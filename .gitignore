@@ -8,7 +8,7 @@
 # testing
 /coverage
 
-/prisama/migrations
+/prisma/migrations
 
 # production
 /build

@@ -1,5 +1,7 @@
 const Stripe = require('stripe');
-const stripeInit = Stripe('sk_test_...', {
+const STRIPE_API_KEY = process.env.STRIPE_API_KEY;
+
+const stripeInit = Stripe(STRIPE_API_KEY, {
     apiVersion: 'v1 - 2022-XX-XX',
     maxNetworkRetries: 1,
     httpAgent: null,

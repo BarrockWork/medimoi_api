@@ -22,19 +22,15 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 
 ## Pour initialiser le projet
 
-### 1/ Configurer la base de données
- Créer son fichier ".env.local" qui contiendra les informations de connexion avec sa base de données. Sinon les commandes suivantes ne pourront pas fonctionner ! Vous pouvez copier coller le ".env" existant.
-> Exemple avec MariaDB: DATABASE_URL="mysql://root:@localhost:3306/medimoi"
+### 1/ Configurer les variables d'environnements
+ Créer son fichier ".env.local" à partir du .env qui contiendra les variable d'environnement du projet. 
+ Exemple pour la connexion avec sa base de données :
+> Exemple avec MariaDB: DATABASE_URL="mysql://root:password@localhost:3306/medimoi"
 
-### 2/ La liste des commandes à exécuter
+### 2/ Les commandes à exécuter pour le développement
 ```
 1. Installer les modules nodes: yarn install ou npm install 
-2. 
-
-Créer la BDD: php bin/console doctrine:database:create ou symfony console doctrine:database:create
-3. Mettre à jours la BDD: php bin/console doctrine:migrations:migrate ou symfony console doctrine:migrations:migrate
-5. Compiler les assets: yarn encore dev npm run dev (Plus d'infos sur https://symfony.com/doc/current/frontend/encore/simple-example.html)
-6. Lancer le sereur web local: symfony console server:start ou php/bin console server:start
-7. Lancer les fixtures: symfony console doctrine:fixtures:load ou php bin/console doctrine:fixtures:load
+2. Initialiser la base de données: yarn execute-migration ou npm run execute-migration
+3. Exécuter l'application: yarn start ou npm run start
 ```
 

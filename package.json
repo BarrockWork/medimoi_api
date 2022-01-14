@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npx nodemon ./bin/www",
+    "start": "dotenv -e .env.local -- npx nodemon ./bin/www",
     "status-migration": "dotenv -e .env.local -- npx prisma migrate status",
     "create-migration": "dotenv -e .env.local -- npx prisma migrate dev --create-only",
     "execute-migration": "dotenv -e .env.local -- npx prisma migrate dev",
@@ -13,6 +13,7 @@
     "create-migration-prod": "npx prisma migrate dev --create-only",
     "execute-migration-prod": "npx prisma migrate dev",
     "reset-migration-prod": "npx prisma migrate reset",
+    "start-prod": "npx nodemon ./bin/www",
 
     "deploy-migration": "npx prisma migrate deploy"
   },

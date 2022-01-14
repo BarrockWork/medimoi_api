@@ -8,17 +8,17 @@
     "create-migration": "dotenv -e .env.local -- npx prisma migrate dev --create-only",
     "execute-migration": "dotenv -e .env.local -- npx prisma migrate dev",
     "reset-migration": "dotenv -e .env.local -- npx prisma migrate reset",
-    
     "status-migration-prod": "npx prisma migrate status",
     "create-migration-prod": "npx prisma migrate dev --create-only",
     "execute-migration-prod": "npx prisma migrate dev",
     "reset-migration-prod": "npx prisma migrate reset",
     "start-prod": "npx nodemon ./bin/www",
-
-    "deploy-migration": "npx prisma migrate deploy"
+    "deploy-migration": "npx prisma migrate deploy",
+    "apidoc-generate": "apidoc -i src/routes -o apidoc -c config/apidoc.json"
   },
   "dependencies": {
     "@prisma/client": "^3.8.0",
+    "apidoc": "^0.50.3",
     "axios": "^0.24.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",

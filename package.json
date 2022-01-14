@@ -4,10 +4,16 @@
   "private": true,
   "scripts": {
     "start": "npx nodemon ./bin/www",
-    "status-migration": "npx prisma migrate status",
-    "create-migration": "npx prisma migrate dev --create-only",
-    "execute-migration": "npx prisma migrate dev",
-    "reset-migration": "npx prisma migrate reset",
+    "status-migration": "dotenv -e .env.local -- npx prisma migrate status",
+    "create-migration": "dotenv -e .env.local -- npx prisma migrate dev --create-only",
+    "execute-migration": "dotenv -e .env.local -- npx prisma migrate dev",
+    "reset-migration": "dotenv -e .env.local -- npx prisma migrate reset",
+    
+    "status-migration-prod": "npx prisma migrate status",
+    "create-migration-prod": "npx prisma migrate dev --create-only",
+    "execute-migration-prod": "npx prisma migrate dev",
+    "reset-migration-prod": "npx prisma migrate reset",
+
     "deploy-migration": "npx prisma migrate deploy"
   },
   "dependencies": {
@@ -17,6 +23,7 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^11.0.0",
+    "dotenv-cli": "^4.1.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",

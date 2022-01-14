@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "start": "npx nodemon ./bin/www",
+    "status-migration": "npx prisma migrate status",
     "create-migration": "npx prisma migrate dev --create-only",
-    "migrate": "npx prisma migrate dev"
+    "execute-migration": "npx prisma migrate dev",
+    "reset-migration": "npx prisma migrate reset",
+    "deploy-migration": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^3.8.0",
@@ -16,8 +19,9 @@
     "dotenv": "^11.0.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "lodash": "^4.17.21",
-    "morgan": "~1.9.1"
+    "jade": "~1.11.0",
+    "morgan": "~1.9.1",
+    "ramda": "^0.27.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",

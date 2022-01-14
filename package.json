@@ -28,7 +28,8 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
-    "ramda": "^0.27.2"
+    "ramda": "^0.27.2",
+    "stripe": "^8.197.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",

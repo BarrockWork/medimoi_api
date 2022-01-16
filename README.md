@@ -19,6 +19,7 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 * [Ramda](https://ramdajs.com/)
 * [Stripe-node](https://github.com/stripe/stripe-node)
 * [Mailjet](https://fr.mailjet.com/)
+* [Slugify](https://www.npmjs.com/package/slugify)
 
 ## Pour initialiser le projet
 

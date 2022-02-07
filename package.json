@@ -29,6 +29,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
+    "prisma-aurora": "^1.2.8",
     "ramda": "^0.27.2",
     "slugify": "^1.6.5",
     "stripe": "^8.197.0"

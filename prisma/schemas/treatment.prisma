@@ -1,0 +1,14 @@
+model treatment{
+    id                              Int                     @default(autoincrement()) @id
+    name                            String                  @db.VarChar(255)
+    treatment_periodicity_id        Int                     @db.Int
+    user_id                         Int                     @db.Int
+    created_at                      DateTime                @default(now())
+    updated_at                      DateTime                @updatedAt
+    starteAt                        DateTime
+    finishedAt                      DateTime
+    isActive                        Boolean                 @default(true)
+    // Relation
+    treatment_periodicity           treatment_periodicity   @relation(fields: [treatment_periodicity_id], references: [id])
+    user                            user                    @relation(fields: [user_id], references: [id])
+}

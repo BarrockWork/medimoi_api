@@ -1,0 +1,10 @@
+model treatment_drug{
+    id              Int             @default(autoincrement()) @id
+    treatment_id    Int             @db.Int
+    drug_id         Int             @db.Int
+    comments        String          @db.Text
+    isActive        Boolean         @default(true)
+    // Relation
+    treatment       treatment       @relation(fields: [treatment_id], references: [id])
+    drug            drug            @relation(fields: [drug_id], references: [id])
+}

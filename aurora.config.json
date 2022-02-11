@@ -2,7 +2,11 @@
   "files": [
     "./prisma/datasource.prisma",
     "./prisma/generator.prisma",
-    "./prisma/schemas/exemple.prisma"
+    "./prisma/schemas/periodicity.prisma",
+    "./prisma/schemas/treatment_drug.prisma",
+    "./prisma/schemas/treatment_media.prisma",
+    "./prisma/schemas/treatment_periodicity.prisma",
+    "./prisma/schemas/treatment.prisma"
   ],
   "output": "./prisma/schema.prisma"
 }

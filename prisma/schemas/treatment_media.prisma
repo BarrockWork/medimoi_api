@@ -1,8 +1,8 @@
 model treatment_media{
     id              Int             @default(autoincrement()) @id
-    treatment_id    Int             @Db.Int
-    name            String          @db.VarChar(255)
-    mime_type       String          @db.Varchar(50)
+    treatment_id    Int             
+    name            String          
+    mime_type       String          
     created_at      DateTime        @default(now())
     updated_at      DateTime        @updatedAt
     isActive        Boolean         @default(true)

@@ -1,8 +1,8 @@
 model treatment{
     id                              Int                     @default(autoincrement()) @id
-    name                            String                  @db.VarChar(255)
-    treatment_periodicity_id        Int                     @db.Int
-    user_id                         Int                     @db.Int
+    name                            String                  
+    treatment_periodicity_id        Int                     
+    user_id                         Int                     
     created_at                      DateTime                @default(now())
     updated_at                      DateTime                @updatedAt
     starteAt                        DateTime

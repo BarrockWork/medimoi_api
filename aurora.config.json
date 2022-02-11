@@ -3,10 +3,10 @@
     "./prisma/datasource.prisma",
     "./prisma/generator.prisma",
     "./prisma/schemas/periodicity.prisma",
-    "./prisma/schemas/treatment_drug.prisma",
     "./prisma/schemas/treatment_media.prisma",
     "./prisma/schemas/treatment_periodicity.prisma",
-    "./prisma/schemas/treatment.prisma"
+    "./prisma/schemas/treatment.prisma",
+    "./prisma/schemas/treatment_drug.prisma"
   ],
   "output": "./prisma/schema.prisma"
 }

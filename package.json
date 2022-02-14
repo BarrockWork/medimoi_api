@@ -14,7 +14,7 @@
     "reset-migration-prod": "npx prisma migrate reset",
     "start-prod": "npx nodemon ./bin/www",
     "deploy-migration": "npx prisma migrate deploy",
-    "apidoc-generate": "apidoc -i src/routes -o apidoc -c config/apidoc.json"
+    "apidoc-generate": "apidoc -i src/routes -o public/docs -c config/apidoc.json"
   },
   "dependencies": {
     "@prisma/client": "^3.8.0",

@@ -1,4 +1,4 @@
-{
+ {
   "files": [
     "./prisma/datasource.prisma",
     "./prisma/generator.prisma",

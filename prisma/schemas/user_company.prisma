@@ -1,10 +1,10 @@
-model User_company {
+model user_company {
     // Company relation ---------
-    company         Company         @relation(fields: [company_id], references:[id])
+    company         company         @relation(fields: [company_id], references:[id])
     company_id      Int
     // -------------------------------
     // User relation -----------------
-    user            User            @relation(fields: [user_id], references: [id])
+    user            user            @relation(fields: [user_id], references: [id])
     user_id         Int
     // -------------------------------
     createdAt       Datetime        @db.DateTime(now())

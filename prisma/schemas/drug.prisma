@@ -1,0 +1,12 @@
+model drug {
+     id                             Int              @id @default(autoincrement())
+     name                           String           @db.VarChar(255)
+     description                    Text
+     isPrescription                 Boolean          @default(false)
+     drug_level_id                  Drug_level       @relation(Drug_level: [id])
+     drug_type_id                   Drug_type        @relation(Drug_type: [id])
+     medical_administration_id      Periodicity      @relation(Periodicity: [id])
+     created_at                     DateTime         @default(now())
+     updatedAt                      DateTime         @updatedAt
+     isActive                       Boolean          @default(true)
+}

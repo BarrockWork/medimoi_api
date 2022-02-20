@@ -1,11 +1,8 @@
-model disease {
+model disease_type {
      id                     Int              @id @default(autoincrement())
      name                   String           @db.VarChar(255)
      name_slug              String           @db.VarChar(50)
      description            Text
-     incubation_period      Text
-     transmitting           String           @db.VarChar(255)
-     disease_type_id        Disease_type     @relation(Disease_type: [id])
      created_at             DateTime         @default(now())
      updatedAt              DateTime         @updatedAt
      isActive               Boolean          @default(true)

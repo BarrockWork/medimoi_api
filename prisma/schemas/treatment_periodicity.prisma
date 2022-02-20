@@ -5,4 +5,6 @@ model treatment_periodicity{
     created_at      DateTime        @default(now())
     updated_at      DateTime        @updatedAt
     isActive        Boolean         @default(true)
+
+    treatments      treatment[]
 }

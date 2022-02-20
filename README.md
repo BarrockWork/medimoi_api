@@ -13,7 +13,9 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 
 ## Stack technique
 * [Express v4.16](https://expressjs.com/fr/)
+* [ApiDoc](https://apidocjs.com/)
 * [Prisma](https://www.prisma.io/docs/)
+* [Prisma-Aurora](https://www.npmjs.com/package/prisma-aurora)
 * [Axios](https://axios-http.com/)
 * [Dotenv](https://www.npmjs.com/package/dotenv)
 * [Ramda](https://ramdajs.com/)

@@ -14,6 +14,10 @@ model user {
     updated_at          DateTime    @updated_at
     isActive            Boolean     @default(true)
     addresses address[]
+    treatments treatment[]
+    users_company user_company[]
+    contacts contact[]
+    users_notifications_type user_notification_type[]
 
     //relation 
     user_type    user_type    @relation(fields: [user_type_id], references:[id])

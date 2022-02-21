@@ -1,8 +1,9 @@
 model drug_level {
   id                     Int              @id @default(autoincrement())
   level                  Int
-  description            Text
-  created_at             DateTime         @default(now())
-  updatedAt              DateTime         @updatedAt
+  description            String           @db.Text
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime?         @updatedAt
   isActive               Boolean          @default(true)
+  drugs                  drug[]
 }

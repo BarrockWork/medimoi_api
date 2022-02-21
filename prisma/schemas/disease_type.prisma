@@ -1,9 +1,10 @@
 model disease_type {
      id                     Int              @id @default(autoincrement())
      name                   String           @db.VarChar(255)
-     name_slug              String           @db.VarChar(50)
-     description            Text
-     created_at             DateTime         @default(now())
-     updatedAt              DateTime         @updatedAt
+     name_slug              String           @db.VarChar(255) @unique
+     description            String           @db.Text
+     createdAt              DateTime         @default(now())
+     updatedAt              DateTime?         @updatedAt
      isActive               Boolean          @default(true)
+     diseases               disease[]
 }

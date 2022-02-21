@@ -1,12 +1,17 @@
 model drug {
-     id                             Int              @id @default(autoincrement())
-     name                           String           @db.VarChar(255)
-     description                    Text
-     isPrescription                 Boolean          @default(false)
-     drug_level_id                  Drug_level       @relation(Drug_level: [id])
-     drug_type_id                   Drug_type        @relation(Drug_type: [id])
-     medical_administration_id      Periodicity      @relation(Periodicity: [id])
-     created_at                     DateTime         @default(now())
-     updatedAt                      DateTime         @updatedAt
-     isActive                       Boolean          @default(true)
+     id                             Int                     @id @default(autoincrement())
+     name                           String                  @db.VarChar(255)
+     description                    String                  @db.Text
+     isPrescription                 Boolean                 @default(false)
+     createdAt                      DateTime                @default(now())
+     updatedAt                      DateTime?               @updatedAt
+     isActive                       Boolean                 @default(true)
+     treatments_drug                treatment_drug[]
+     drug_level_id                  Int
+     drug_type_id                   Int
+     medical_administration_id      Int
+     //relation
+     drug_level                     drug_level              @relation(fields: [drug_level_id], references: [id])
+     drug_type                      drug_type               @relation(fields: [drug_type_id], references: [id])
+     medical_administration         medical_administration  @relation(fields: [medical_administration_id], references: [id])
 }

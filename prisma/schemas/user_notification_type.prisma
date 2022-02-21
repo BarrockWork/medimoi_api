@@ -1,13 +1,13 @@
 model user_notification_type {
-    id                      Int         @id @default(autoincrement())
+    id                      Int                    @id @default(autoincrement())
     notifcation_type_id     Int
     user_id                 Int
-    created_at              DateTime    @default(now())
-    updated_at              DateTime    @updated_at
-    isActive                Boolean     @default(true)
-    Notifications_histories Notification_history[]
+    createdAt               DateTime               @default(now())
+    updatedAt               DateTime?              @updatedAt
+    isActive                Boolean                @default(true)
+    notifications_histories notification_history[]
 
     //relation
-    user                    user                @relation(fields: [user_id], references: [id])
-    notifcation_type        notifcation_type    @relation(fields: [notifcation_type_id], references: [id])
+    user                    user                   @relation(fields: [user_id], references: [id])
+    notifcation_type        notifcation_type       @relation(fields: [notifcation_type_id], references: [id])
 }

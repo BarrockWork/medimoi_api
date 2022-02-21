@@ -3,16 +3,16 @@ model treatment{
     name                            String                  @db.VarChar(255)
     treatment_periodicity_id        Int                     
     user_id                         Int                     
-    created_at                      DateTime                @default(now())
-    updated_at                      DateTime                @updatedAt
-    starteAt                        DateTime
-    finishedAt                      DateTime
+    createdAt                       DateTime                @default(now())
+    updatedAt                       DateTime?               @updatedAt
+    startedAt                       DateTime
+    finishedAt                      DateTime?
     isActive                        Boolean                 @default(true)
 
     // Relation
     treatment_periodicity           treatment_periodicity   @relation(fields: [treatment_periodicity_id], references: [id])
     user                            user                    @relation(fields: [user_id], references: [id])
 
-    medias                          media[]
+    treatment_medias                treatment_media[]
     drugs                           drug[]
 }

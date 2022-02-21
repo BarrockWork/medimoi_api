@@ -1,4 +1,5 @@
 model user_company {
+    id              Int         @id @default(autoincrement())
     // Company relation ---------
     company         company         @relation(fields: [company_id], references:[id])
     company_id      Int

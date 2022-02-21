@@ -1,0 +1,8 @@
+model notification_history {
+    id                          Int         @id @default(autoincrement())
+    user_notification_type_id   Int
+    created_at                  DateTime    @default(now())
+
+    //relation
+    user_notification_type    user_notification_type    @relation(fields: [user_notification_type_id], references: [id])
+}

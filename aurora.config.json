@@ -17,7 +17,7 @@
     "./prisma/schemas/drug.prisma",
     "./prisma/schemas/treatment_drug.prisma",
     "./prisma/schemas/notification_type.prisma",
-    "./prisma/schemas/user_notifaction_type.prisma",
+    "./prisma/schemas/user_notification_type.prisma",
     "./prisma/schemas/notification_history.prisma",
     "./prisma/schemas/address_road_type.prisma",
     "./prisma/schemas/address.prisma",

@@ -1,4 +1,4 @@
-model user {
+model User {
     id                          Int                         @id @default(autoincrement())
     firstName                   String                      @db.VarChar(50)
     lastName                    String                      @db.VarChar(50)
@@ -10,16 +10,14 @@ model user {
     workphone                   String?                     @db.VarChar(50)
     role                        String                      @db.longText
     user_type_id                Int
+    user_type                   User_type                   @relation(fields: [user_type_id], references:[id])
     lastConnection_id           DateTime                    @default(now())
     createdAt                   DateTime                    @default(now())
-    updatedAt                   DateTime?                    @updatedAt
+    updatedAt                   DateTime?                   @updatedAt
     isActive                    Boolean                     @default(true)
-    addresses                   address[]
-    treatments                  treatment[]
-    users_company               user_company[]
-    contacts                    contact[]
-    users_notifications_type    user_notification_type[]
-
-    //relation 
-    user_type                   user_type                   @relation(fields: [user_type_id], references:[id])
+    addresses                   Address[]
+    treatments                  Treatment[]
+    users_company               User_company[]
+    contacts                    Contact[]
+    users_notifications_type    User_notification_type[]
 }

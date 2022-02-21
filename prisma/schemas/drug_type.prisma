@@ -1,4 +1,4 @@
-model drug_type{
+model Drug_type {
      id                     Int              @id @default(autoincrement())
      name                   String           @db.VarChar(255)
      name_slug              String           @db.VarChar(50) @unique
@@ -6,5 +6,5 @@ model drug_type{
      createdAt              DateTime         @default(now())
      updatedAt              DateTime?        @updatedAt
      isActive               Boolean          @default(true)
-     drugs                  drug[]
+     drugs                  Drug[]
 }

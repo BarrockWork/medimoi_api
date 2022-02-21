@@ -1,4 +1,4 @@
-model company {
+model Company {
     id              Int         @id @default(autoincrement())
     name            String      @db.VarChar(50)
     name_slug       String      @db.VarChar(50) @unique
@@ -7,5 +7,5 @@ model company {
     createdAt       Datetime    @db.DateTime(now())
     updatedAt       Datetime?   @updatedAt
     isActive        Boolean     @default(true)
-    users_company   user_company[]
+    users_company   User_company[]
 }

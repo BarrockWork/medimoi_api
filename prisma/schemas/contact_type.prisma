@@ -1,9 +1,9 @@
-model contact_type {
+model Contact_type {
     id          Int         @id @default(autoincrement())
     name        String      @db.VarChar(50)
     name_slug   String      @db.VarChar(50) @unique
     createdAt   Datetime    @db.DateTime(now())
     updatedAt   Datetime?   @updatedAt
     isActive    Boolean     @default(true)
-    contacts    contact[]
+    contacts    Contact[]
 }

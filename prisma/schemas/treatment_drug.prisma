@@ -1,10 +1,9 @@
-model treatment_drug{
-    id              Int             @default(autoincrement()) @id
-    treatment_id    Int             
-    drug_id         Int             
+model Treatment_drug {
+    id             Int             @default(autoincrement()) @id
+    treatment_id    Int
+    treatment       Treatment       @relation(fields: [treatment_id], references: [id])
+    drug_id         Int
+    drug            Drug            @relation(fields: [drug_id], references: [id])
     comments        String          @db.Text
     isActive        Boolean         @default(true)
-    // Relation
-    treatment       treatment       @relation(fields: [treatment_id], references: [id])
-    drug            drug            @relation(fields: [drug_id], references: [id])
 }

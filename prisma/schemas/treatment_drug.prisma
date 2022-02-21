@@ -2,7 +2,7 @@ model treatment_drug{
     id              Int             @default(autoincrement()) @id
     treatment_id    Int             
     drug_id         Int             
-    comments        String          
+    comments        String          @db.Text
     isActive        Boolean         @default(true)
     // Relation
     treatment       treatment       @relation(fields: [treatment_id], references: [id])

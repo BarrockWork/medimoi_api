@@ -1,0 +1,13 @@
+model user_company {
+    // Company relation ---------
+    company         company         @relation(fields: [company_id], references:[id])
+    company_id      Int
+    // -------------------------------
+    // User relation -----------------
+    user            user            @relation(fields: [user_id], references: [id])
+    user_id         Int
+    // -------------------------------
+    createdAt       Datetime        @db.DateTime(now())
+    updatedAt       Datetime?       @updatedAt
+    isActive        Boolean         @default(true)
+}

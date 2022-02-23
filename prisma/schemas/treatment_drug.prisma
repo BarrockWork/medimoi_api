@@ -7,13 +7,23 @@ datasource db {
 model TreatmentDrug {
     id             Int             @default(autoincrement()) @id
     // Treatment relation ------------------------------------
-    treatmentId    Int
-    Treatment      Treatment       @relation(fields: [treatmentId], references: [id])
+    treatment_id   Int
+    Treatment      Treatment       @relation(fields: [treatment_id], references: [id])
     // -------------------------------------------------------
     // Drug relation ----------------------------------------
-    drugId         Int
-    Drug           Drug            @relation(fields: [drugId], references: [id])
+    drug_id        Int
+    Drug           Drug            @relation(fields: [drug_id], references: [id])
     // -----------------------------------------------------
     comments       String          @db.Text
     isActive       Boolean         @default(true)
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model Drug {
+    id                  Int     @id
+    TreatmentDrugs      TreatmentDrug[]
+}
+model Treatment {
+    id              Int     @id
+    TreatmentDrugs  TreatmentDrug[]
 }

@@ -13,3 +13,10 @@ model TreatmentPeriodicity {
     isActive        Boolean         @default(true)
     Treatments      Treatment[]
 }
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model Treatment {
+    id                              Int     @id
+    treatment_periodicity_id        Int
+    TreatmentPeriodicity            TreatmentPeriodicity   @relation(fields: [treatment_periodicity_id], references: [id])
+}

@@ -11,5 +11,12 @@ model NotificationType {
     createdAt                 DateTime                     @default(now())
     updatedAt                 DateTime?                    @updatedAt
     isActive                  Boolean                      @default(true)
-    UsersNotificationType     UserNotificationType[]
+    UserNotificationTypes     UserNotificationType[]
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model UserNotificationType {
+    id                      Int     @id
+    notifcation_type_id     Int
+    NotifcationType         NotifcationType       @relation(fields: [notifcation_type_id], references: [id])
 }

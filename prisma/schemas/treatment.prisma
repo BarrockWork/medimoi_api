@@ -8,12 +8,12 @@ model Treatment {
     id                              Int                     @default(autoincrement()) @id
     name                            String                  @db.VarChar(255)
     // Treatment_periodicity relation --------
-    treatmentPeriodicityId          Int
-    TreatmentPeriodicity            TreatmentPeriodicity   @relation(fields: [treatmentPeriodicityId], references: [id])
+    treatment_periodicity_id        Int
+    TreatmentPeriodicity            TreatmentPeriodicity    @relation(fields: [treatment_periodicity_id], references: [id])
     // -----------------------------------------
     // User relation --------------------------
-    userId                          Int
-    User                            User                    @relation(fields: [userId], references: [id])
+    user_id                         Int
+    User                            User                    @relation(fields: [user_id], references: [id])
     // -----------------------------------------
     createdAt                       DateTime                @default(now())
     updatedAt                       DateTime?               @updatedAt
@@ -21,5 +21,26 @@ model Treatment {
     finishedAt                      DateTime?
     isActive                        Boolean                 @default(true)
     TreatmentMedias                 TreatmentMedia[]
-    Drugs                           Drug[]
+    TreatmentDrugs                  TreatmentDrug[]
 }
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model TreatmentPeriodicity {
+    id             Int     @id
+    Treatments     Treatment[]
+}
+model User {
+    id             Int     @id
+    Treatments     Treatment[]
+}
+model TreatmentMedia {
+    id             Int        @id
+    treatment_id   Int
+    Treatment      Treatment  @relation(fields: [treatment_id], references: [id])
+}
+model TreatmentDrug {
+    id             Int        @id
+    treatment_id   Int
+    Treatment      Treatment  @relation(fields: [treatment_id], references: [id])
+}
+

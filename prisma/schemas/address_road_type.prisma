@@ -12,3 +12,10 @@ model AddressRoadType {
     updatedAt               DateTime?   @updatedAt
     Addresses               Address[]
 }
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model Address {
+    id  Int @id
+    address_road_type_id    Int
+    AddressRoadType         AddressRoadType   @relation(fields: [address_road_type_id], references: [id])
+}

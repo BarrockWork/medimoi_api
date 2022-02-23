@@ -12,3 +12,10 @@ model UserType{
     updatedAt       DateTime?   @updatedAt
     Users           User[]
 }
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model User {
+    id                  Int      @id
+    user_type_id        Int
+    UserType            UserType @relation(fields: [user_type_id], references:[id])
+}

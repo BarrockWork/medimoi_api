@@ -9,12 +9,12 @@ model Address {
     numberRoad              Int
     name                    String            @db.VarChar(50)
     // AddressRoadType relation ----------------------------
-    addressRoadTypeId       Int
-    AddressRoadType         AddressRoadType   @relation(fields: [addressRoadTypeId], references: [id])
+    address_road_type_id    Int
+    AddressRoadType         AddressRoadType   @relation(fields: [address_road_type_id], references: [id])
     // -------------------------------------------------------
     // User relation ----------------------------------------
-    userId                  Int
-    User                    User              @relation(fields: [userId], references: [id])
+    user_id                 Int
+    User                    User              @relation(fields: [user_id], references: [id])
     // -------------------------------------------------------
     additionnalAddress      String            @db.VarChar(255)
     zipcode                 String            @db.VarChar(10)
@@ -24,4 +24,14 @@ model Address {
     title                   String            @db.VarChar(50)
     createdAt               DateTime          @default(now())
     updatedAt               DateTime?         @updatedAt
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model AddressRoadType {
+    id  Int @id
+    Addresses    Address[]
+}
+model User {
+    id  Int @id
+    Addresses    Address[]
 }

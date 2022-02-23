@@ -12,10 +12,16 @@ model Disease {
      incubationPeriod       String           @db.Text
      transmitting           String           @db.VarChar(255)
      // Disease_type relation -------------------
-     diseaseTypeId          Int
-     DiseaseType            DiseaseType     @relation(fields: [diseaseTypeId], references: [id])
+     disease_type_id        Int
+     DiseaseType            DiseaseType     @relation(fields: [disease_type_id], references: [id])
      // ------------------------------------------
      createdAt              DateTime         @default(now())
      updatedAt              DateTime?        @updatedAt
      isActive               Boolean          @default(true)
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model DiseaseType {
+    id                  Int     @id
+    Diseases            Disease[]
 }

@@ -7,8 +7,8 @@ datasource db {
 model UserNotificationType {
     id                      Int                    @id @default(autoincrement())
     // Notification_type relation ---------------------------
-    notifcationTypeId       Int
-    NotifcationType         NotifcationType       @relation(fields: [notifcationTypeId], references: [id])
+    notifcation_type_id       Int
+    NotifcationType         NotifcationType       @relation(fields: [notifcation_type_id], references: [id])
     // ------------------------------------------------------
     // User relation ----------------------------------------
     userId                  Int
@@ -18,4 +18,20 @@ model UserNotificationType {
     updatedAt               DateTime?              @updatedAt
     isActive                Boolean                @default(true)
     NotificationsHistories  NotificationHistory[]
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model NotifcationType {
+    id                      Int     @id
+    UserNotificationTypes   UserNotificationType[]
+}
+model User {
+    id                      Int     @id
+    UserNotificationTypes   UserNotificationType[]
+}
+
+model NotificationHistory {
+    id                          Int                     @id
+    user_notification_type_id   Int
+    UserNotificationType        UserNotificationType    @relation(fields: [user_notification_type_id], references: [id])
 }

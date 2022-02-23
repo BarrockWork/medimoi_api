@@ -15,7 +15,7 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 * [Express v4.16](https://expressjs.com/fr/)
 * [ApiDoc](https://apidocjs.com/)
 * [Prisma](https://www.prisma.io/docs/)
-* [Prisma-Aurora](https://www.npmjs.com/package/prisma-aurora)
+* [Prismix](https://github.com/jamiepine/prismix)
 * [Axios](https://axios-http.com/)
 * [Dotenv](https://www.npmjs.com/package/dotenv)
 * [Ramda](https://ramdajs.com/)
@@ -33,7 +33,8 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 ### 2/ Les commandes à exécuter pour le développement
 ```
 1. Installer les modules nodes: yarn install ou npm install 
-2. Initialiser la base de données: yarn execute-migration ou npm run execute-migration
-3. Exécuter l'application: yarn start ou npm run start
+2. Fusionner et générer le fichier schema pour prisma: npx prismix ou yarn prixmix
+3. Initialiser la base de données: yarn execute-migration ou npm run execute-migration
+4. Exécuter l'application: yarn start ou npm run start
 ```
 

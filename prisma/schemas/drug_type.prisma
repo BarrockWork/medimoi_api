@@ -14,3 +14,10 @@ model DrugType {
      isActive               Boolean          @default(true)
      Drugs                  Drug[]
 }
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model Drug {
+    id                  Int     @id
+    drug_type_id        Int
+    DrugType            DrugType               @relation(fields: [drug_type_id], references: [id])
+}

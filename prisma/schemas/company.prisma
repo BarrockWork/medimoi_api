@@ -15,3 +15,10 @@ model Company {
     isActive        Boolean     @default(true)
     UsersCompany    UserCompany[]
 }
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model UserCompany {
+    id              Int     @id
+    company_id       Int
+    Company         Company     @relation(fields: [company_id], references:[id])
+}

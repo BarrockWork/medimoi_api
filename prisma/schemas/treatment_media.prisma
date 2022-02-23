@@ -7,12 +7,18 @@ datasource db {
 model TreatmentMedia {
     id              Int             @default(autoincrement()) @id
     // Treatment relation -------------------
-    treatmentId     Int
-    Treatment       Treatment       @relation(fields: [treatmentId], references: [id])
+    treatment_id     Int
+    Treatment       Treatment       @relation(fields: [treatment_id], references: [id])
     // ---------------------------------------
     name            String          @db.Varchar(255)
     mimeType        String          @db.Varchar(50)
     createdAt       DateTime        @default(now())
     updatedAt       DateTime?       @updatedAt
     isActive        Boolean         @default(true)
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model Treatment {
+    id              Int     @id
+    TreatmentMedias TreatmentMedia[]
 }

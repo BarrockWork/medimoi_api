@@ -7,14 +7,24 @@ datasource db {
 model UserCompany {
     id              Int         @id @default(autoincrement())
     // Company relation ---------
-    companyId       Int
-    Company         Company     @relation(fields: [companyId], references:[id])
+    company_id       Int
+    Company         Company     @relation(fields: [company_id], references:[id])
     // -------------------------------
     // User relation -----------------
-    userId          Int
-    User            User        @relation(fields: [userId], references: [id])
+    user_id          Int
+    User            User        @relation(fields: [user_id], references: [id])
     // -------------------------------
     createdAt       DateTime    @db.DateTime(now())
     updatedAt       DateTime?   @updatedAt
     isActive        Boolean     @default(true)
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model Company {
+    id              Int     @id
+    UsersCompany    UserCompany[]
+}
+model User {
+    id              Int     @id
+    UserCompany     UserCompany
 }

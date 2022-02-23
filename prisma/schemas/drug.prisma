@@ -12,17 +12,36 @@ model Drug {
      createdAt                      DateTime                @default(now())
      updatedAt                      DateTime?               @updatedAt
      isActive                       Boolean                 @default(true)
-     treatmentsDrug                 TreatmentDrug[]
+     TreatmentDrugs                 TreatmentDrug[]
      // Drug_level relation -------------------
-     drugLevelId                    Int
-     DrugLevel                      DrugLevel               @relation(fields: [drugLevelId], references: [id])
+     drug_level_id                  Int
+     DrugLevel                      DrugLevel               @relation(fields: [drug_level_id], references: [id])
      // ---------------------------------------
      // Drug_type relation ------------------------
-     drugTypeId                     Int
-     DrugType                       DrugType               @relation(fields: [drugTypeId], references: [id])
+     drug_type_id                   Int
+     DrugType                       DrugType               @relation(fields: [drug_type_id], references: [id])
      // --------------------------------------------
      // Medical_administration ----------------------
-     medicalAdministrationId        Int
-     MedicalAdministration          MedicalAdministration  @relation(fields: [medicalAdministrationId], references: [id])
+     medical_administration_id      Int
+     MedicalAdministration          MedicalAdministration  @relation(fields: [medical_administration_id], references: [id])
     // ------------------------------------------------
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model TreatmentDrug {
+    id             Int     @id
+    drug_id        Int
+    Drug           Drug    @relation(fields: [drug_id], references: [id])
+}
+model DrugLevel {
+    id             Int     @id
+    Drugs          Drug[]
+}
+model DrugType {
+    id             Int     @id
+    Drugs          Drug[]
+}
+model MedicalAdministration {
+    id             Int     @id
+    Drugs          Drug[]
 }

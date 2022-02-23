@@ -10,14 +10,24 @@ model Contact {
     lastName        String          @db.VarChar(50)
     phoneNumber     String          @db.VarChar(50)
     // ContactType relation ---------
-    contactTypeId   Int
-    ContactType     ContactType     @relation(fields: [contactTypeId], references:[id])
+    contact_type_id Int
+    ContactType     ContactType     @relation(fields: [contact_type_id], references:[id])
     // -------------------------------
     // User relation -----------------
-    userId          Int
-    User            User            @relation(fields: [userId], references: [id])
+    user_id         Int
+    User            User            @relation(fields: [user_id], references: [id])
     // -------------------------------
     createdAt       DateTime        @default(now())
     updatedAt       DateTime?       @updatedAt
     isActive        Boolean         @default(true)
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model ContactType {
+    id  Int @id
+    Contacts    Contact[]
+}
+model User {
+    id  Int @id
+    Contacts    Contact[]
 }

@@ -16,8 +16,8 @@ model User {
     workphone                   String?                     @db.VarChar(50)
     role                        String                      @db.longText
     // User_type relation ------------------------
-    userTypeId                  Int
-    UserType                    UserType                   @relation(fields: [userTypeId], references:[id])
+    user_type_id                Int
+    UserType                    UserType                   @relation(fields: [user_type_id], references:[id])
     // -------------------------------------------
     lastConnectionId            DateTime                    @default(now())
     createdAt                   DateTime                    @default(now())
@@ -25,7 +25,38 @@ model User {
     isActive                    Boolean                     @default(true)
     Addresses                   Address[]
     Treatments                  Treatment[]
-    UsersCompany                UserCompany[]
+    UserCompany                 UserCompany
     Contacts                    Contact[]
-    UsersNotificationsType      UserNotificationType[]
+    UserNotificationTypes       UserNotificationType[]
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model UserType {
+    id                   Int     @id
+    Users               User[]
+}
+model Address {
+    id                  Int     @id
+    user_id             Int
+    User                User    @relation(fields: [user_id], references: [id])
+}
+model UserCompany {
+    id                  Int     @id
+    user_id             Int
+    User                User    @relation(fields: [user_id], references: [id])
+}
+model Contact {
+    id                  Int     @id
+    user_id             Int
+    User                User    @relation(fields: [user_id], references: [id])
+}
+model Treatment {
+    id                  Int     @id
+    user_id             Int
+    User                User    @relation(fields: [user_id], references: [id])
+}
+model UserNotificationType {
+    id                  Int     @id
+    user_notification_type_id   Int
+    UserNotificationType        UserNotificationType       @relation(fields: [user_notification_type_id], references: [id])
 }

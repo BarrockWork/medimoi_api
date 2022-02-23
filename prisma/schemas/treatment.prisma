@@ -1,15 +1,15 @@
 model Treatment {
     id                              Int                     @default(autoincrement()) @id
-    name                            String                  @db.VarChar(255)
+    name                            String                  // @db.VarChar(255)
     treatment_periodicity_id        Int
-    treatment_periodicity           Treatment_periodicity   @relation(fields: [treatment_periodicity_id], references: [id])
+    // treatment_periodicity           Treatment_periodicity   @relation(fields: [treatment_periodicity_id], references: [id])
     user_id                         Int
-    user                            User                    @relation(fields: [user_id], references: [id])
+    // user                            User                    @relation(fields: [user_id], references: [id])
     createdAt                       DateTime                @default(now())
     updatedAt                       DateTime?               @updatedAt
     startedAt                       DateTime
     finishedAt                      DateTime?
     isActive                        Boolean                 @default(true)
-    treatment_medias                Treatment_media[]
-    drugs                           Drug[]
+    // treatment_medias                Treatment_media[]
+    // drugs                           Drug[]
 }

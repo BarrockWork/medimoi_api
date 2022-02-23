@@ -2,13 +2,13 @@ model User_company {
     id              Int         @id @default(autoincrement())
     // Company relation ---------
     company_id      Int
-    company         Company         @relation(fields: [company_id], references:[id])
+    // company         Company         @relation(fields: [company_id], references:[id])
     // -------------------------------
     // User relation -----------------
     user_id         Int
-    user            User            @relation(fields: [user_id], references: [id])
+    // user            User            @relation(fields: [user_id], references: [id])
     // -------------------------------
-    createdAt       Datetime        @db.DateTime(now())
-    updatedAt       Datetime?       @updatedAt
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime?       @updatedAt
     isActive        Boolean         @default(true)
 }

@@ -1,17 +1,17 @@
 model Address {
     id                      Int               @id @default(autoincrement())
     number_road             Int
-    name                    String            @db.VarChar(50)
+    name                    String            // @db.VarChar(50)
     address_road_type_id    Int
-    address_road_type       Address_road_type @relation(fields: [address_road_type_id], references: [id])
+    // address_road_type       Address_road_type @relation(fields: [address_road_type_id], references: [id])
     user_id                 Int
-    user                    User              @relation(fields: [user_id], references: [id])
-    additionnal_address     String            @db.VarChar(255)
-    zipcode                 String            @db.VarChar(10)
-    city                    String            @db.VarChar(50)
-    region                  String            @db.VarChar(50)
-    country                 String            @db.VarChar(50)
-    title                   String            @db.VarChar(50)
+    // user                    User              @relation(fields: [user_id], references: [id])
+    additionnal_address     String            // @db.VarChar(255)
+    zipcode                 String            // @db.VarChar(10)
+    city                    String            // @db.VarChar(50)
+    region                  String            // @db.VarChar(50)
+    country                 String            // @db.VarChar(50)
+    title                   String            // @db.VarChar(50)
     createdAt               DateTime          @default(now())
     updatedAt               DateTime?         @updatedAt
 }

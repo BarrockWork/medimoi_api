@@ -1,9 +1,9 @@
 model Treatment_media {
     id              Int             @default(autoincrement()) @id
     treatment_id    Int
-    treatment       Treatment       @relation(fields: [treatment_id], references: [id])
-    name            String          @db.Varchar(255)
-    mime_type       String          @db.Varchar(50)
+    // treatment       Treatment       @relation(fields: [treatment_id], references: [id])
+    name            String          // @db.Varchar(255)
+    mime_type       String          // @db.Varchar(50)
     createdAt       DateTime        @default(now())
     updatedAt       DateTime?       @updatedAt
     isActive        Boolean         @default(true)

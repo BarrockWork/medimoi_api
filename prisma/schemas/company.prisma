@@ -1,11 +1,11 @@
 model Company {
     id              Int         @id @default(autoincrement())
-    name            String      @db.VarChar(50)
-    name_slug       String      @db.VarChar(50) @unique
-    siret           String      @db.VarChar(50)
-    tva             String      @db.VarChar(50)
-    createdAt       Datetime    @db.DateTime(now())
-    updatedAt       Datetime?   @updatedAt
+    name            String      // @db.VarChar(50)
+    name_slug       String      // @db.VarChar(50) @unique
+    siret           String      // @db.VarChar(50)
+    tva             String      // @db.VarChar(50)
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
     isActive        Boolean     @default(true)
-    users_company   User_company[]
+    // users_company   User_company[]
 }

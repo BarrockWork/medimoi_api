@@ -1,9 +1,15 @@
-model Notification_type {
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model NotificationType {
     id                        Int                          @id @default(autoincrement())
     name                      String                       @db.VarChar(50)
-    name_slug                 String                       @db.VarChar(50) @unique
-    createdAt                 Datetime                     @db.DateTime(now())
-    updatedAt                 Datetime?                    @updatedAt
+    nameSlug                  String                       @db.VarChar(50) @unique
+    createdAt                 DateTime                     @default(now())
+    updatedAt                 DateTime?                    @updatedAt
     isActive                  Boolean                      @default(true)
-    users_notification_type   User_notification_type[]
+    UsersNotificationType     UserNotificationType[]
 }

@@ -1,9 +1,17 @@
-model Treatment_media {
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model TreatmentMedia {
     id              Int             @default(autoincrement()) @id
-    treatment_id    Int
-    treatment       Treatment       @relation(fields: [treatment_id], references: [id])
+    // Treatment relation -------------------
+    treatmentId     Int
+    Treatment       Treatment       @relation(fields: [treatmentId], references: [id])
+    // ---------------------------------------
     name            String          @db.Varchar(255)
-    mime_type       String          @db.Varchar(50)
+    mimeType        String          @db.Varchar(50)
     createdAt       DateTime        @default(now())
     updatedAt       DateTime?       @updatedAt
     isActive        Boolean         @default(true)

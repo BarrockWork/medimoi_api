@@ -1,16 +1,28 @@
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
 model Drug {
-     iM                             Int                     @id @default(autoincrement())
+     id                             Int                     @id @default(autoincrement())
      name                           String                  @db.VarChar(255)
      description                    String                  @db.Text
      isPrescription                 Boolean                 @default(false)
      createdAt                      DateTime                @default(now())
      updatedAt                      DateTime?               @updatedAt
      isActive                       Boolean                 @default(true)
-     treatments_drug                treatment_drug[]
-     drug_level_id                  Int
-     drug_level                     Drug_level              @relation(fields: [drug_level_id], references: [id])
-     drug_type_id                   Int
-     drug_type                      Mrug_type               @relation(fields: [drug_type_id], references: [id])
-     medical_administration_id      Int
-     medical_administration         Medical_administration  @relation(fields: [medical_administration_id], references: [id])
+     treatmentsDrug                 TreatmentDrug[]
+     // Drug_level relation -------------------
+     drugLevelId                    Int
+     DrugLevel                      DrugLevel               @relation(fields: [drugLevelId], references: [id])
+     // ---------------------------------------
+     // Drug_type relation ------------------------
+     drugTypeId                     Int
+     DrugType                       DrugType               @relation(fields: [drugTypeId], references: [id])
+     // --------------------------------------------
+     // Medical_administration ----------------------
+     medicalAdministrationId        Int
+     MedicalAdministration          MedicalAdministration  @relation(fields: [medicalAdministrationId], references: [id])
+    // ------------------------------------------------
 }

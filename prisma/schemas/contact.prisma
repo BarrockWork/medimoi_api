@@ -1,17 +1,23 @@
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
 model Contact {
     id              Int             @id @default(autoincrement())
     firstName       String          @db.VarChar(50)
     lastName        String          @db.VarChar(50)
     phoneNumber     String          @db.VarChar(50)
-    // Contact_type relation ---------
-    contact_type_id Int
-    contact_type    Contact_type    @relation(fields: [contact_type_id], references:[id])
+    // ContactType relation ---------
+    contactTypeId   Int
+    ContactType     ContactType     @relation(fields: [contactTypeId], references:[id])
     // -------------------------------
     // User relation -----------------
-    user_id         Int
-    user            User            @relation(fields: [user_id], references: [id])
+    userId          Int
+    User            User            @relation(fields: [userId], references: [id])
     // -------------------------------
-    createdAt       Datetime        @db.DateTime(now())
-    updatedAt       Datetime?       @updatedAt
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime?       @updatedAt
     isActive        Boolean         @default(true)
 }

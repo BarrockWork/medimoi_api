@@ -1,11 +1,21 @@
-model User_notification_type {
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model UserNotificationType {
     id                      Int                    @id @default(autoincrement())
-    notifcation_type_id     Int
-    notifcation_type        Notifcation_type       @relation(fields: [notifcation_type_id], references: [id])
-    user_id                 Int
-    user                    User                   @relation(fields: [user_id], references: [id])
+    // Notification_type relation ---------------------------
+    notifcationTypeId       Int
+    NotifcationType         NotifcationType       @relation(fields: [notifcationTypeId], references: [id])
+    // ------------------------------------------------------
+    // User relation ----------------------------------------
+    userId                  Int
+    User                    User                   @relation(fields: [userId], references: [id])
+    // ------------------------------------------------------
     createdAt               DateTime               @default(now())
     updatedAt               DateTime?              @updatedAt
     isActive                Boolean                @default(true)
-    notifications_histories Notification_history[]
+    NotificationsHistories  NotificationHistory[]
 }

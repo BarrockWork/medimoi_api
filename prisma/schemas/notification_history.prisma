@@ -1,6 +1,14 @@
-model Notification_history {
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model NotificationHistory {
     id                          Int                        @id @default(autoincrement())
-    user_notification_type_id   Int
-    user_notification_type      User_notification_type     @relation(fields: [user_notification_type_id], references: [id])
+    // User_notification relation --------------------------------
+    userNotificationTypeId      Int
+    UserNotificationType        UserNotificationType       @relation(fields: [userNotificationTypeId], references: [id])
+    // ----------------------------------------------------------
     createdAt                   DateTime                   @default(now())
 }

@@ -1,14 +1,20 @@
-model User_company {
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model UserCompany {
     id              Int         @id @default(autoincrement())
     // Company relation ---------
-    company_id      Int
-    company         Company         @relation(fields: [company_id], references:[id])
+    companyId       Int
+    Company         Company     @relation(fields: [companyId], references:[id])
     // -------------------------------
     // User relation -----------------
-    user_id         Int
-    user            User            @relation(fields: [user_id], references: [id])
+    userId          Int
+    User            User        @relation(fields: [userId], references: [id])
     // -------------------------------
-    createdAt       Datetime        @db.DateTime(now())
-    updatedAt       Datetime?       @updatedAt
-    isActive        Boolean         @default(true)
+    createdAt       DateTime    @db.DateTime(now())
+    updatedAt       DateTime?   @updatedAt
+    isActive        Boolean     @default(true)
 }

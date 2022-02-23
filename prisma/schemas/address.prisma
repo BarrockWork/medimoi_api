@@ -1,12 +1,22 @@
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
 model Address {
     id                      Int               @id @default(autoincrement())
-    number_road             Int
+    numberRoad              Int
     name                    String            @db.VarChar(50)
-    address_road_type_id    Int
-    address_road_type       Address_road_type @relation(fields: [address_road_type_id], references: [id])
-    user_id                 Int
-    user                    User              @relation(fields: [user_id], references: [id])
-    additionnal_address     String            @db.VarChar(255)
+    // AddressRoadType relation ----------------------------
+    addressRoadTypeId       Int
+    AddressRoadType         AddressRoadType   @relation(fields: [addressRoadTypeId], references: [id])
+    // -------------------------------------------------------
+    // User relation ----------------------------------------
+    userId                  Int
+    User                    User              @relation(fields: [userId], references: [id])
+    // -------------------------------------------------------
+    additionnalAddress      String            @db.VarChar(255)
     zipcode                 String            @db.VarChar(10)
     city                    String            @db.VarChar(50)
     region                  String            @db.VarChar(50)

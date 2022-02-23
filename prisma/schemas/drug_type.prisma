@@ -1,10 +1,16 @@
-model Drug_type {
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model DrugType {
      id                     Int              @id @default(autoincrement())
      name                   String           @db.VarChar(255)
-     name_slug              String           @db.VarChar(50) @unique
+     nameSlug               String           @db.VarChar(50) @unique
      description            String           @db.Text
      createdAt              DateTime         @default(now())
      updatedAt              DateTime?        @updatedAt
      isActive               Boolean          @default(true)
-     drugs                  Drug[]
+     Drugs                  Drug[]
 }

@@ -7,12 +7,12 @@ datasource db {
 model UserNotificationType {
     id                      Int                    @id @default(autoincrement())
     // Notification_type relation ---------------------------
-    notifcation_type_id       Int
+    notifcation_type_id     Int
     NotifcationType         NotifcationType       @relation(fields: [notifcation_type_id], references: [id])
     // ------------------------------------------------------
     // User relation ----------------------------------------
-    userId                  Int
-    User                    User                   @relation(fields: [userId], references: [id])
+    user_id                 Int
+    User                    User                   @relation(fields: [user_id], references: [id])
     // ------------------------------------------------------
     createdAt               DateTime               @default(now())
     updatedAt               DateTime?              @updatedAt

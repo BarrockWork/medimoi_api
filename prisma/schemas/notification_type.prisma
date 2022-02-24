@@ -18,5 +18,5 @@ model NotificationType {
 model UserNotificationType {
     id                      Int     @id
     notifcation_type_id     Int
-    NotifcationType         NotifcationType       @relation(fields: [notifcation_type_id], references: [id])
+    NotifcationType         NotificationType       @relation(fields: [notifcation_type_id], references: [id])
 }

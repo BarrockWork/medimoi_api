@@ -5,7 +5,7 @@ datasource db {
 }
 
 model Treatment {
-    id                              Int                     @default(autoincrement()) @id
+    id                              Int                     @id @default(autoincrement())
     name                            String                  @db.VarChar(255)
     // Treatment_periodicity relation --------
     treatment_periodicity_id        Int

@@ -14,7 +14,7 @@ model User {
     cellphone                   String                      @db.VarChar(50)
     homephone                   String                      @db.VarChar(50)
     workphone                   String?                     @db.VarChar(50)
-    role                        String                      @db.longText
+    role                        String                      @db.LongText
     // User_type relation ------------------------
     user_type_id                Int
     UserType                    UserType                   @relation(fields: [user_type_id], references:[id])
@@ -25,7 +25,7 @@ model User {
     isActive                    Boolean                     @default(true)
     Addresses                   Address[]
     Treatments                  Treatment[]
-    UserCompany                 UserCompany
+    UserCompany                 UserCompany?
     Contacts                    Contact[]
     UserNotificationTypes       UserNotificationType[]
 }
@@ -57,6 +57,6 @@ model Treatment {
 }
 model UserNotificationType {
     id                  Int     @id
-    user_notification_type_id   Int
-    UserNotificationType        UserNotificationType       @relation(fields: [user_notification_type_id], references: [id])
+    user_id             Int
+    User                User    @relation(fields: [user_id], references: [id])
 }

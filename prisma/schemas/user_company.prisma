@@ -11,10 +11,10 @@ model UserCompany {
     Company         Company     @relation(fields: [company_id], references:[id])
     // -------------------------------
     // User relation -----------------
-    user_id          Int
+    user_id         Int
     User            User        @relation(fields: [user_id], references: [id])
     // -------------------------------
-    createdAt       DateTime    @db.DateTime(now())
+    createdAt       DateTime    @default(now())
     updatedAt       DateTime?   @updatedAt
     isActive        Boolean     @default(true)
 }
@@ -22,9 +22,9 @@ model UserCompany {
 //**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
 model Company {
     id              Int     @id
-    UsersCompany    UserCompany[]
+    UserCompanies   UserCompany[]
 }
 model User {
     id              Int     @id
-    UserCompany     UserCompany
+    UserCompany     UserCompany?
 }

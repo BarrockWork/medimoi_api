@@ -3,6 +3,12 @@
     {
       "input": [
         "./prisma/datasource_generator.prisma",
+        "./prisma/schemas/treatment_periodicity.prisma",
+        "./prisma/schemas/treatment_media.prisma",
+        "./prisma/schemas/company.prisma",
+        "./prisma/schemas/user_type.prisma",
+        "./prisma/schemas/user.prisma",
+        "./prisma/schemas/user_company.prisma",
         "./prisma/schemas/contact_type.prisma",
         "./prisma/schemas/contact.prisma",
         "./prisma/schemas/treatment.prisma",

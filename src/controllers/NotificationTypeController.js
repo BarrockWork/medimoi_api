@@ -2,10 +2,10 @@ const Models = require('./../models');
 
 const createOne = async (req, res) => {
     try {
-        const newNotificationType = await Models.notification_type.create({
+        const notificationsType = await Models.NotificationTyoe.create({
             data: req.body
         })
-        res.status(200).json(newNotificationType);
+        res.status(200).json(notificationsType);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -13,10 +13,49 @@ const createOne = async (req, res) => {
 
 const createMany = async (req, res) => {
     try {
-        const newNotificationTypes = await Models.notification_type.create({
+        const notificationsTypes = await Models.NotificationTyoe.create({
             data: [req.body]
         })
-        res.status(200).json(newNotificationTypes);
+        res.status(200).json(notificationsTypes);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
+const findOneById = async (req, res) => {
+    try {
+        const notificationsType = await Models.NotificationTyoe.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+        res.status(200).json(notificationsType);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
+const findOneByNameSlug = async (req, res) => {
+    try {
+        const notificationsType = await Models.NotificationTyoe.findUnique({
+            where: {
+                id: req.params.nameSlug
+            }
+        })
+        res.status(200).json(notificationsType);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
+const findAll = async (req, res) => {
+    try {
+        const notificationsTypes = await Models.NotificationTyoe.findMany({
+            orderBy: {
+                id: "asc"
+            }
+        })
+        res.status(200).json(notificationsTypes);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -26,5 +65,9 @@ const createMany = async (req, res) => {
 
 module.exports = {
     createOne,
-    createMany
+    createMany,
+    findOneById,
+    findOneByNameSlug,
+    findAll,
+
 }

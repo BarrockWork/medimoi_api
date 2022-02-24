@@ -7,8 +7,8 @@ datasource db {
 model UserNotificationType {
     id                      Int                    @id @default(autoincrement())
     // Notification_type relation ---------------------------
-    notifcation_type_id     Int
-    NotifcationType         NotifcationType       @relation(fields: [notifcation_type_id], references: [id])
+    notification_type_id     Int
+    NotificationType         NotificationType       @relation(fields: [notification_type_id], references: [id])
     // ------------------------------------------------------
     // User relation ----------------------------------------
     user_id                 Int
@@ -21,7 +21,7 @@ model UserNotificationType {
 }
 
 //**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
-model NotifcationType {
+model NotificationType {
     id                      Int     @id
     UserNotificationTypes   UserNotificationType[]
 }

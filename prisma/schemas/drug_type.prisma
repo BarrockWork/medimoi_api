@@ -1,10 +1,21 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Drug_type {
      id                     Int              @id @default(autoincrement())
-     name                   String           // @db.VarChar(255)
-     name_slug              String           // @db.VarChar(50) @unique
-     description            String           // @db.Text
+     name                   String           @db.VarChar(255)
+     name_slug              String           @db.VarChar(50) @unique
+     description            String           @db.Text
      createdAt              DateTime         @default(now())
      updatedAt              DateTime?        @updatedAt
      isActive               Boolean          @default(true)
-     // drugs                  Drug[]
+     drugs                  Drug[]
+}
+
+model Drug{
+  id Int @id
+  drug_type_id Int
+  drug_type Drug_type @relation(fields: [drug_type_id], references: [id])
 }

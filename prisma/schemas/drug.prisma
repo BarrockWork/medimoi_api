@@ -1,16 +1,30 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Drug {
-     iM                             Int                     @id @default(autoincrement())
-     name                           String                  //@db.VarChar(255)
-     description                    String                  // @db.Text
+     id                             Int                     @id @default(autoincrement())
+     name                           String                  @db.VarChar(255)
+     description                    String                  @db.Text
      isPrescription                 Boolean                 @default(false)
      createdAt                      DateTime                @default(now())
      updatedAt                      DateTime?               @updatedAt
      isActive                       Boolean                 @default(true)
-     // treatments_drug                Treatment_drug[]
+     treatments_drug                Treatment_drug[]
      drug_level_id                  Int
-     // drug_level                     Drug_level              @relation(fields: [drug_level_id], references: [id])
      drug_type_id                   Int
-     // drug_type                      Mrug_type               @relation(fields: [drug_type_id], references: [id])
      medical_administration_id      Int
-     // medical_administration         Medical_administration  @relation(fields: [medical_administration_id], references: [id])
+     medical_administration         Medical_administration  @relation(fields: [medical_administration_id], references: [id])
+}
+
+model Treatment_drug {
+     id Int @id
+     drug_id Int
+     drug Drug @relation(fields: [drug_id], references: [id])
+}
+
+model Medical_administration{
+     id Int @id
+     drugs Drug[]
 }

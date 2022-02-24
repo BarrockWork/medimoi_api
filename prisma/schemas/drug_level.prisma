@@ -1,9 +1,20 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Drug_level {
   id                     Int              @id @default(autoincrement())
   level                  Int
-  description            String           // @db.Text
+  description            String           @db.Text
   createdAt              DateTime         @default(now())
   updatedAt              DateTime?        @updatedAt
   isActive               Boolean          @default(true)
-  // drugs                  Drug[]
+  drugs                  Drug[]
+}
+
+model Drug{
+  id Int @id
+  drug_level_id Int
+  drug_level Drug_level @relation(fields: [drug_level_id], references: [id])
 }

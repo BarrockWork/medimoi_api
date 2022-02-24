@@ -1,8 +1,19 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Address_road_type {
     id                      Int         @id @default(autoincrement())
-    name                    String      //@db.VarChar(50)
-    name_slug               String      @unique //@db.VarChar(50) 
+    name                    String      @db.VarChar(50)
+    name_slug               String      @unique @db.VarChar(50) 
     createdAt               DateTime    @default(now())
     updatedAt               DateTime?   @updatedAt
-    // addresses               Address[]
+    addresses               Address[]
+}
+
+model Address{
+    id  Int @id
+    address_road_type_id Int
+    address_road_type   Address_road_type @relation(fields: [address_road_type_id], references: [id])
 }

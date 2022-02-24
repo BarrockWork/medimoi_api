@@ -1,11 +1,32 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model User_notification_type {
     id                      Int                    @id @default(autoincrement())
     notifcation_type_id     Int
-    // notifcation_type        Notifcation_type       @relation(fields: [notifcation_type_id], references: [id])
+    notifcation_type        Notifcation_type       @relation(fields: [notifcation_type_id], references: [id])
     user_id                 Int
-    // user                    User                   @relation(fields: [user_id], references: [id])
+    user                    User                   @relation(fields: [user_id], references: [id])
     createdAt               DateTime               @default(now())
     updatedAt               DateTime?              @updatedAt
     isActive                Boolean                @default(true)
-    // notifications_histories Notification_history[]
+    notifications_histories Notification_history[]
+}
+
+model User{
+    id Int @id
+    user_notifications_types User_notification_type[]
+}
+
+model Notifcation_type{
+    id Int @id
+    user_notifications_types User_notification_type[]
+}
+
+model Notification_history{
+    id Int @id
+    user_notification_type_id Int
+    user_notification_type User_notification_type @relation(fields: [user_notification_type_id], references: [id])
 }

@@ -1,11 +1,22 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Company {
     id              Int         @id @default(autoincrement())
-    name            String      // @db.VarChar(50)
-    name_slug       String      // @db.VarChar(50) @unique
-    siret           String      // @db.VarChar(50)
-    tva             String      // @db.VarChar(50)
+    name            String      @db.VarChar(50)
+    name_slug       String      @db.VarChar(50) @unique
+    siret           String      @db.VarChar(50)
+    tva             String      @db.VarChar(50)
     createdAt       DateTime    @default(now())
     updatedAt       DateTime    @updatedAt
     isActive        Boolean     @default(true)
-    // users_company   User_company[]
+    users_company   User_company[]
+}
+
+model User_company {
+    id Int @id
+    user_company_id     Int
+    company Company @relation(fields: [user_company_id], references: [id])
 }

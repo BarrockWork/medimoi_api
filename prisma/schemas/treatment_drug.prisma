@@ -1,9 +1,18 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Treatment_drug {
     id             Int             @default(autoincrement()) @id
     treatment_id    Int
-    // treatment       Treatment       @relation(fields: [treatment_id], references: [id])
+    treatment       Treatment       @relation(fields: [treatment_id], references: [id])
     drug_id         Int
-    // drug            Drug            @relation(fields: [drug_id], references: [id])
-    comment        String          // @db.Text
+    comment        String           @db.Text
     isActive        Boolean         @default(true)
+}
+
+model Treatment{
+    id Int @id
+    treatments_drugs Treatment_drug[]
 }

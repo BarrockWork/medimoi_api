@@ -1,13 +1,23 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Disease {
      id                     Int              @id @default(autoincrement())
-     name                   String           // @db.VarChar(255)
-     name_slug              String           // @db.VarChar(255) @unique
-     description            String           // @db.Text
-     incubation_period      String           // @db.Text
-     transmitting           String           // @db.VarChar(255)
+     name                   String           @db.VarChar(255)
+     name_slug              String           @db.VarChar(255) @unique
+     description            String           @db.Text
+     incubation_period      String           @db.Text
+     transmitting           String           @db.VarChar(255)
      disease_type_id        Int
-     // disease_type           Disease_type     @relation(fields: [disease_type_id], references: [id])
+     disease_type           Disease_type     @relation(fields: [disease_type_id], references: [id])
      createdAt              DateTime         @default(now())
      updatedAt              DateTime?        @updatedAt
      isActive               Boolean          @default(true)
+}
+
+model Disease_type {
+     id Int @id
+     diseases Disease[]
 }

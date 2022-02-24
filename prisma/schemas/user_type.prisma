@@ -1,8 +1,19 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model User_type{
     id              Int         @id @default(autoincrement())
-    name            String      // @db.VarChar(50)
-    name_slug       String      // @db.VarChar(50) @unique
+    name            String      @db.VarChar(50)
+    name_slug       String      @db.VarChar(50) @unique
     createdAt       DateTime    @default(now())
     updatedAt       DateTime?   @updatedAt
-    // users           User[]
+    users           User[]
+}
+
+model User {
+    id Int @id
+    user_type_id Int
+    user_type User_type @relation(fields: [user_type_id], references: [id])
 }

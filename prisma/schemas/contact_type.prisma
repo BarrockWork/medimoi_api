@@ -1,9 +1,20 @@
+datasource db {
+  provider       = "mysql"
+  url            = env("DATABASE_URL")
+}
+
 model Contact_type {
     id          Int         @id @default(autoincrement())
-    name        String      // @db.VarChar(50)
-    name_slug   String      // @db.VarChar(50) @unique
+    name        String      @db.VarChar(50)
+    name_slug   String      @db.VarChar(50) @unique
     createdAt   DateTime    @default(now())
     updatedAt   DateTime?   @updatedAt
     isActive    Boolean     @default(true)
-    // contacts    Contact[]
+    contacts    Contact[]
+}
+
+model Contact {
+    id Int @id
+    contact_type_id Int
+    contact_type Contact_type @relation(fields: [contact_type_id], references: [id])
 }

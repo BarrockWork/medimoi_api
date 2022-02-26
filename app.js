@@ -9,7 +9,8 @@ const cors = require('cors');
 const indexRouter = require('./src/routes/home');
 const usersRouter = require('./src/routes/users');
 const treatmentRouter = require('./src/routes/treatment');
-const treatmemtMediaRouter = require('./src/routes/treatment_media');
+const treatmentMediaRouter = require('./src/routes/treatment_media');
+const treatmentDrugRouter = require('./src/routes/treatment_drug');
 
 const app = express();
 
@@ -27,7 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/treatments', treatmentRouter);
-app.use('/api/treatmentMedias', treatmemtMediaRouter);
+app.use('/api/treatmentMedias', treatmentMediaRouter);
+app.use('/api/treatmentDrugs', treatmentDrugRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

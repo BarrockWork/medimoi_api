@@ -1,4 +1,7 @@
 const Models = require('./../models');
+const { PrismaClient } = require('@prisma/client')
+
+const prisma = new PrismaClient()
 
 const getAllDisease = async(req, res) => {
     try {

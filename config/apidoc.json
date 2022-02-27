@@ -3,5 +3,10 @@
     "version": "0.1.0",
     "description": "apiDoc",
     "title": "Médi'Moi API",
-    "url" : "https://github.com/BarrockWork/medimoi_api"
+    "url" : "http://localhost:4000",
+    "sampleUrl": true,
+    "template": {
+        "forceLanguage": "en",
+        "showRequiredLabels": true
+    }
 }

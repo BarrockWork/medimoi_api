@@ -46,8 +46,10 @@ router.get('/user/:id', getUserById);
  * @apiBody {String} password user's  password.
  * @apiBody {String} cellphone user's  cellphone.
  * @apiBody {String} homephone user's  homephone.
- * @apiBody {String} Optional workphone user's  workphone.
- * @apiBody {Boolean} [isActive=true] Optional user's  slug.
+ * @apiBody {String} [default=empty]  workphone user's  workphone.
+ * @apiBody {Date} [default=now()] createdAt   date when a user is created.
+ * @apiBody {Date} [default=now()] updatedAt Optional date when a user update his data.
+ * @apiBody {Boolean} [isActive=true] If user is active at the creation
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -69,7 +71,16 @@ router.post('/user/new', createOne);
  * @api {PUT} /api/user/:id Update user
  * @apiName updateUserByid
  *
- * @apiBody {Int}  ID User identifier.
+ * @apiBody {String} firstName user's firstName.
+ * @apiBody {String} lastName user's lastName.
+ * @apiBody {Int} age user's  r age.
+ * @apiBody {String} password user's  password.
+ * @apiBody {String} cellphone user's  cellphone.
+ * @apiBody {String} homephone user's  homephone.
+ * @apiBody {String} [default=empty]  workphone user's  workphone.
+ * @apiBody {Date} [default=now()] createdAt   date when a user is created.
+ * @apiBody {Date} [default=now()] updatedAt Optional date when a user update his data.
+ * @apiBody {Boolean} [isActive=true] If user is active at the creation
  *
  * @apiHeaderExample {json} Header-Example:
  *   {

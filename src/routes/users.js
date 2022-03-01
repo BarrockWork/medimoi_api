@@ -3,10 +3,27 @@ var router = express.Router();
 const {
   createOne,
   getAllUsers,
-  getUserById,
-  updateUserByid,
+  getUserByEmail,
+  updateUserByEmail,
   deleteUser,
 } = require('./../controllers/UserController');
+
+/**
+ * Define parameters for the request
+ *
+ * @apiDefine UserParams
+ * @apiBody {String} [firstName=john] firstName user's firstName.
+ * @apiBody {String} [lastName=doe] user's lastName.
+ * @apiBody {Int} [age=30]age user's age.
+ * @apiBody {String} [email=john.doe@medimoi.com] email user's email
+ * @apiBody {String} [password=password] password user's  password.
+ * @apiBody {String} [cellphone=0123456789] cellphone user's  cellphone.
+ * @apiBody {String} [homephone=0123456789] homephone user's  homephone.
+ * @apiBody {String} [Workphone=""]  user's workphone.
+ * @apiBody {Date} [createdAt=now()] Created date (YYYY-MM-DD hh:mm:ss).
+ * @apiBody {Date} [updatedAt=updatedAt()] Updated date (YYYY-MM-DD hh:mm:ss).
+ * @apiBody {Boolean} [isActive=true] If user is active at the creation
+ */
 
 /**
  * @apiDescription This is how we get all the users
@@ -15,24 +32,26 @@ const {
  * @apiName getAllUsers
  *
  * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/user
+ *      curl -i http://localhost:4000/api/users
+ *
+ * @apiSampleRequest http://localhost:4000/api/users/new
  *
  * @apiVersion 0.1.0
  */
-router.get('/users', getAllUsers);
+router.get('/', getAllUsers);
 
 /**
  * @apiDescription This is how we get a user by ID
  * @apiGroup User
- * @api {GET} /api/user/:id Get user by Id
- * @apiName getUserById
+ * @api {GET} /api/users/:id Get user by Id
+ * @apiName getUserByEmail
  *
  * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/user/4711
+ *      curl -i http://localhost:4000/api/users/4711
  *
  * @apiVersion 0.1.0
  */
-router.get('/user/:id', getUserById);
+router.get('/:email', getUserByEmail);
 
 /**
  * @apiDescription This is how we create
@@ -40,16 +59,7 @@ router.get('/user/:id', getUserById);
  * @api {POST} /api/user/new Create new user
  * @apiName Createuser
  *
- * @apiBody {String} firstName user's firstName.
- * @apiBody {String} lastName user's lastName.
- * @apiBody {Int} age user's  r age.
- * @apiBody {String} password user's  password.
- * @apiBody {String} cellphone user's  cellphone.
- * @apiBody {String} homephone user's  homephone.
- * @apiBody {String} [default=empty]  workphone user's  workphone.
- * @apiBody {Date} [default=now()] createdAt   date when a user is created.
- * @apiBody {Date} [default=now()] updatedAt Optional date when a user update his data.
- * @apiBody {Boolean} [isActive=true] If user is active at the creation
+ * @apiUse UserParams
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -58,29 +68,26 @@ router.get('/user/:id', getUserById);
  *
  * @apiParamExample {json} Request-Example
  *  {
- *     name:       "user exemple",
+ *     firstName:       "john",
+ *     lastName:        "doe",
+ *     age:             "30",
+ *     password:        "password",
+ *     cellphone:       "0123456789"
+ *     homephone:       "0123456789"
+ *
  *  }
  *
+ * @apiSampleRequest http://localhost:4000/api/users/new
  * @apiVersion 0.1.0
  */
-router.post('/user/new', createOne);
+router.post('/new', createOne);
 
 /**
  * @apiDescription This is how we update a user by ID
  * @apiGroup User
  * @api {PUT} /api/user/:id Update user
- * @apiName updateUserByid
+ * @apiName updateUserByEmail
  *
- * @apiBody {String} firstName user's firstName.
- * @apiBody {String} lastName user's lastName.
- * @apiBody {Int} age user's  r age.
- * @apiBody {String} password user's  password.
- * @apiBody {String} cellphone user's  cellphone.
- * @apiBody {String} homephone user's  homephone.
- * @apiBody {String} [default=empty]  workphone user's  workphone.
- * @apiBody {Date} [default=now()] createdAt   date when a user is created.
- * @apiBody {Date} [default=now()] updatedAt Optional date when a user update his data.
- * @apiBody {Boolean} [isActive=true] If user is active at the creation
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -89,15 +96,17 @@ router.post('/user/new', createOne);
  *
  * @apiParamExample {json} Request-Example
  *  {
- *     id:       "user's ID",
+ *     id:       "150",
  *  }
  *
  * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/user/123
+ *      curl -i http://localhost:4000/api/users/123
+ *
+ * @apiSampleRequest http://localhost:4000/api/users/put
  *
  * @apiVersion 0.1.0
  */
-router.put('/user/:id', updateUserByid);
+router.put('/:email/edit', updateUserByEmail);
 
 /**
  * @apiDescription This is how we delete a user by ID
@@ -114,14 +123,14 @@ router.put('/user/:id', updateUserByid);
  *
  * @apiParamExample {json} Request-Example
  *  {
- *     id:       "user's ID",
+ *     id:       "150",
  *  }
- *
+ * @apiSampleRequest http://localhost:4000/api/users/delete
  * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/user/123
+ *      curl -i http://localhost:4000/api/users/123
  *
  * @apiVersion 0.1.0
  */
-router.delete('/user/:id', deleteUser);
+router.delete('/:email/delete', deleteUser);
 
 module.exports = router;

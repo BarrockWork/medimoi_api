@@ -1,34 +1,37 @@
 const Models = require('./../models');
 
-
 // Create a single user
 const createOne = async (req, res) => {
   try {
-    const newUser = await Models.user.create({
+    const newUser = await Models.User.create({
       data: req.body,
     });
-    res.status(200).json(newUser);
+    res.status(200).json({ newUser });
   } catch (error) {
-    return res.status(400).json(error);
+    return res.status(400).json({ error });
   }
 };
 
 // Get all users
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await Models.user.findMany();
+    const allUsers = await Models.User.findMany();
     res.status(200).json(allUsers);
   } catch (error) {
     return res.status(400).json(error);
   }
 };
 
-// Get a user by Id
-const getUserById = async (req, res) => {
+// Get a user by email
+const getUserByEmail = async (req, res) => {
   try {
-    const userById = await Models.user.findUnique({
+    const userById = await Models.User.findUnique({
       where: {
-        id: req.body.id,
+        email: req.params.email,
+      },
+      // you can include relation and elements like that.
+      include: {
+        UserType: true,
       },
     });
     res.status(200).json(userById);
@@ -38,11 +41,11 @@ const getUserById = async (req, res) => {
 };
 
 // Update a user
-const updateUserByid = async (req, res) => {
+const updateUserByEmail = async (req, res) => {
   try {
-    const updateUser = await Models.user.update({
+    const updateUser = await Models.User.update({
       where: {
-        id: req.body.id,
+        email: req.params.email,
       },
       data: req.body,
     });
@@ -55,9 +58,9 @@ const updateUserByid = async (req, res) => {
 //Delete a user
 const deleteUser = async (req, res) => {
   try {
-    const deleteUser = await Models.user.delete({
+    const deleteUser = await Models.User.delete({
       where: {
-        id: req.body,
+        email: req.params.email,
       },
     });
     res.status(200).json(deleteUser);
@@ -69,7 +72,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
   createOne,
   getAllUsers,
-  getUserById,
-  updateUserByid,
-  deleteUser
+  getUserByEmail,
+  updateUserByEmail,
+  deleteUser,
 };

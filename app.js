@@ -8,6 +8,7 @@ const cors = require('cors');
 
 const indexRouter = require('./src/routes/home');
 const usersRouter = require('./src/routes/users');
+const userTypeRouter = require('./src/routes/user_type');
 const treatmentRouter = require('./src/routes/treatment');
 const treatmentMediaRouter = require('./src/routes/treatment_media');
 const treatmentDrugRouter = require('./src/routes/treatment_drug');
@@ -30,7 +31,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//User Route
+app.use('/api/users', usersRouter);
+//UserType Route
+app.use('/api/user_type', userTypeRouter);
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);

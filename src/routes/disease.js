@@ -1,5 +1,11 @@
 var express = require('express');
 var router = express.Router();
+const {
+    findAll,
+    findBySlug,
+    deleteBySlug
+} = require('../controllers/DiseaseController');
+
 
 /**
  * @apiGroup Disease
@@ -32,13 +38,11 @@ var router = express.Router();
  *
  * @apiVersion 0.1.0
  */
-router.post("/new", function(req, res, next){
-    res.end('Ceci est un POST !');
-});
+router.post("/new");
 
 /**
  * @apiGroup Disease
- * @api {GET} /api/Disease Get all Disease
+ * @api {GET} /api/diseases Get all Disease
  * @apiName GetAllDisease
  *
  * @apiExample {curl} Exemple uasage:
@@ -46,28 +50,24 @@ router.post("/new", function(req, res, next){
  *
  * @apiVersion 0.1.0
  */
-router.get('/diseases', function(req, res, next){
-    res.end('Ceci est un GET !');
-});
+router.get('/', findAll);
 
 
 /**
  * @apiGroup Disease
- * @api {GET} /api/disease/:slug/ Get Disease by Slug
+ * @api {GET} /api/diseases/:nameSlug/ Get Disease by Slug
  * @apiName GetDiseaseBySlug
  *
  * @apiExample {curl} Example usage:
- *     curl -i http://localhost:4000/api/disease/slug/
+ *     curl -i http://localhost:4000/api/diseases/rhume/
  *
  * @apiVersion 0.1.0
  */
-router.get('/disease/:slug', function(req, res, next){
-    res.end('Ceci est un GET avec un ID !');
-});
+router.get('/:nameSlug', findBySlug);
 
 /**
  * @apiGroup Disease
- * @api {PUT} /api/disease/:slug Update Disease
+ * @api {PUT} /api/diseases/:nameSlug Update Disease
  * @apiName UpdateDiseaseBySlug
  *
  * @apiBody {String}  Optional name Disease name.
@@ -94,23 +94,21 @@ router.get('/disease/:slug', function(req, res, next){
  *
  * @apiVersion 0.1.0
  */
-router.put('/:slug/edit', function(req, res, next){
+router.put('/:nameSlug/edit', function (req, res, next) {
     res.end('Ceci est un PUT !');
 });
 
 /**
  * @apiGroup Disease
- * @api {DELETE} /api/Disease/:id Delete Disease
+ * @api {DELETE} /api/diseases/:nameSlug/delete Delete Disease
  * @apiName DeleteDisease
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/disease/25
+ *      curl -i http://localhost:4000/api/diseases/rhume/delete
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:slug/delete', function(req, res, next){
-    res.end('Ceci est un DELETE !');
-});
+router.delete('/:nameSlug/delete', deleteBySlug);
 
 
 module.exports = router;

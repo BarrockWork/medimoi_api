@@ -19,7 +19,7 @@ model User {
     user_type_id                Int
     UserType                    UserType                   @relation(fields: [user_type_id], references:[id])
     // -------------------------------------------
-    lastConnectionId            DateTime                    @default(now())
+    lastConnection              DateTime                    @default(now())
     createdAt                   DateTime                    @default(now())
     updatedAt                   DateTime?                   @updatedAt
     isActive                    Boolean                     @default(true)

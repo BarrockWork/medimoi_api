@@ -1,6 +1,6 @@
 const Models = require('./../models');
 const { checkRequiredFields, createNameSlug, extractFieldsToChange } = require('./../utils/requestHandler')
-const {toLower, findIndex, without} = require("ramda");
+const {toLower} = require("ramda");
 
 const createOne = async (req, res) => {
     try {

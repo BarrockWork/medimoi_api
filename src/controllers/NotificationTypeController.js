@@ -1,6 +1,6 @@
 const Models = require('./../models');
-const { checkRequiredFields, createNameSlug } = require('./../utils/requestHandler')
-const {toLower} = require("ramda");
+const { checkRequiredFields, createNameSlug, extractFieldsToChange } = require('./../utils/requestHandler')
+const {toLower, findIndex, without} = require("ramda");
 
 const createOne = async (req, res) => {
     try {
@@ -83,7 +83,7 @@ const findAll = async (req, res) => {
             }
         };
 
-        // If param status is defined
+        // If param isActive is defined
         if(req.params.isActive) {
             if (toLower(req.params.isActive) === "true") {
                 configClient.where = {
@@ -110,9 +110,35 @@ const findAll = async (req, res) => {
     }
 }
 
+const updateOne = async (req, res) => {
+    try {
+        // Selection of fields
+        const onlyThoseField = ['name', 'nameSlug', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseField);
+
+        const configClient = {
+            where: {
+                nameSlug: req.params.nameSlug
+            },
+            data: fieldsFiltered
+        }
+
+        const notificationType = await Models.NotificationType.update(configClient);
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(notificationType);
+    }catch (error) {
+        return res.status(400).json(error);
+    }
+}
 module.exports = {
     createOne,
     createMany,
     findOneByNameSlug,
-    findAll
+    findAll,
+    updateOne
 }

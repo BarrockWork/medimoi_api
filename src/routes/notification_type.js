@@ -5,7 +5,8 @@ const {
     createOne,
     createMany,
     findOneByNameSlug,
-    findAll
+    findAll,
+    updateOne
 } = require('./../controllers/NotificationTypeController')
 
 /* DEFINES -------------------------------------------*/
@@ -34,8 +35,8 @@ const {
  * Define parameters for the GET request
  *
  * @apiDefine NotificationTypeGETParam
- * @apiBody {String} [name] Name (50).
- * @apiBody {String} [nameSlug=auto] Slug (50, Unique).
+ * @apiBody {String[2..50]} [name] Name.
+ * @apiBody {String[2..50]} [nameSlug=auto] Slug (Unique).
  */
 
 /* ROUTES --------------------------------------------*/
@@ -115,7 +116,7 @@ router.get('/slug/:nameSlug', findOneByNameSlug);
 
 /**
  * @apiDescription Get all Notification_types
- * @api {GET} /api/notification_type/list/:isActive? Get all Notification_type
+ * @api {GET} /api/notification_type/all/:isActive? Get all Notification_type
  * @apiName GetAllNotificationType
  * @apiGroup Notification_Type
  *
@@ -128,10 +129,37 @@ router.get('/slug/:nameSlug', findOneByNameSlug);
  *
  * @apiUse NotificationTypeNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/notification_type/list/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/notification_type/all/:isActive?
  * @apiVersion 0.1.0
  */
-router.get('/list/:isActive?', findAll);
+router.get('/all/:isActive?', findAll);
+
+/**
+ * @apiDescription Update a single Notification_type
+ * @api {GET} /api/notification_type/slug/:nameSLug Update single Notification_type
+ * @apiName UpdateSingleNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     name:       "New Name",
+ *     nameSlug:   "New Slug",
+ *     isActive:   false
+ *  }
+ * @apiBody {String[2..50]} [name=current] Name.
+ * @apiBody {String[2..50]} [nameSlug=current] Slug (Unique).
+ * @apiBody {Boolean} [isActive=current] Is active.
+ *
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/slug/:nameSlug
+ * @apiVersion 0.1.0
+ */
+router.put('/slug/:nameSlug', updateOne);
 
 
 module.exports = router;

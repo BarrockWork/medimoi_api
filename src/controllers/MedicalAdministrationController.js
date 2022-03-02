@@ -1,13 +1,14 @@
 // Import of the Prisma client
 const Models = require('../models');
 const { isEmpty } = require('ramda');
+const { default: slugify } = require('slugify');
 
 const createMedicalAdministration = async (req, res) => {
 
     // Array of required fields.
     const requiredFields = [
         'name',
-        'nameSlug'
+        // 'nameSlug' Optional
     ];
 
     // Get missing required fields.
@@ -21,8 +22,19 @@ const createMedicalAdministration = async (req, res) => {
     }
 
     try {
+        let {nameSlug, name} = req.body;
+        if(nameSlug === undefined){
+            nameSlug = name;
+        }
+        
+        // {remove: /[*+~.()'"!:@]/g} to remove special chart
+        const slug = slugify(nameSlug, {remove: /[*+~.()'"!:@]/g})
+
         const medicalAdministration = await Models.medicalAdministration.create({
-            data: req.body
+            data:{
+                name,
+                nameSlug: slug
+            }
         });
         console.log(medicalAdministration);
 
@@ -31,7 +43,64 @@ const createMedicalAdministration = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json({
             success: true,
-            medicalAdministration
+            response: medicalAdministration
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({
+            success: false,
+            error
+        });
+    }
+
+}
+
+const createMedicalAdministrations = async (req, res) => {
+
+    // Array of required fields.
+    const requiredFields = [
+        'name',
+        // 'nameSlug' //Optional
+    ];
+
+    // Get missing required fields.
+    const missingValues = [];
+    const data = req.body;
+    data.forEach((element, key) => {
+        const fields = requiredFields.filter(fileld => !element[fileld])
+        if(!isEmpty(fields)){
+            missingValues.push({
+                line: key+1,
+                fields 
+            })
+        }
+    });
+
+    console.log(missingValues)
+
+    if(!isEmpty(missingValues)){
+        return res.status(400).json({
+            message: "Somes values are missings",
+            value: missingValues
+        })
+    }
+
+    try {
+        const data = req.body;
+        // {remove: /[*+~.()'"!:@]/g} to remove special chart
+        const dataToStore = data.filter((item) => item.nameSlug !== undefined ? item.nameSlug = slugify(item.nameSlug, {remove: /[*+~.()'"!:@]/g}) : item.nameSlug = slugify(item.name, {remove: /[*+~.()'"!:@]/g}))
+
+        const medicalAdministrations = await Models.medicalAdministration.createMany({
+            data:dataToStore
+        });
+        console.log(medicalAdministrations);
+
+        // // The prisma client can run only 10 instances simultaneously, 
+        // // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+        res.status(200).json({
+            success: true,
+            response: medicalAdministrations
         });
     } catch (error) {
         console.log(error)
@@ -68,7 +137,7 @@ const getMedicalAdministrationById = async (req, res) => {
         console.log(medicalAdministration);
         res.status(200).json({
             success: true,
-            medicalAdministration
+            response: medicalAdministration
         });
     } catch (error) {
         console.log(error);
@@ -105,7 +174,7 @@ const getMedicalAdministrationBySlug = async (req, res) => {
         console.log(medicalAdministration);
         res.status(200).json({
             success: true,
-            medicalAdministration
+            response: medicalAdministration
         });
     } catch (error) {
         console.log(error);
@@ -133,7 +202,7 @@ const getAllMedicalAdministrations = async (req, res) => {
         console.log(medicalAdministrations);
         res.status(200).json({
             success: true,
-            medicalAdministrations
+            response: medicalAdministrations
         });
     } catch (error) {
         console.log(error);
@@ -166,7 +235,7 @@ const getMedicalAdministrationByStatus = async (req, res) => {
         console.log(medicalAdministrations);
         res.status(200).json({
             success: true,
-            medicalAdministrations
+            response: medicalAdministrations
         });
     } catch (error) {
         console.log(error);
@@ -193,7 +262,7 @@ const updateMedicalAdministration = async (req, res) => {
         console.log(medicalAdministration);
         res.status(200).json({
             success: true,
-            medicalAdministration
+            response: medicalAdministration
         });
     } catch (error) {
         console.log(error);
@@ -218,7 +287,29 @@ const deleteMedicalAdministration = async (req, res) => {
         console.log(deletedMedicalAdministration);
         res.status(200).json({
             success: true,
-            message: `Medical administration with id ${id} was deleted`
+            response: `Medical administration with id ${id} was deleted`
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({success: false})
+    }
+}
+
+// Delete function by slug
+const deleteMedicalAdministrationBySlug = async (req, res) => {
+    const {slug} = req.params;
+
+    try {
+        const deletedMedicalAdministration = await Models.medicalAdministration.delete({
+            where:{
+                nameSlug: slug
+            }
+        })
+        await Models.$disconnect();
+        console.log(deletedMedicalAdministration);
+        res.status(200).json({
+            success: true,
+            response: `Medical administration with slug ${slug} was deleted.`
         });
     } catch (error) {
         console.log(error);
@@ -228,10 +319,12 @@ const deleteMedicalAdministration = async (req, res) => {
 
 module.exports = {
     createMedicalAdministration,
+    createMedicalAdministrations,
     getMedicalAdministrationById,
     getMedicalAdministrationBySlug,
     getAllMedicalAdministrations,
     getMedicalAdministrationByStatus,
     updateMedicalAdministration,
-    deleteMedicalAdministration
+    deleteMedicalAdministration,
+    deleteMedicalAdministrationBySlug,
 }

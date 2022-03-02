@@ -1,9 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-const { createOne, getAll } = require('./../controllers/UserTypeController');
+const {
+  createOne,
+  getAllUserType,
+  getOneBySlug,
+  deleteUserType,
+} = require('./../controllers/UserTypeController');
 
+router.get('/', getAllUserType);
+router.get('/:nameSlug', getOneBySlug);
 router.post('/new', createOne);
-router.get('/', getAll);
-
+router.delete('/:nameSlug', deleteUserType);
 module.exports = router;

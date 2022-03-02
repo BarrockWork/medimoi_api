@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // import route functions from controller
-const { createTreatmentPeriodicity, getTreatmentPeriodicityByStatus, getTreatmentPeriodicityById, getAllTreatmentPeriodicities, updateTreatmentPeriodicity, deleteTreatmentPeriodicity } = require('../controllers/TreatmentPeriodicityController');
+const { createTreatmentPeriodicity, getTreatmentPeriodicityByStatus, getTreatmentPeriodicityById, getAllTreatmentPeriodicities, updateTreatmentPeriodicity, deleteTreatmentPeriodicity, deleteTreatmentPeriodicityBySlug } = require('../controllers/TreatmentPeriodicityController');
 const action = () => {
 }
 
@@ -113,5 +113,18 @@ router.put("/:id", updateTreatmentPeriodicity);
  * @apiVersion 0.1.0
  */
 router.delete("/:id", deleteTreatmentPeriodicity);
+
+
+/**
+ * @apiGroup TreatmentPeriodicity
+ * @api {DELETE} /api/treatmentPeriodicities/slug/:slug Delete treatment periodicity by slug
+ * @apiName DeleteTreatmentPeriodicity
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *      curl -i http://localhost:4000/api/treatmentPeriodicities/slug/mounthly
+ * 
+ * @apiVersion 0.1.0
+ */
+router.delete("/slug/:slug", deleteTreatmentPeriodicityBySlug);
 
 module.exports = router;

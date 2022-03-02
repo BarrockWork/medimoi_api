@@ -2,8 +2,30 @@ var express = require('express');
 var router = express.Router();
 
 // en attendant le controller
-const { createMedicalAdministration, getMedicalAdministrationById, getMedicalAdministrationBySlug, getAllMedicalAdministrations, updateMedicalAdministration, deleteMedicalAdministration, getMedicalAdministrationByStatus } = require("../controllers/MedicalAdministrationController");
-const action = ()=>{}
+const { 
+    createMedicalAdministration, 
+    getMedicalAdministrationById, 
+    getMedicalAdministrationBySlug, 
+    getAllMedicalAdministrations, 
+    updateMedicalAdministration, 
+    deleteMedicalAdministration, 
+    getMedicalAdministrationByStatus, 
+    deleteMedicalAdministrationBySlug, 
+    createMedicalAdministrations
+} = require("../controllers/MedicalAdministrationController");
+
+/** DEFINES ------------------------------------------------- */
+
+/**
+ * Define a global MedicalAdministration not found
+ * @apiDefine MedicalAdministrationNotFoundError
+ * @apiError MedicalAdministrationNotFound MedicalAdministration was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "MedicalAdministrationNotFound"
+ *     }
+*/
 
 /**
  * @apiGroup MedicalAdministration
@@ -11,8 +33,8 @@ const action = ()=>{}
  * @apiName CreateMedicalAdministration
  * 
  * @apiBody {String} name Medical administration name.
- * @apiBody {String} nameSlug Medical administration slug.
- * @apiBody {Boolean} [isActive=true] Optional Medical administration state.
+ * @apiBody {String} [nameSlug=auto] Medical administration slug.
+ * @apiBody {Boolean} [isActive=true] Medical administration state.
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -28,6 +50,36 @@ const action = ()=>{}
  * @apiVersion 0.1.0
  */
 router.post("/new", createMedicalAdministration);
+
+/**
+ * @apiGroup MedicalAdministration
+ * @api {POST} /api/medicalAdministrations/new Create new medical administration
+ * @apiName CreateMedicalAdministration
+ * 
+ * @apiBody {String} name Medical administration name.
+ * @apiBody {String} [nameSlug=auto] Medical administration slug.
+ * @apiBody {Boolean} [isActive=true] Medical administration state.
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * @apiParamExample {json} Request-Example
+ * [
+ *   {
+ *     name:       "Medical administration name exemple 1",
+ *     nameSlug:   "Medical administration slug 1"
+ *   },
+ *   {
+ *     name:       "Medical administration name exemple 2",
+ *     nameSlug:   "Medical administration slug 2"
+ *   }
+ * ]
+ * 
+ * @apiVersion 0.1.0
+ */
+router.post("/news", createMedicalAdministrations);
 
 /**
  * @apiGroup MedicalAdministration
@@ -58,6 +110,7 @@ router.post("/new", createMedicalAdministration);
  * @apiExample {curl} Example usage:
  *      curl -i http://localhost:4000/api/medicalAdministrations/4711
  * 
+ * @apiSampleRequest http://localhost:4000/api/medicalAdministrations/1
  * @apiVersion 0.1.0
  */
 router.get("/:id", getMedicalAdministrationById);
@@ -95,9 +148,9 @@ router.get("/", getAllMedicalAdministrations);
  * @api {PUT} /api/medicalAdministrations/:id Update medical administration
  * @apiName UpdateMedicalAdministrationById
  * 
- * @apiBody {String}  Optional name Medical administration name.
- * @apiBody {String}  Optional nameSlug Medical administration slug.
- * @apiBody {Boolean} Optional Medical administration state.
+ * @apiBody {String}  [name=last] name Medical administration name.
+ * @apiBody {String}  [nameSlug=last] nameSlug Medical administration slug.
+ * @apiBody {Boolean} [isActive=last] Medical administration state.
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -110,6 +163,7 @@ router.get("/", getAllMedicalAdministrations);
  *     nameSlug:   "new slug",
  *     isActive:   false
  *  }
+ * 
  * 
  * @apiVersion 0.1.0
  */
@@ -127,5 +181,17 @@ router.put("/:id", updateMedicalAdministration);
  * @apiVersion 0.1.0
  */
 router.delete("/:id", deleteMedicalAdministration);
+
+/**
+ * @apiGroup MedicalAdministration
+ * @api {DELETE} /api/medicalAdministrations/slug/:slug Delete medical administration
+ * @apiName DeleteMedicalAdministration
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *      curl -i http://localhost:4000/api/medicalAdministrations/4711
+ * 
+ * @apiVersion 0.1.0
+ */
+ router.delete("/slug/:slug", deleteMedicalAdministrationBySlug);
 
 module.exports = router;

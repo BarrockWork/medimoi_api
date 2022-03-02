@@ -6,7 +6,8 @@ const {
     createMany,
     findOneByNameSlug,
     findAll,
-    updateOne
+    updateOne,
+    deleteOne
 } = require('./../controllers/NotificationTypeController')
 
 /* DEFINES -------------------------------------------*/
@@ -42,8 +43,8 @@ const {
 /* ROUTES --------------------------------------------*/
 
 /**
- * @apiDescription Insert a new Notification_type
- * @api {POST} /api/notification_type/new Create new Notification_type
+ * @apiDescription Insert single Notification_type
+ * @api {POST} /api/notification_type/new Create single Notification_type
  * @apiName CreateNotificationType
  * @apiGroup Notification_Type
  *
@@ -136,7 +137,7 @@ router.get('/all/:isActive?', findAll);
 
 /**
  * @apiDescription Update a single Notification_type
- * @api {GET} /api/notification_type/slug/:nameSLug Update single Notification_type
+ * @api {PUT} /api/notification_type/slug/:nameSLug Update single Notification_type
  * @apiName UpdateSingleNotificationType
  * @apiGroup Notification_Type
  *
@@ -160,6 +161,24 @@ router.get('/all/:isActive?', findAll);
  * @apiVersion 0.1.0
  */
 router.put('/slug/:nameSlug', updateOne);
+
+/**
+ * @apiDescription Delete a single Notification_type
+ * @api {DELETE} /api/notification_type/slug/:nameSLug Delete single Notification_type
+ * @apiName DeleteSingleNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/slug/:nameSlug
+ * @apiVersion 0.1.0
+ */
+router.delete('/slug/:nameSlug', deleteOne);
 
 
 module.exports = router;

@@ -135,10 +135,36 @@ const updateOne = async (req, res) => {
         return res.status(400).json(error);
     }
 }
+
+const deleteOne = async (req, res) => {
+    try {
+
+        checkRequiredFields(req, res,['nameSlug'], 'GET');
+
+        const configClient = {
+            where: {
+                nameSlug: req.params.nameSlug
+            },
+        }
+
+        const notificationType = await Models.NotificationType.delete(configClient);
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(notificationType);
+    }catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
 module.exports = {
     createOne,
     createMany,
     findOneByNameSlug,
     findAll,
-    updateOne
+    updateOne,
+    deleteOne
 }

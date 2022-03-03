@@ -8,6 +8,8 @@ const cors = require('cors');
 
 const indexRouter = require('./src/routes/home');
 const usersRouter = require('./src/routes/users');
+// NotificationType router
+const NotificationTypeRouter = require('./src/routes/notification_type');
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+// NotificationType Route
+app.use('/api/notification_type', NotificationTypeRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

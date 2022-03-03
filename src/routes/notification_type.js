@@ -3,15 +3,19 @@ let router = express.Router();
 
 const {
     createOne,
-    createMany
+    createMany,
+    findOneByNameSlug,
+    findAll,
+    updateOne,
+    deleteOne
 } = require('./../controllers/NotificationTypeController')
+
+/* DEFINES -------------------------------------------*/
 
 /**
  * Define a global NotificationType not found
  * @apiDefine NotificationTypeNotFoundError
- *
- * @apiError NotificationTypeNotFound The id of the NotificationType was not found.
- *
+ * @apiError NotificationTypeNotFound NotificationType was not found.
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found
  *     {
@@ -19,6 +23,162 @@ const {
  *     }
  */
 
-router.post('/notification_type/add', createOne);
+/**
+ * Define parameters for the POST request
+ *
+ * @apiDefine NotificationTypePOSTParam
+ * @apiBody {String[2..50]} name Name (50).
+ * @apiBody {String[2..50]} [nameSlug=auto] Slug (50, Unique).
+ * @apiBody {Boolean} [isActive=true] Is active.
+ */
 
-router.post('/notification_type/add/multiple', createMany);
+/**
+ * Define parameters for the GET request
+ *
+ * @apiDefine NotificationTypeGETParam
+ * @apiBody {String[2..50]} [name] Name.
+ * @apiBody {String[2..50]} [nameSlug=auto] Slug (Unique).
+ */
+
+/* ROUTES --------------------------------------------*/
+
+/**
+ * @apiDescription Insert single Notification_type
+ * @api {POST} /api/notification_type/new Create single Notification_type
+ * @apiName CreateNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiUse NotificationTypePOSTParam
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     "name": "Type 5"
+ *  }
+ * @apiSampleRequest http://localhost:4000/api/notification_type/new
+ * @apiVersion 0.1.0
+ */
+router.post('/new', createOne);
+
+/**
+ * @apiDescription Insert many Notification_type
+ * @api {POST} /api/notification_type/news Create many Notification_type
+ * @apiName CreateManyNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiUse NotificationTypePOSTParam
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiParamExample {json} Request-Example
+ *  {
+ *      "entries": [
+ *          {
+ *              "name": "Type 1"
+ *          },
+ *          {
+ *              "name": "Type 2"
+ *          },
+ *          {
+ *              "name": "Type 3",
+ *              "nameSlug": "type-3"
+ *          }
+ *      ]
+ *  }
+ * @apiSampleRequest http://localhost:4000/api/notification_type/news
+ * @apiVersion 0.1.0
+ */
+router.post('/news', createMany);
+
+/**
+ * @apiDescription Get a Notification_type by the nameSlug
+ * @api {GET} /api/notification_type/slug/:nameSlug Get Notification_type by nameSlug
+ * @apiName GetByNameSlugNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiParam {String[2..50]} nameSlug
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/slug/:nameSlug
+ * @apiVersion 0.1.0
+ */
+router.get('/slug/:nameSlug', findOneByNameSlug);
+
+/**
+ * @apiDescription Get all Notification_types
+ * @api {GET} /api/notification_type/all/:isActive? Get all Notification_type
+ * @apiName GetAllNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/all/:isActive?
+ * @apiVersion 0.1.0
+ */
+router.get('/all/:isActive?', findAll);
+
+/**
+ * @apiDescription Update a single Notification_type
+ * @api {PUT} /api/notification_type/slug/:nameSLug Update single Notification_type
+ * @apiName UpdateSingleNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     name:       "New Name",
+ *     nameSlug:   "New Slug",
+ *     isActive:   false
+ *  }
+ * @apiBody {String[2..50]} [name=current] Name.
+ * @apiBody {String[2..50]} [nameSlug=current] Slug (Unique).
+ * @apiBody {Boolean} [isActive=current] Is active.
+ *
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/slug/:nameSlug
+ * @apiVersion 0.1.0
+ */
+router.put('/slug/:nameSlug', updateOne);
+
+/**
+ * @apiDescription Delete a single Notification_type
+ * @api {DELETE} /api/notification_type/slug/:nameSLug Delete single Notification_type
+ * @apiName DeleteSingleNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/slug/:nameSlug
+ * @apiVersion 0.1.0
+ */
+router.delete('/slug/:nameSlug', deleteOne);
+
+
+module.exports = router;

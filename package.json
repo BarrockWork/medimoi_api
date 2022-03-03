@@ -2,6 +2,9 @@
   "name": "medimoi-back",
   "version": "0.0.0",
   "private": true,
+  "jest": {
+    "verbose": true
+  },
   "scripts": {
     "start": "dotenv -e .env.local -- npx nodemon ./bin/www",
     "status-migration": "dotenv -e .env.local -- npx prisma migrate status",
@@ -15,7 +18,10 @@
     "reset-migration-prod": "npx prisma migrate reset",
     "start-prod": "npx nodemon ./bin/www",
     "deploy-migration": "npx prisma migrate deploy",
-    "apidoc-generate": "apidoc -i src/routes -o public/docs -c config/apidoc.json"
+    "apidoc-generate": "apidoc -i src/routes -o public/docs -c config/apidoc.json",
+    "test": "jest",
+    "test-watch": "jest --watch",
+    "test-coverage": "jest --coverage"
   },
   "dependencies": {
     "@prisma/client": "^3.8.0",
@@ -35,6 +41,8 @@
     "stripe": "^8.197.0"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "prisma": "^3.8.0",
     "prismix": "^1.0.21"

@@ -58,7 +58,7 @@ const extractFieldsToChange = (req, res, fieldSelected) => {
  */
 const createNameSlug = (req) => {
     const {name: reqName, nameSlug: reqNameSlug} = req.body;
-    return reqNameSlug ? reqNameSlug : slugify(reqName, {lower: true});
+    return reqNameSlug ? reqNameSlug : slugify(reqName, {lower: true, remove: /[*+~.()'"!:@]/g});
 }
 
 /**

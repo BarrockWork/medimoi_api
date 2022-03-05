@@ -15,6 +15,9 @@ const treatmentPeriodicityRouter = require('./src/routes/treatment_periodicity')
 const medicalAdministrationRouter = require('./src/routes/medical_administration');
 const diseaseRouter = require('./src/routes/disease');
 const diseaseTypeRouter = require('./src/routes/disease_type');
+// NotificationType router
+const NotificationTypeRouter = require('./src/routes/notification_type');
+
 const app = express();
 
 // view engine setup
@@ -37,6 +40,8 @@ app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);
 app.use('/api/treatmentPeriodicities', treatmentPeriodicityRouter);
 app.use('/api/medicalAdministrations', medicalAdministrationRouter);
+// NotificationType Route
+app.use('/api/notification_type', NotificationTypeRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -47,7 +47,7 @@ const extractFieldsToChange = (req, res, fieldSelected) => {
 
     // Dispatch an error for the try catch
     if(R.isEmpty(fieldsFiltered)){
-        throw `A required field is missing : fieldSelected}`
+        throw `A required field is missing : ${fieldSelected}`
     }
 
     return fieldsFiltered;
@@ -62,6 +62,66 @@ const createSlug = (textForSlug) => {
 }
 
 /**
+ * Check if slug already exists and returned an abject to the request
+ *
+ * @param Models Prisma Client
+ * @param SchemaTarget Schema
+ * @param currentSlug String
+ * @param newSlug String
+ * @param fieldsFiltered Array String
+ * @returns {string}
+ */
+const verifySlugInDb = async (Models, SchemaTarget, currentSlug, newSlug, fieldsFiltered) => {
+    try {
+        // Check slug in DB
+        const findData = await Models[SchemaTarget].findUnique({
+            where: {
+                nameSlug: newSlug
+            }
+        });
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        Models.$disconnect();
+
+        // If the slug exists
+        if (findData && (newSlug !== currentSlug)) {
+            let isResult = true;
+            let i = 1;
+            do {
+                const checkSlug = newSlug +`-${i}`;
+                const res = await Models[SchemaTarget].findUnique({
+                    where: {
+                        nameSlug: checkSlug
+                    }
+                });
+                isResult = !!res;// isResult = res ? true : false
+                if(isResult === false){
+                    newSlug = checkSlug;
+                }
+                i++;
+                // The prisma client can run only 10 instances simultaneously,
+                // so it is better to stop the current instance before sending the response
+                Models.$disconnect();
+            } while (isResult === true);
+        }
+
+        // Initiate client params for the updating request
+        if ((newSlug !== currentSlug)) {
+            fieldsFiltered.nameSlug = newSlug;
+        }
+        return {
+            where: {
+                nameSlug: currentSlug
+            },
+            data: fieldsFiltered
+        };
+    } catch (error) {
+        throw `An error is occurred: ${error}`;
+    }
+}
+
+/**
  * TODO
  */
 const errorHandler = () => {
@@ -71,5 +131,6 @@ const errorHandler = () => {
 module.exports =  {
     checkRequiredFields,
     createSlug,
-    extractFieldsToChange
+    extractFieldsToChange,
+    verifySlugInDb
 }

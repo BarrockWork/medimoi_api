@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const { checkRequiredFields, createSlug, extractFieldsToChange } = require('./../utils/requestHandler')
+const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb } = require('./../utils/requestHandler')
 const {toLower} = require("ramda");
 
 const createOne = async (req, res) => {
@@ -119,14 +119,16 @@ const updateOne = async (req, res) => {
         const onlyThoseFields = ['name', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
-        const configClient = {
-            where: {
-                nameSlug: req.params.nameSlug
-            },
-            data: fieldsFiltered
-        }
+        // Check if the new slug exists
+        const configRequestDB = await verifySlugInDb(Models,
+            "NotificationType",
+            req.params.nameSlug,
+            createSlug(req.body.name),
+            fieldsFiltered);
 
-        const notificationType = await Models.NotificationType.update(configClient);
+        // res.status(200).json(configRequestDB);
+        // Update the current entry
+        const notificationType = await Models.NotificationType.update(configRequestDB);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
@@ -141,7 +143,6 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
     try {
-
         checkRequiredFields(req, res,['nameSlug'], 'GET');
 
         const configClient = {

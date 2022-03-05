@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const {getAllDiseaseType, findBySlug, deleteBySlug} = require('../controllers/DiseaseTypeController');
+const {createDiseaseType,getAllDiseaseType, findBySlug, deleteBySlug} = require('../controllers/DiseaseTypeController');
 
 
 /**
@@ -31,9 +31,7 @@ const {getAllDiseaseType, findBySlug, deleteBySlug} = require('../controllers/Di
  *
  * @apiVersion 0.1.0
  */
-router.post("/new", function(req, res, next){
-    res.end('Ceci est un POST !');
-});
+router.post("/new", createDiseaseType);
 
 /**
  * @apiGroup Disease_type

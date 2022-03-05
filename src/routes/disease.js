@@ -1,26 +1,21 @@
 var express = require('express');
 var router = express.Router();
 const {
+    createDisease,
     findAll,
     findBySlug,
+    updateBySlug,
     deleteBySlug
 } = require('../controllers/DiseaseController');
 
 
 /**
  * @apiGroup Disease
- * @api {POST} /api/disease/new Create new disease
+ * @api {POST} /api/diseases/new Create new disease
  * @apiName CreateDisease
  *
  * @apiBody {String} name disease name.
- * @apiBody {String} name_slug disease slug.
- * @apiBody {String} description disease.
- * @apiBody {String} incubationPeriod disease.
- * @apiBody {String} transmitting disease.
- * @apiBody {Boolean} [isActive=true] Optional disease slug.
- * @apiBody {Date}  [createdAt=now]
- * @apiBody {Date} updatedAt
- *
+ * @apiBody {Number} disease_type_id  Disease type  id.
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -30,15 +25,12 @@ const {
  * @apiParamExample {json} Request-Example
  *  {
  *     name:       "Covid 19",
- *     name_slug:  "covid-19",
- *     description: "maladie inconnue",
- *     incubationPeriod: "15 jours",
- *     transmitting: "on ne sait pas",
+ *     disease_type_id:     1
  *  }
  *
  * @apiVersion 0.1.0
  */
-router.post("/new");
+router.post("/new", createDisease);
 
 /**
  * @apiGroup Disease
@@ -67,11 +59,11 @@ router.get('/:nameSlug', findBySlug);
 
 /**
  * @apiGroup Disease
- * @api {PUT} /api/diseases/:nameSlug Update Disease
+ * @api {PUT} /api/diseases/:nameSlug/edit Update Disease
  * @apiName UpdateDiseaseBySlug
  *
  * @apiBody {String}  Optional name Disease name.
- * @apiBody {String}  Optional name_slug Disease slug.
+ * @apiBody {String}  Optional nameSlug Disease slug.
  * @apiBody {String} description disease.
  * @apiBody {String} incubationPeriod disease.
  * @apiBody {String} transmitting disease.
@@ -86,7 +78,7 @@ router.get('/:nameSlug', findBySlug);
  * @apiParamExample {json} Request-Example
  *  {
  *     name:       "new name",
- *     name_slug:  "new slug",
+ *     nameSlug:  "new slug",
  *     description: "maladie inconnue",
  *     incubationPeriod: "15 jours",
  *     transmitting: 'on ne sait pas",
@@ -94,9 +86,7 @@ router.get('/:nameSlug', findBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:nameSlug/edit', function (req, res, next) {
-    res.end('Ceci est un PUT !');
-});
+router.put('/:nameSlug/edit', updateBySlug);
 
 /**
  * @apiGroup Disease

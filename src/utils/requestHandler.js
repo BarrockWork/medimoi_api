@@ -3,34 +3,38 @@ const R = require('ramda');
 
 /**
  * Check the required fields
- * @param req
- * @param res
- * @param requiredFields
- * @param reqType
- * @returns {*}
+ * @param req Object Request | Object Model
+ * @param res Object Response
+ * @param requiredFields Array
+ * @param reqType String
  */
 const checkRequiredFields = (req, res, requiredFields, reqType = 'POST') => {
     // Get missing required fields.
     let missingValues;
+
     if (reqType === "GET") {
-        missingValues = requiredFields.filter(fileld => !req.params[fileld])
+        missingValues = requiredFields.filter(field => !req.params[field])
     }else {
-        missingValues = requiredFields.filter(fileld => !req.body[fileld])
+        // req = An object (exemple NotificationType in createMany function)
+        if(!req.body) {
+            missingValues = requiredFields.filter(field => !req[field])
+        }else{
+            // req = Request object
+            missingValues = requiredFields.filter(field => !req.body[field])
+        }
     }
 
+    // Dispatch an error for the try catch
     if(!R.isEmpty(missingValues)){
-        return res.status(400).json({
-            message: "Required fields are missing.",
-            value: missingValues
-        })
+        throw `Required fields are missing : ${missingValues}`
     }
 }
 
 /**
  * Extract from req.body the only fields selected
- * @param req
- * @param res
- * @param fieldSelected
+ * @param req Object Request
+ * @param res Object Response
+ * @param fieldSelected Array
  * @returns {*}
  */
 const extractFieldsToChange = (req, res, fieldSelected) => {
@@ -41,24 +45,20 @@ const extractFieldsToChange = (req, res, fieldSelected) => {
         }
     });
 
+    // Dispatch an error for the try catch
     if(R.isEmpty(fieldsFiltered)){
-        return res.status(400).json({
-            message: "A required field is missing.",
-            value: fieldSelected
-        })
+        throw `A required field is missing : fieldSelected}`
     }
 
     return fieldsFiltered;
 }
 
 /**
- * Create a name slug
- * @param req
- * @returns {string} nameSlug
+ * Create a slug
+ * @param textForSlug String
  */
-const createNameSlug = (req) => {
-    const {name: reqName, nameSlug: reqNameSlug} = req.body;
-    return reqNameSlug ? reqNameSlug : slugify(reqName, {lower: true, remove: /[*+~.()'"!:@]/g});
+const createSlug = (textForSlug) => {
+    return slugify(textForSlug, {lower: true, remove: /[*+~.()'"!:@]/g});
 }
 
 /**
@@ -70,6 +70,6 @@ const errorHandler = () => {
 
 module.exports =  {
     checkRequiredFields,
-    createNameSlug,
+    createSlug,
     extractFieldsToChange
 }

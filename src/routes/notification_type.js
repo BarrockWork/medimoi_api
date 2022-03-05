@@ -24,20 +24,10 @@ const {
  */
 
 /**
- * Define parameters for the POST request
+ * Define parameters for the POST and PUT requests
  *
  * @apiDefine NotificationTypePOSTParam
- * @apiBody {String[2..50]} name Name (50).
- * @apiBody {String[2..50]} [nameSlug=auto] Slug (50, Unique).
- * @apiBody {Boolean} [isActive=true] Is active.
- */
-
-/**
- * Define parameters for the GET request
- *
- * @apiDefine NotificationTypeGETParam
- * @apiBody {String[2..50]} [name] Name.
- * @apiBody {String[2..50]} [nameSlug=auto] Slug (Unique).
+ * @apiBody {String[2..50]} name Name.
  */
 
 /* ROUTES --------------------------------------------*/
@@ -101,7 +91,7 @@ router.post('/news', createMany);
  * @apiName GetByNameSlugNotificationType
  * @apiGroup Notification_Type
  *
- * @apiParam {String[2..50]} nameSlug
+ * @apiParam {String[2..50]} nameSlug Name slug
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -144,14 +134,15 @@ router.get('/all/:isActive?', findAll);
  *   {
  *     'Content-Type': 'application/json'
  *   }
+ *
+ * @apiBody {String[2..50]} [name="New name"] Name (50).
+ * @apiBody {Boolean} [isActive=true] Is active.
+ * @apiParam {String[2..50]} nameSlug Name slug
  * @apiParamExample {json} Request-Example
  *  {
  *     name:       "New Name",
  *     isActive:   false
  *  }
- * @apiBody {String[2..50]} [name=current] Name.
- * @apiBody {String[2..50]} [nameSlug=current] Slug (Unique).
- * @apiBody {Boolean} [isActive=current] Is active.
  *
  * @apiUse NotificationTypeNotFoundError
  *
@@ -165,7 +156,7 @@ router.put('/slug/:nameSlug', updateOne);
  * @api {DELETE} /api/notification_type/slug/:nameSLug Delete single Notification_type
  * @apiName DeleteSingleNotificationType
  * @apiGroup Notification_Type
- *
+ * @apiParam {String[2..50]} nameSlug Name slug
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     'Content-Type': 'application/json'

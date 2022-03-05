@@ -113,8 +113,8 @@ const findAll = async (req, res) => {
 const updateOne = async (req, res) => {
     try {
         // Selection of fields
-        const onlyThoseField = ['name', 'isActive'];
-        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseField);
+        const onlyThoseFields = ['name', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
         const configClient = {
             where: {

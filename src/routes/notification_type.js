@@ -87,7 +87,6 @@ router.post('/new', createOne);
  *          },
  *          {
  *              "name": "Type 3",
- *              "nameSlug": "type-3"
  *          }
  *      ]
  *  }
@@ -148,7 +147,6 @@ router.get('/all/:isActive?', findAll);
  * @apiParamExample {json} Request-Example
  *  {
  *     name:       "New Name",
- *     nameSlug:   "New Slug",
  *     isActive:   false
  *  }
  * @apiBody {String[2..50]} [name=current] Name.

@@ -9,6 +9,9 @@ const cors = require('cors');
 const indexRouter = require('./src/routes/home');
 const usersRouter = require('./src/routes/users');
 const userTypeRouter = require('./src/routes/user_type');
+const userNotificationRouter = require('./src/routes/user_notification_type');
+const addressRoadTypeRouter = require('./src/routes/address_road_type');
+const addressRouter = require('./src/routes/address');
 const treatmentRouter = require('./src/routes/treatment');
 const treatmentMediaRouter = require('./src/routes/treatment_media');
 const treatmentDrugRouter = require('./src/routes/treatment_drug');
@@ -16,6 +19,7 @@ const treatmentPeriodicityRouter = require('./src/routes/treatment_periodicity')
 const medicalAdministrationRouter = require('./src/routes/medical_administration');
 // NotificationType router
 const NotificationTypeRouter = require('./src/routes/notification_type');
+const NotificationHistory = require('./src/routes/notification_history');
 
 const app = express();
 
@@ -35,6 +39,9 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 //UserType Route
 app.use('/api/user_type', userTypeRouter);
+app.use('/api/address_road_type', addressRoadTypeRouter);
+app.use('/api/user_notification_type', userNotificationRouter);
+app.use('/api/address', addressRouter);
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);
@@ -42,6 +49,7 @@ app.use('/api/treatmentPeriodicities', treatmentPeriodicityRouter);
 app.use('/api/medicalAdministrations', medicalAdministrationRouter);
 // NotificationType Route
 app.use('/api/notification_type', NotificationTypeRouter);
+app.use('/api/notification_history', NotificationHistory);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

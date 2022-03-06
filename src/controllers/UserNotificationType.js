@@ -1,20 +1,11 @@
 const Models = require('./../models');
-const {
-  checkRequiredFields,
-  createNameSlug,
-  extractFieldsToChange,
-} = require('./../utils/requestHandler');
+const { checkRequiredFields } = require('./../utils/requestHandler');
 
-// create a user type
+// create a user notification type
 const createOne = async (req, res) => {
   try {
-    const reqName = req.body.name;
-
-    const newType = await Models.AddressRoadType.create({
-      data: {
-        name: reqName,
-        nameSlug: createNameSlug(req),
-      },
+    const UserNotifications = await Models.UserNotificationType.create({
+      data: req.body,
     });
 
     // The prisma client can run only 10 instances simultaneously,
@@ -22,48 +13,61 @@ const createOne = async (req, res) => {
     await Models.$disconnect();
 
     // Success Response
-    res.status(200).json(newType);
+    res.status(200).json(UserNotifications);
   } catch (error) {
     console.log(error);
     return res.status(400).json(error);
   }
 };
 
-// get user type by nameSlug field
-const getOneBySlug = async (req, res) => {
+// get user notification type by id
+const getOneById = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['nameSlug'], 'GET');
+    checkRequiredFields(req, res, ['id'], 'GET');
 
     const configClient = {
       where: {
-        nameSlug: req.params.nameSlug,
+        id: parseInt(req.params.id),
+      },
+      include: {
+        User: true,
+        NotificationType: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+          },
+        },
       },
     };
 
-    const getBySlug = await Models.AddressRoadType.findUnique(configClient);
+    const UserNotificationById = await Models.UserNotificationType.findUnique(
+      configClient
+    );
 
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
 
     // Success Response
-    res.status(200).json(getBySlug);
+    res.status(200).json(UserNotificationById);
   } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 };
 
-// get all user type
-const getAllUserType = async (req, res) => {
+// get all user notification type
+const getAll = async (req, res) => {
   try {
-    const AddressType = await Models.AddressRoadType.findMany();
+    const UserNotification = await Models.UserNotificationType.findMany();
 
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
 
     // Success Response
-    res.status(200).json(AddressType);
+    res.status(200).json(UserNotification);
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -71,50 +75,50 @@ const getAllUserType = async (req, res) => {
 
 const updateOne = async (req, res) => {
   try {
-    // Selection of fields
-    const onlyThoseField = ['name'];
-    const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseField);
-
     // Request Select
     const configClient = {
       where: {
-        nameSlug: req.params.nameSlug,
+        id: parseInt(req.params.id),
       },
-      data: fieldsFiltered,
+      data: req.body,
     };
 
-    const AddressType = await Models.AddressRoadType.update(configClient);
+    const UserNotification = await Models.UserNotificationType.update(
+      configClient
+    );
 
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
 
     // Success Response
-    res.status(200).json(AddressType);
+    res.status(200).json(UserNotification);
   } catch (error) {
     return res.status(400).json(error);
   }
 };
 
-// delete a user type
+// delete a user notification type
 const deleteOne = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['nameSlug'], 'GET');
+    checkRequiredFields(req, res, ['id'], 'GET');
 
     const configClient = {
       where: {
-        nameSlug: req.params.nameSlug,
+        id: parseInt(req.params.id),
       },
     };
 
-    const UsertType = await Models.AddressRoadType.delete(configClient);
+    const UserNotification = await Models.UserNotificationType.delete(
+      configClient
+    );
 
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
 
     // Success Response
-    res.status(200).json(UsertType);
+    res.status(200).json(UserNotification);
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -122,8 +126,8 @@ const deleteOne = async (req, res) => {
 
 module.exports = {
   createOne,
-  getAllUserType,
-  getOneBySlug,
+  getAll,
+  getOneById,
   updateOne,
   deleteOne,
 };

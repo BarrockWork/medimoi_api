@@ -6,6 +6,11 @@ const createOne = async (req, res) => {
     const newUser = await Models.User.create({
       data: req.body,
     });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
     res.status(200).json({ newUser });
   } catch (error) {
     return res.status(400).json({ error });
@@ -15,7 +20,21 @@ const createOne = async (req, res) => {
 // Get all users
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await Models.User.findMany();
+    const allUsers = await Models.User.findMany({
+      include: {
+        UserType: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
     res.status(200).json(allUsers);
   } catch (error) {
     return res.status(400).json(error);
@@ -34,6 +53,11 @@ const getUserByEmail = async (req, res) => {
         UserType: true,
       },
     });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
     res.status(200).json(userById);
   } catch (error) {
     return res.status(400).json(error);
@@ -49,6 +73,11 @@ const updateUserByEmail = async (req, res) => {
       },
       data: req.body,
     });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
     res.status(200).json(updateUser);
   } catch (error) {
     return res.status(400).json(error);
@@ -63,6 +92,11 @@ const deleteUser = async (req, res) => {
         email: req.params.email,
       },
     });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
     res.status(200).json(deleteUser);
   } catch (error) {
     return res.status(400).json(error);

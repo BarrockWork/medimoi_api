@@ -7,7 +7,7 @@ datasource db {
 model Address {
     id                      Int               @id @default(autoincrement())
     numberRoad              Int
-    name                    String            @db.VarChar(50)
+    streetName              String            @db.VarChar(50)
     // AddressRoadType relation ----------------------------
     address_road_type_id    Int
     AddressRoadType         AddressRoadType   @relation(fields: [address_road_type_id], references: [id])

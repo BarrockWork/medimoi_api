@@ -1,56 +1,126 @@
 const Models = require('./../models');
+const { checkRequiredFields } = require('./../utils/requestHandler');
 
-// Create an address
-const createAddress = async (req, res) => {
+// create a user type
+const createOne = async (req, res) => {
   try {
-    const newAddress = await Models.address.create({
+    const newType = await Models.Address.create({
       data: req.body,
     });
-    res.status(200).json(newAddress);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(newType);
   } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 };
 
-// Get an address
-const getUserAddress = async (req, res) => {
+// get user type by nameSlug field
+const getOneById = async (req, res) => {
   try {
-    const getAddress = await Models.address.findMany({
+    checkRequiredFields(req, res, ['id'], 'GET');
+
+    const configClient = {
       where: {
-        id: req.body.id,
+        id: parseInt(req.params.id),
+      },
+      include: {
+        User: true,
+        AddressRoadType: true,
+      },
+    };
+
+    const getById = await Models.Address.findUnique(configClient);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(getById);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+  }
+};
+
+// get all user type
+const getAll = async (req, res) => {
+  try {
+    const AddressType = await Models.Address.findMany({
+      include: {
+        User: true,
+        AddressRoadType: true,
       },
     });
-    res.status(200).json(getAddress);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(AddressType);
   } catch (error) {
     return res.status(400).json(error);
   }
 };
 
-//Update an address
-const updateUserAddress = async (req, res) => {
+const updateOne = async (req, res) => {
   try {
-    const updateAddress = await Models.address.update({
+    // Request Select
+    const configClient = {
       where: {
-        id: req.body.id,
+        id: parseInt(req.params.id),
       },
       data: req.body,
-    });
-    res.status(200).json(updateUserAddress);
-  } catch (error) {
-    res.status(400).json(error);
-  }
-};
+    };
 
-// Delete an address
-const deleteUserAddress = async (req, res) => {
-  try {
-    const deleteAddress = await Models.address.delete({
-      where: {
-        id: req.body,
-      },
-    });
-    res.status(200).json(deleteAddress);
+    const AddressType = await Models.Address.update(configClient);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(AddressType);
   } catch (error) {
     return res.status(400).json(error);
   }
+};
+
+// delete a user type
+const deleteOne = async (req, res) => {
+  try {
+    checkRequiredFields(req, res, ['id'], 'GET');
+
+    const configClient = {
+      where: {
+        id: parseInt(req.params.id),
+      },
+    };
+
+    const AddressType = await Models.Address.delete(configClient);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(AddressType);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+module.exports = {
+  createOne,
+  getAll,
+  getOneById,
+  updateOne,
+  deleteOne,
 };

@@ -54,7 +54,7 @@ const getOneBySlug = async (req, res) => {
 };
 
 // get all user type
-const getAllUserType = async (req, res) => {
+const getAll = async (req, res) => {
   try {
     const AddressType = await Models.AddressRoadType.findMany();
 
@@ -107,14 +107,14 @@ const deleteOne = async (req, res) => {
       },
     };
 
-    const UsertType = await Models.AddressRoadType.delete(configClient);
+    const AddressType = await Models.AddressRoadType.delete(configClient);
 
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
 
     // Success Response
-    res.status(200).json(UsertType);
+    res.status(200).json(AddressType);
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -122,7 +122,7 @@ const deleteOne = async (req, res) => {
 
 module.exports = {
   createOne,
-  getAllUserType,
+  getAll,
   getOneBySlug,
   updateOne,
   deleteOne,

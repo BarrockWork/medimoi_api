@@ -3,13 +3,13 @@ var router = express.Router();
 
 const {
   createOne,
-  getAllUserType,
+  getAll,
   getOneBySlug,
   updateOne,
   deleteOne,
-} = require('./../controllers/UserTypeController');
+} = require('./../controllers/AddressRoadTypeController');
 
-router.get('/', getAllUserType);
+router.get('/', getAll);
 router.get('/:nameSlug', getOneBySlug);
 router.post('/new', createOne);
 router.put('/:nameSlug/edit', updateOne);

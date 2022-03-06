@@ -5,13 +5,15 @@ const {toLower} = require("ramda");
 const createOne = async (req, res) => {
     try {
         // Check the required fields
-        checkRequiredFields(req, res,['name']);
+        checkRequiredFields(req, res,['name', 'siret', 'tva']);
 
-        // Insert the notification_type
-        const notificationsType = await Models.NotificationType.create({
+        // Insert the company
+        const company = await Models.Company.create({
             data: {
                 name: req.body.name,
-                nameSlug: createSlug(req.body.name)
+                nameSlug: createSlug(req.body.name),
+                siret: req.body.siret,
+                tva: req.body.tva
             }
         })
 
@@ -20,7 +22,7 @@ const createOne = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsType);
+        res.status(200).json(company);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -31,20 +33,22 @@ const createMany = async (req, res) => {
         // Check the required fields
         checkRequiredFields(req, res,['entries']);
 
-        const notifTypes = [];
+        const comps = [];
 
-        // Loop on the list of NotificationTypes
-        req.body.entries.forEach( notificationType => {
+        // Loop on the list of Companies
+        req.body.entries.forEach( company => {
             // Check the required fields
-            checkRequiredFields(notificationType, res,['name']);
-            notifTypes.push({
-                name: notificationType.name,
-                nameSlug: createSlug(notificationType.name)
+            checkRequiredFields(company, res,['name', 'siret', 'tva']);
+            comps.push({
+                name: company.name,
+                nameSlug: createSlug(company.name),
+                siret: company.siret,
+                tva: company.tva
             })
         })
 
-        const notificationsTypes = await Models.NotificationType.createMany({
-            data: notifTypes,
+        const companies = await Models.Company.createMany({
+            data: comps,
             skipDuplicates: true
         })
 
@@ -53,7 +57,7 @@ const createMany = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsTypes);
+        res.status(200).json(companies);
     } catch (error) {
         res.status(400).json(error);
     }
@@ -61,7 +65,7 @@ const createMany = async (req, res) => {
 
 const findOneByNameSlug = async (req, res) => {
     try {
-        const notificationType = await Models.NotificationType.findUnique({
+        const company = await Models.Company.findUnique({
             where: {
                 nameSlug: req.params.nameSlug
             }
@@ -72,7 +76,7 @@ const findOneByNameSlug = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(company);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -100,14 +104,14 @@ const findAll = async (req, res) => {
             }
         }
 
-        const notificationsTypes = await Models.NotificationType.findMany(configClient)
+        const companies = await Models.Company.findMany(configClient)
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsTypes);
+        res.status(200).json(companies);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -116,25 +120,25 @@ const findAll = async (req, res) => {
 const updateOne = async (req, res) => {
     try {
         // Selection of fields
-        const onlyThoseFields = ['name', 'isActive'];
+        const onlyThoseFields = ['name', 'siret', 'tva', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
         // Check if the new slug exists
         const configRequestDB = await verifySlugInDb(Models,
-            "NotificationType",
+            "Company",
             req.params.nameSlug,
             createSlug(req.body.name),
             fieldsFiltered);
 
         // Update the current entry
-        const notificationType = await Models.NotificationType.update(configRequestDB);
+        const company = await Models.Company.update(configRequestDB);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(company);
     }catch (error) {
         return res.status(400).json(error);
     }
@@ -150,14 +154,14 @@ const deleteOne = async (req, res) => {
             },
         }
 
-        const notificationType = await Models.NotificationType.delete(configClient);
+        const company = await Models.Company.delete(configClient);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(company);
     }catch (error) {
         return res.status(400).json(error);
     }

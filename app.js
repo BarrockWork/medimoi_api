@@ -20,6 +20,14 @@ const medicalAdministrationRouter = require('./src/routes/medical_administration
 // NotificationType router
 const NotificationTypeRouter = require('./src/routes/notification_type');
 const NotificationHistory = require('./src/routes/notification_history');
+// ContactType router
+const ContactTypeRouter = require('./src/routes/contact_type');
+// Company router
+const CompanyRouter = require('./src/routes/company');
+// Contact router
+const ContactRouter = require('./src/routes/contact');
+// UserCompany router
+const UserCompanyRouter = require('./src/routes/user_company');
 
 const app = express();
 
@@ -50,6 +58,14 @@ app.use('/api/medicalAdministrations', medicalAdministrationRouter);
 // NotificationType Route
 app.use('/api/notification_type', NotificationTypeRouter);
 app.use('/api/notification_history', NotificationHistory);
+// ContactType Route
+app.use('/api/contact_type', ContactTypeRouter)
+// Company Route
+app.use('/api/company', CompanyRouter)
+// Contact Route
+app.use('/api/contact', ContactRouter)
+// UserCompany Route
+app.use('/api/user_company', UserCompanyRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -40,7 +40,7 @@ const checkRequiredFields = (req, res, requiredFields, reqType = 'POST') => {
 const extractFieldsToChange = (req, res, fieldSelected) => {
     const fieldsFiltered = {};
     fieldSelected.forEach(field => {
-        if(req.body[field]) {
+        if(req.body[field] !== null) {
             fieldsFiltered[field] = req.body[field];
         }
     });
@@ -134,6 +134,36 @@ const transformIntValue = (value) => {
     return result;
 }
 
+
+/**
+ * Get user infos
+ */
+const selectUserGlobalInfos = () => {
+    return {
+        select: {
+            id: true,
+            UserType: {
+                select: {
+                    id:true,
+                    name: true,
+                    nameSlug: true,
+                }
+            },
+            firstName: true,
+            lastName: true,
+            age: true,
+            email: true,
+            cellphone: true,
+            homephone: true,
+            workphone: true,
+            lastConnectionId: true,
+            createdAt: true,
+            updatedAt: true,
+            isActive: true
+        }
+    }
+}
+
 /**
  * TODO
  */
@@ -146,5 +176,6 @@ module.exports =  {
     createSlug,
     extractFieldsToChange,
     verifySlugInDb,
-    transformIntValue
+    transformIntValue,
+    selectUserGlobalInfos
 }

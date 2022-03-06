@@ -16,6 +16,8 @@ const ContactTypeRouter = require('./src/routes/contact_type');
 const CompanyRouter = require('./src/routes/company');
 // Contact router
 const ContactRouter = require('./src/routes/contact');
+// UserCompany router
+const UserCompanyRouter = require('./src/routes/user_company');
 
 const app = express();
 
@@ -40,6 +42,8 @@ app.use('/api/contact_type', ContactTypeRouter)
 app.use('/api/company', CompanyRouter)
 // Contact Route
 app.use('/api/contact', ContactRouter)
+// UserCompany Route
+app.use('/api/user_company', UserCompanyRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

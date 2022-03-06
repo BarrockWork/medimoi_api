@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const { checkRequiredFields, extractFieldsToChange, transformIntValue } = require('./../utils/requestHandler')
+const { checkRequiredFields, extractFieldsToChange, transformIntValue, selectContactType, selectUserGlobalInfos} = require('./../utils/requestHandler')
 const {toLower} = require("ramda");
 
 const createOne = async (req, res) => {
@@ -80,6 +80,10 @@ const findOneById = async (req, res) => {
         const contact = await Models.Contact.findUnique({
             where: {
                 id: id
+            },
+            include: {
+                ContactType: selectContactType(),
+                User: selectUserGlobalInfos()
             }
         });
 
@@ -101,6 +105,9 @@ const findByUserId = async (req, res) => {
         const contact = await Models.Contact.findMany({
             where: {
                 user_id: id
+            },
+            include: {
+                ContactType: selectContactType()
             }
         });
 
@@ -120,6 +127,10 @@ const findAll = async (req, res) => {
         const configClient = {
             orderBy: {
                 lastName: "asc"
+            },
+            include: {
+                ContactType: selectContactType(),
+                User: selectUserGlobalInfos()
             }
         };
 
@@ -164,7 +175,11 @@ const updateOne = async (req, res) => {
             where: {
                 id: id
             },
-            data: fieldsFiltered
+            data: fieldsFiltered,
+            include: {
+                ContactType: selectContactType(),
+                User: selectUserGlobalInfos()
+            }
         };
 
         // Update the current entry

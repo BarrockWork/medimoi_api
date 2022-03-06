@@ -1,5 +1,11 @@
 const Models = require('./../models');
-const { checkRequiredFields, extractFieldsToChange, transformIntValue, selectUserGlobalInfos } = require('./../utils/requestHandler')
+const {
+    checkRequiredFields,
+    extractFieldsToChange,
+    transformIntValue,
+    selectUserGlobalInfos,
+    selectCompany
+} = require('./../utils/requestHandler')
 const {toLower} = require("ramda");
 
 const createOne = async (req, res) => {
@@ -18,6 +24,7 @@ const createOne = async (req, res) => {
                 user_id: req.body.user_id,
             },
             include: {
+                Company: selectCompany(),
                 User: selectUserGlobalInfos()
             },
         })
@@ -79,8 +86,9 @@ const findOneById = async (req, res) => {
                 id: id
             },
             include: {
+                Company: selectCompany(),
                 User: selectUserGlobalInfos()
-            },
+            }
         });
 
         // The prisma client can run only 10 instances simultaneously,
@@ -103,6 +111,7 @@ const findByUserId = async (req, res) => {
                 user_id: id
             },
             include: {
+                Company: selectCompany(),
                 User: selectUserGlobalInfos()
             },
         });

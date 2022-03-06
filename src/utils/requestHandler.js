@@ -165,6 +165,36 @@ const selectUserGlobalInfos = () => {
 }
 
 /**
+ * Get contact_type infos
+ */
+const selectContactType = () => {
+    return {
+        select: {
+            id: true,
+            name: true,
+            nameSlug: true,
+            isActive: true
+        }
+    }
+}
+
+/**
+ * Get company infos
+ */
+const selectCompany = () => {
+    return {
+        select: {
+            id: true,
+            name: true,
+            nameSlug: true,
+            siret: true,
+            tva: true,
+            isActive: true
+        }
+    }
+}
+
+/**
  * TODO
  */
 const errorHandler = () => {
@@ -177,5 +207,7 @@ module.exports =  {
     extractFieldsToChange,
     verifySlugInDb,
     transformIntValue,
-    selectUserGlobalInfos
+    selectUserGlobalInfos,
+    selectContactType,
+    selectCompany
 }

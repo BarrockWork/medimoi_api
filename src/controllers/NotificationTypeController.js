@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const { checkRequiredFields, createNameSlug, extractFieldsToChange } = require('./../utils/requestHandler')
+const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb } = require('./../utils/requestHandler')
 const {toLower} = require("ramda");
 
 const createOne = async (req, res) => {
@@ -11,7 +11,7 @@ const createOne = async (req, res) => {
         const notificationsType = await Models.NotificationType.create({
             data: {
                 name: req.body.name,
-                nameSlug: createNameSlug(req)
+                nameSlug: createSlug(req.body.name)
             }
         })
 
@@ -28,15 +28,18 @@ const createOne = async (req, res) => {
 
 const createMany = async (req, res) => {
     try {
+        // Check the required fields
+        checkRequiredFields(req, res,['entries']);
+
         const notifTypes = [];
 
         // Loop on the list of NotificationTypes
         req.body.entries.forEach( notificationType => {
             // Check the required fields
-            checkRequiredFields(req, res,['name']);
+            checkRequiredFields(notificationType, res,['name']);
             notifTypes.push({
                 name: notificationType.name,
-                nameSlug: createNameSlug(req)
+                nameSlug: createSlug(notificationType.name)
             })
         })
 
@@ -52,7 +55,7 @@ const createMany = async (req, res) => {
         // Success Response
         res.status(200).json(notificationsTypes);
     } catch (error) {
-        return res.status(400).json(error);
+        res.status(400).json(error);
     }
 }
 
@@ -113,17 +116,19 @@ const findAll = async (req, res) => {
 const updateOne = async (req, res) => {
     try {
         // Selection of fields
-        const onlyThoseField = ['name', 'isActive'];
-        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseField);
+        const onlyThoseFields = ['name', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
-        const configClient = {
-            where: {
-                nameSlug: req.params.nameSlug
-            },
-            data: fieldsFiltered
-        }
+        // Check if the new slug exists
+        const configRequestDB = await verifySlugInDb(Models,
+            "NotificationType",
+            req.params.nameSlug,
+            createSlug(req.body.name),
+            fieldsFiltered);
 
-        const notificationType = await Models.NotificationType.update(configClient);
+        // res.status(200).json(configRequestDB);
+        // Update the current entry
+        const notificationType = await Models.NotificationType.update(configRequestDB);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
@@ -138,7 +143,6 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
     try {
-
         checkRequiredFields(req, res,['nameSlug'], 'GET');
 
         const configClient = {

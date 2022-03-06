@@ -10,6 +10,8 @@ const indexRouter = require('./src/routes/home');
 const usersRouter = require('./src/routes/users');
 // NotificationType router
 const NotificationTypeRouter = require('./src/routes/notification_type');
+// ContactType router
+const ContactTypeRouter = require('./src/routes/contact_type');
 
 const app = express();
 
@@ -28,6 +30,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 // NotificationType Route
 app.use('/api/notification_type', NotificationTypeRouter)
+// ContactType Route
+app.use('/api/contact_type', ContactTypeRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

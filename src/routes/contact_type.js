@@ -140,8 +140,8 @@ router.get('/all/:isActive?', findAll);
  * @apiParam {String[2..50]} nameSlug Name slug
  * @apiParamExample {json} Request-Example
  *  {
- *     name:       "New Name",
- *     isActive:   false
+ *     "name":       "New Name",
+ *     "isActive":   false
  *  }
  *
  * @apiUse ContactTypeNotFoundError

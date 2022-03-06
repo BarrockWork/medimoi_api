@@ -1,7 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-const {createDiseaseType,getAllDiseaseType, findBySlug, deleteBySlug} = require('../controllers/DiseaseTypeController');
+const {
+    createDiseaseType,
+    getAllDiseaseType,
+    findBySlug,
+    updateBySlug,
+    deleteBySlug
+} = require('../controllers/DiseaseTypeController');
 
 
 /**
@@ -59,7 +65,7 @@ router.get('/:nameSlug', findBySlug);
 
 /**
  * @apiGroup Disease_type
- * @api {PUT} /api/disease_type/:slug Update Disease_Type
+ * @api {PUT} /api/disease_type/:nameSlug/edit Update Disease_Type
  * @apiName UpdateDiseaseType
  *
  * @apiBody {String} name disease_type name.
@@ -84,9 +90,7 @@ router.get('/:nameSlug', findBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:slug/edit', function(req, res, next){
-    res.end('Ceci est un PUT !');
-});
+router.put('/:nameSlug/edit', updateBySlug);
 
 
 /**

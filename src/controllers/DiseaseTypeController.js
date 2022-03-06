@@ -26,7 +26,6 @@ const createDiseaseType = async (req, res) => {
         const diseaseType = await Models.diseaseType.create({
             data: req.body,
         });
-        console.log(diseaseType);
 
         await Models.$disconnect();
         res.status(200).json({
@@ -42,6 +41,8 @@ const createDiseaseType = async (req, res) => {
 const getAllDiseaseType = async (req, res) => {
     try {
         const diseaseType = await Models.diseaseType.findMany()
+        await Models.$disconnect();
+
         res.status(200).json(diseaseType)
     } catch (error) {
         console.log(error);
@@ -56,10 +57,28 @@ const findBySlug = async (req, res) => {
                 nameSlug: req.params.nameSlug,
             },
         })
-        console.log(diseaseType);
+        await Models.$disconnect();
         res.status(200).json(diseaseType)
     } catch (error) {
-        console.log(req.params.nameSlug);
+        console.log(error);
+        return res.status(400).json(error)
+    }
+}
+
+const updateBySlug = async (req, res) => {
+    try {
+        const updateDiseaseType = await Models.diseaseType.update({
+            where: {
+                nameSlug: req.params.nameSlug
+            }, data: req.body
+        });
+        await Models.$disconnect();
+
+        res.status(200).json({
+            success: true, updateDiseaseType
+        });
+    } catch (error) {
+        console.log(error);
         return res.status(400).json(error)
     }
 }
@@ -71,7 +90,8 @@ const deleteBySlug = async (req, res) => {
                 nameSlug: req.params.nameSlug,
             },
         })
-        console.log(deleteDiseaseType);
+
+        await Models.$disconnect();
         res.status(200).json(deleteDiseaseType)
     } catch (error) {
         console.log(error)
@@ -83,5 +103,6 @@ module.exports = {
     createDiseaseType,
     getAllDiseaseType,
     findBySlug,
+    updateBySlug,
     deleteBySlug
 }

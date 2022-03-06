@@ -94,6 +94,27 @@ const findOneById = async (req, res) => {
     }
 }
 
+const findByUserId = async (req, res) => {
+    try {
+        // Check and transform the param is a number
+        const id = transformIntValue(req.params.id);
+        const contact = await Models.Contact.findMany({
+            where: {
+                user_id: id
+            }
+        });
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(contact);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
 const findAll = async (req, res) => {
     try {
         const configClient = {
@@ -191,6 +212,7 @@ module.exports = {
     createMany,
     findOneById,
     findAll,
+    findByUserId,
     updateOne,
     deleteOne
 }

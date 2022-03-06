@@ -6,6 +6,7 @@ const {
     createMany,
     findOneById,
     findAll,
+    findByUserId,
     updateOne,
     deleteOne
 } = require('./../controllers/ContactController')
@@ -123,6 +124,25 @@ router.post('/news', createMany);
  * @apiVersion 0.1.0
  */
 router.get('/:id', findOneById);
+
+/**
+ * @apiDescription Get Contacts by User id
+ * @api {GET} /api/contact/user/:id Get Contacts by User id
+ * @apiName GetByUserIdContact
+ * @apiGroup Contact
+ *
+ * @apiParam {Number} id Id
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse ContactNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact/user/:id
+ * @apiVersion 0.1.0
+ */
+router.get('/user/:id', findByUserId);
 
 /**
  * @apiDescription Get all Companies

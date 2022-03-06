@@ -15,6 +15,7 @@ const treatmentPeriodicityRouter = require('./src/routes/treatment_periodicity')
 const medicalAdministrationRouter = require('./src/routes/medical_administration');
 const diseaseRouter = require('./src/routes/disease');
 const diseaseTypeRouter = require('./src/routes/disease_type');
+const drugRouter = require('./src/routes/drug');
 // NotificationType router
 const NotificationTypeRouter = require('./src/routes/notification_type');
 
@@ -35,6 +36,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/diseases', diseaseRouter);
 app.use('/api/disease_type', diseaseTypeRouter);
+app.use('/api/drugs', drugRouter);
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);

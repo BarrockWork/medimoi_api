@@ -1,19 +1,24 @@
 var express = require('express');
 var router = express.Router();
+const {
+    createDrug,
+    getAllDrug,
+    findBySlug,
+    deleteBySlug,
+} = require('../controllers/drugController');
 
 
 /**
  * @apiGroup Drug
- * @api {POST} /api/drug/new Create new Drug
+ * @api {POST} /api/drugs/new Create new Drug
  * @apiName CreateDrug
  *
  * @apiBody {String} name drug name.
- * @apiBody {String} name_slug drug slug.
  * @apiBody {String} description drug.
- * @apiBody {Boolean} [isActive=true] Optional drug slug.
  * @apiBody {Boolean} [isPrescription=false] Optional drug slug.
- * @apiBody {Date}  [createdAt=now]
- * @apiBody {Date} updatedAt
+ * @apiBody {Number} drug_level_id  Drug level  id
+ * @apiBody {Number} drug_type_id  Drug type  id
+ * @apiBody {Number} medical_administration_id  Medical administration  id
  *
  *
  * @apiHeaderExample {json} Header-Example:
@@ -23,8 +28,8 @@ var router = express.Router();
  *
  * @apiParamExample {json} Request-Example
  *  {
- *     name:       "Covid 19",
- *     name_slug:  "covid-19",
+ *     name:       "Doliprane",
+ *     name_slug:  "doliprane",
  *     description: "maladie inconnue",
  *     incubationPeriod: "15 jours",
  *     transmitting: "on ne sait pas",
@@ -32,24 +37,49 @@ var router = express.Router();
  *
  * @apiVersion 0.1.0
  */
-router.post("/new", function(req, res, next){
-    res.end('Ceci est un POST !');
-});
+router.post("/new", createDrug);
 
-router.get('/', function(req, res, next){
-    res.end('Ceci est un GET !');
-});
+/**
+ * @apiGroup Drug
+ * @api {GET} /api/drugs Get all Drug
+ * @apiName GetAllDrug
+ *
+ * @apiExample {curl} Exemple uasage:
+ *      curl -i http://localhost:4000/api/drugs
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/', getAllDrug);
 
-router.get('/:id', function(req, res, next){
-    res.end('Ceci est un GET avec un ID !');
-});
-router.put('/:id/edit', function(req, res, next){
+/**
+ * @apiGroup Drug
+ * @api {GET} /api/drugs/:nameSlug Get drug by slug
+ * @apiName GetDrugBySlug
+ *
+ * @apiExample {curl} Exemple uasage:
+ *      curl -i http://localhost:4000/api/drugs/test
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:nameSlug', findBySlug);
+
+
+
+router.put('/:nameSlug/edit', function(req, res, next){
     res.end('Ceci est un PUT !');
 });
 
-router.delete('/:id/delete', function(req, res, next){
-    res.end('Ceci est un DELETE !');
-});
+/**
+ * @apiGroup Drug
+ * @api {DELETE} /api/drugs/:nameSlug/delete Delete drug
+ * @apiName DeleteDrug
+ *
+ * @apiExample {curl} Exemple uasage:
+ *      curl -i http://localhost:4000/api/drugs/doliprane/delete
+ *
+ * @apiVersion 0.1.0
+ */
+router.delete('/:nameSlug/delete', deleteBySlug);
 
 
 module.exports = router;

@@ -122,6 +122,19 @@ const verifySlugInDb = async (Models, SchemaTarget, currentSlug, newSlug, fields
 }
 
 /**
+ * Check and parse a STRING value to INT value
+ * @param value String
+ */
+const transformIntValue = (value) => {
+    const result = parseInt(value);
+
+    if (!R.is(Number, result)) {
+        throw `The value ${value} is NaN.`
+    }
+    return result;
+}
+
+/**
  * TODO
  */
 const errorHandler = () => {
@@ -132,5 +145,6 @@ module.exports =  {
     checkRequiredFields,
     createSlug,
     extractFieldsToChange,
-    verifySlugInDb
+    verifySlugInDb,
+    transformIntValue
 }

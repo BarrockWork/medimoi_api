@@ -14,6 +14,8 @@ const NotificationTypeRouter = require('./src/routes/notification_type');
 const ContactTypeRouter = require('./src/routes/contact_type');
 // Company router
 const CompanyRouter = require('./src/routes/company');
+// Contact router
+const ContactRouter = require('./src/routes/contact');
 
 const app = express();
 
@@ -36,6 +38,8 @@ app.use('/api/notification_type', NotificationTypeRouter)
 app.use('/api/contact_type', ContactTypeRouter)
 // Company Route
 app.use('/api/company', CompanyRouter)
+// Contact Route
+app.use('/api/contact', ContactRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

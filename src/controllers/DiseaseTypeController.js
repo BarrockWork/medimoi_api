@@ -1,30 +1,18 @@
 const Models = require('./../models');
 const {isEmpty} = require("ramda");
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb} = require('./../utils/requestHandler')
 
 
 const createDiseaseType = async (req, res) => {
-
-    // Array of required fields.
-    const requiredFields = [
-        'name',
-        'nameSlug',
-        'description',
-        'isActive',
-    ];
-
-    // Get missing required fields.
-    const missingValues = requiredFields.filter(fileld => !req.body[fileld])
-
-    if (!isEmpty(missingValues)) {
-        return res.status(400).json({
-            message: "Somes values are missings",
-            value: missingValues
-        })
-    }
-
     try {
+        checkRequiredFields(req, res, ['name', 'description']);
         const diseaseType = await Models.diseaseType.create({
-            data: req.body,
+            data: {
+                name: req.body.name,
+                nameSlug: createSlug(req.body.name),
+                description: req.body.description,
+                isActive: req.body.isActive,
+            }
         });
 
         await Models.$disconnect();

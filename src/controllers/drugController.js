@@ -40,6 +40,26 @@ const getAllDrug = async (req, res) => {
     }
 }
 
+const updateBySlug = async (req,res) => {
+    try {
+        const updateDrug = await Models.drug.update({
+            where: {
+                nameSlug: req.params.nameSlug
+            }, data: req.body
+        });
+        await Models.$disconnect();
+
+        res.status(200).json({
+            success: true, updateDrug
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            success: false, error
+        });
+    }
+}
+
 const findBySlug = async (req, res) => {
     try {
         const drug = await Models.drug.findUnique({
@@ -70,5 +90,6 @@ module.exports = {
     createDrug,
     deleteBySlug,
     getAllDrug,
-    findBySlug
+    findBySlug,
+    updateBySlug
 }

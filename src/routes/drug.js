@@ -4,6 +4,7 @@ const {
     createDrug,
     getAllDrug,
     findBySlug,
+    updateBySlug,
     deleteBySlug,
 } = require('../controllers/drugController');
 
@@ -28,11 +29,12 @@ const {
  *
  * @apiParamExample {json} Request-Example
  *  {
- *     name:       "Doliprane",
- *     name_slug:  "doliprane",
- *     description: "maladie inconnue",
- *     incubationPeriod: "15 jours",
- *     transmitting: "on ne sait pas",
+ *    name: "lisopaine",
+ *    description: "gellulle gout menthe",
+ *    isPrescription: true,
+ *    drug_level_id: 1,
+ *    drug_type_id: 1,
+ *    medical_administration_id: 1
  *  }
  *
  * @apiVersion 0.1.0
@@ -64,10 +66,37 @@ router.get('/', getAllDrug);
 router.get('/:nameSlug', findBySlug);
 
 
-
-router.put('/:nameSlug/edit', function(req, res, next){
-    res.end('Ceci est un PUT !');
-});
+/**
+ * @apiGroup Drug
+ * @api {PUT} /api/drugs/:nameSlug/edit Update drug
+ * @apiName UpdatedrugBySlug
+ *
+ * @apiBody {String} name drug name.
+ * @apiBody {String} description drug.
+ * @apiBody {Boolean} [isPrescription=false] Optional drug slug.
+ * @apiBody {Number} drug_level_id  Drug level  id
+ * @apiBody {Number} drug_type_id  Drug type  id
+ * @apiBody {Number} medical_administration_id  Medical administration  id
+ *
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *    name: "lisopaine",
+ *    description: "gellulle gout menthe",
+ *    isPrescription: true,
+ *    drug_level_id: 1,
+ *    drug_type_id: 1,
+ *    medical_administration_id: 1
+ *  }
+ *
+ * @apiVersion 0.1.0
+ */
+router.put('/:nameSlug/edit', updateBySlug);
 
 /**
  * @apiGroup Drug

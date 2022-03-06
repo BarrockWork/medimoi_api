@@ -40,7 +40,7 @@ const checkRequiredFields = (req, res, requiredFields, reqType = 'POST') => {
 const extractFieldsToChange = (req, res, fieldSelected) => {
     const fieldsFiltered = {};
     fieldSelected.forEach(field => {
-        if(req.body[field]) {
+        if(req.body[field] !== null) {
             fieldsFiltered[field] = req.body[field];
         }
     });
@@ -122,6 +122,79 @@ const verifySlugInDb = async (Models, SchemaTarget, currentSlug, newSlug, fields
 }
 
 /**
+ * Check and parse a STRING value to INT value
+ * @param value String
+ */
+const transformIntValue = (value) => {
+    const result = parseInt(value);
+
+    if (!R.is(Number, result)) {
+        throw `The value ${value} is NaN.`
+    }
+    return result;
+}
+
+
+/**
+ * Get user infos
+ */
+const selectUserGlobalInfos = () => {
+    return {
+        select: {
+            id: true,
+            UserType: {
+                select: {
+                    id:true,
+                    name: true,
+                    nameSlug: true,
+                }
+            },
+            firstName: true,
+            lastName: true,
+            age: true,
+            email: true,
+            cellphone: true,
+            homephone: true,
+            workphone: true,
+            lastConnectionId: true,
+            createdAt: true,
+            updatedAt: true,
+            isActive: true
+        }
+    }
+}
+
+/**
+ * Get contact_type infos
+ */
+const selectContactType = () => {
+    return {
+        select: {
+            id: true,
+            name: true,
+            nameSlug: true,
+            isActive: true
+        }
+    }
+}
+
+/**
+ * Get company infos
+ */
+const selectCompany = () => {
+    return {
+        select: {
+            id: true,
+            name: true,
+            nameSlug: true,
+            siret: true,
+            tva: true,
+            isActive: true
+        }
+    }
+}
+
+/**
  * TODO
  */
 const errorHandler = () => {
@@ -132,5 +205,9 @@ module.exports =  {
     checkRequiredFields,
     createSlug,
     extractFieldsToChange,
-    verifySlugInDb
+    verifySlugInDb,
+    transformIntValue,
+    selectUserGlobalInfos,
+    selectContactType,
+    selectCompany
 }

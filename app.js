@@ -1,7 +1,7 @@
 require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
-const path = require('path'); 
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
@@ -19,6 +19,8 @@ const diseaseTypeRouter = require('./src/routes/disease_type');
 const drugRouter = require('./src/routes/drug');
 //Drug Level router
 const drugLevelRouter = require('./src/routes/drug_level');
+//Drug Type router
+const drugTypeRouter = require('./src/routes/drug_type');
 // NotificationType router
 const NotificationTypeRouter = require('./src/routes/notification_type');
 // ContactType router
@@ -39,7 +41,7 @@ app.set('view engine', 'jade');
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -51,6 +53,8 @@ app.use('/api/disease_type', diseaseTypeRouter);
 app.use('/api/drugs', drugRouter);
 //Drug level route
 app.use('/api/drugLevels', drugLevelRouter)
+//Drug Type route
+app.use('/api/drugTypes', drugTypeRouter)
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);
@@ -68,12 +72,12 @@ app.use('/api/contact', ContactRouter)
 app.use('/api/user_company', UserCompanyRouter)
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};

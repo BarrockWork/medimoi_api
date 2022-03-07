@@ -142,8 +142,6 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
     try {
-        checkRequiredFields(req, res,['nameSlug'], 'GET');
-
         const configClient = {
             where: {
                 nameSlug: req.params.nameSlug

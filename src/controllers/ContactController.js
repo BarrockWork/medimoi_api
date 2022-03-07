@@ -198,8 +198,6 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
     try {
-        // Check requried field
-        checkRequiredFields(req, res,['id'], 'GET');
         // Check and transform the param is a number
         const id = transformIntValue(req.params.id);
 

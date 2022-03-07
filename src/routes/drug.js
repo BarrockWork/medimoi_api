@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const {
     createDrug,
+    createManyDrug,
     getAllDrug,
     findBySlug,
     updateBySlug,
@@ -40,6 +41,52 @@ const {
  * @apiVersion 0.1.0
  */
 router.post("/new", createDrug);
+
+
+/**
+ * @apiDescription Insert many UserCompany
+ * @api {POST} /api/drugs/news Create many Drugs
+ * @apiName CreateManyDrugs
+ * @apiGroup Drug
+ *
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiParamExample {json} Request-Example
+ *  {
+ *      "entries": [
+ *          {
+ *            name: "lisopaine",
+ *            description: "gellulle gout menthe",
+ *            isPrescription: true,
+ *            drug_level_id: 1,
+ *            drug_type_id: 1,
+ *            medical_administration_id: 1
+ *          },
+ *          {
+ *            name: "voltarene",
+ *            description: "pommade ",
+ *            isPrescription: true,
+ *            drug_level_id: 1,
+ *            drug_type_id: 1,
+ *            medical_administration_id: 1
+ *          },
+ *          {
+ *            name: "toplexis",
+ *            description: "sirop pour la toux",
+ *            isPrescription: true,
+ *            drug_level_id: 1,
+ *            drug_type_id: 1,
+ *            medical_administration_id: 1
+ *          }
+ *      ]
+ *  }
+ * @apiSampleRequest http://localhost:4000/api/drugs/news
+ * @apiVersion 0.1.0
+ */
+router.post('/news', createManyDrug)
 
 /**
  * @apiGroup Drug

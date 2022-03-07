@@ -15,7 +15,10 @@ const treatmentPeriodicityRouter = require('./src/routes/treatment_periodicity')
 const medicalAdministrationRouter = require('./src/routes/medical_administration');
 const diseaseRouter = require('./src/routes/disease');
 const diseaseTypeRouter = require('./src/routes/disease_type');
+// Drug router
 const drugRouter = require('./src/routes/drug');
+//Drug Level router
+const drugLevelRouter = require('./src/routes/drug_level');
 // NotificationType router
 const NotificationTypeRouter = require('./src/routes/notification_type');
 // ContactType router
@@ -44,7 +47,10 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/diseases', diseaseRouter);
 app.use('/api/disease_type', diseaseTypeRouter);
+//Drug router
 app.use('/api/drugs', drugRouter);
+//Drug level route
+app.use('/api/drugLevels', drugLevelRouter)
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);

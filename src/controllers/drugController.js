@@ -111,6 +111,11 @@ const findBySlug = async (req, res) => {
                 nameSlug: req.params.nameSlug,
             },
         })
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
         res.status(200).json(drug)
     } catch (error) {
         return res.status(400).json(error)
@@ -124,6 +129,11 @@ const deleteBySlug = async (req, res) => {
                 nameSlug: req.params.nameSlug,
             },
         })
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
         res.status(200).json(deleteDrug)
     } catch (error) {
         return res.status(400).json(error)

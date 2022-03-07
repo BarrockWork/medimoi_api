@@ -44,7 +44,7 @@ router.post("/new", createDrug);
 
 
 /**
- * @apiDescription Insert many UserCompany
+ * @apiDescription Insert many drugs
  * @api {POST} /api/drugs/news Create many Drugs
  * @apiName CreateManyDrugs
  * @apiGroup Drug
@@ -120,7 +120,7 @@ router.get('/:nameSlug', findBySlug);
  *
  * @apiBody {String} name drug name.
  * @apiBody {String} description drug.
- * @apiBody {Boolean} [isPrescription=false] Optional drug slug.
+     * @apiBody {Boolean} [isPrescription=false] Optional drug slug.
  * @apiBody {Number} drug_level_id  Drug level  id
  * @apiBody {Number} drug_type_id  Drug type  id
  * @apiBody {Number} medical_administration_id  Medical administration  id

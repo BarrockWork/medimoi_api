@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {createDrugLevel, createManyDrugLevel, getAllDrugLevel, getById, deleteById, updateById} = require('../controllers/drugLevelController');
+const {createDrugLevel, createManyDrugLevel, getAllDrugLevel, getById, deleteById, updateById} = require('../controllers/DrugLevelController');
 
 
 /**

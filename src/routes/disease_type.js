@@ -3,6 +3,7 @@ var router = express.Router();
 
 const {
     createDiseaseType,
+    createManyDiseaseType,
     getAllDiseaseType,
     findBySlug,
     updateBySlug,
@@ -12,16 +13,11 @@ const {
 
 /**
  * @apiGroup Disease_type
- * @api {POST} /api/disease_type/new Create New Disease_Type
+ * @api {POST} /api/disease_type/new Create single Disease_Type
  * @apiName CreateDiseaseType
  *
  * @apiBody {String} name disease_type name.
- * @apiBody {String} name_slug disease slug.
  * @apiBody {String} description disease.
- * @apiBody {Boolean} [isActive=true] Optional disease slug.
- * @apiBody {Date} [createdAt=now]
- * @apiBody {Date} updatedAt
- *
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -31,13 +27,47 @@ const {
  * @apiParamExample {json} Request-Example
  *  {
  *     name:       "dermatologiques",
- *     name_slug:  "dermatologiques",
  *     description: "maladie de la peau",
  *  }
  *
  * @apiVersion 0.1.0
  */
 router.post("/new", createDiseaseType);
+
+/**
+ * @apiGroup Disease_type
+ * @api {POST} /api/disease_type/news Create many disease type
+ * @apiName CreateManyDiseaseType
+ *
+ * @apiBody {String} name disease_type name.
+ * @apiBody {String} description disease.
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *      "entries": [
+ *          {
+ *            name: "diabète",
+ *            description: "Cette maladie métabolique chronique est grave par ses complications au niveau des vaisseaux sanguins.",
+ *          },
+ *          {
+ *            name: "maladies génétiques",
+ *            description: "maladie héréditaire",
+ *          },
+ *          {
+ *            name: "maladies respiratoires",
+ *            description: "maladie des poumons",
+ *          }
+ *      ]
+ *  }
+ *
+ * @apiVersion 0.1.0
+ */
+router.post("/news", createManyDiseaseType);
 
 /**
  * @apiGroup Disease_type

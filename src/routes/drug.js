@@ -7,7 +7,7 @@ const {
     findBySlug,
     updateBySlug,
     deleteBySlug,
-} = require('../controllers/drugController');
+} = require('../controllers/DrugController');
 
 
 /**

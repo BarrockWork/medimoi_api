@@ -11,7 +11,6 @@ const createDiseaseType = async (req, res) => {
                 name: req.body.name,
                 nameSlug: createSlug(req.body.name),
                 description: req.body.description,
-                isActive: req.body.isActive,
             }
         });
 
@@ -25,6 +24,46 @@ const createDiseaseType = async (req, res) => {
         return res.status(400).json(req);
     }
 }
+
+const createManyDiseaseType = async (req, res) => {
+    try {
+        // Check the required fields
+        checkRequiredFields(req, res, ['entries']);
+
+        const manyDiseaseType = [];
+
+        // Loop on the list of UserCompanies
+        req.body.entries.forEach(diseasesType => {
+            // Check the required fields
+            checkRequiredFields(
+                diseasesType,
+                res,
+                ['name', 'description']
+            );
+            manyDiseaseType.push({
+                name: diseasesType.name,
+                nameSlug: createSlug(diseasesType.name),
+                description: diseasesType.description
+            })
+        })
+
+        const diseaseType = await Models.diseaseType.createMany({
+            data: manyDiseaseType,
+            skipDuplicates: true
+        })
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(diseaseType);
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error);
+    }
+}
+
 
 const getAllDiseaseType = async (req, res) => {
     try {
@@ -89,6 +128,7 @@ const deleteBySlug = async (req, res) => {
 
 module.exports = {
     createDiseaseType,
+    createManyDiseaseType,
     getAllDiseaseType,
     findBySlug,
     updateBySlug,

@@ -13,7 +13,6 @@ const createDisease = async (req, res) => {
                 description: req.body.description,
                 incubationPeriod: req.body.incubationPeriod,
                 transmitting: req.body.transmitting,
-                isActive: req.body.isActive,
                 disease_type_id: req.body.disease_type_id,
             }
         });
@@ -25,6 +24,48 @@ const createDisease = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(400).json(req);
+    }
+}
+
+const createManyDisease = async (req, res) => {
+    try {
+        // Check the required fields
+        checkRequiredFields(req, res, ['entries']);
+
+        const manyDisease = [];
+
+        // Loop on the list of UserCompanies
+        req.body.entries.forEach(diseases => {
+            // Check the required fields
+            checkRequiredFields(
+                diseases,
+                res,
+                ['name', 'description', 'incubationPeriod', 'transmitting', 'disease_type_id']
+            );
+            manyDisease.push({
+                name: diseases.name,
+                nameSlug: createSlug(diseases.name),
+                description: diseases.description,
+                incubationPeriod: diseases.incubationPeriod,
+                transmitting: diseases.transmitting,
+                disease_type_id: diseases.disease_type_id,
+            })
+        })
+
+        const disease = await Models.disease.createMany({
+            data: manyDisease,
+            skipDuplicates: true
+        })
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(disease);
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(error);
     }
 }
 
@@ -94,5 +135,5 @@ const deleteBySlug = async (req, res) => {
 }
 
 module.exports = {
-    createDisease, findAll, findBySlug, updateBySlug, deleteBySlug
+    createDisease,createManyDisease, findAll, findBySlug, updateBySlug, deleteBySlug
 }

@@ -14,6 +14,7 @@ const treatmentDrugRouter = require('./src/routes/treatment_drug');
 const treatmentPeriodicityRouter = require('./src/routes/treatment_periodicity');
 const medicalAdministrationRouter = require('./src/routes/medical_administration');
 const diseaseRouter = require('./src/routes/disease');
+// Diseasetype router
 const diseaseTypeRouter = require('./src/routes/disease_type');
 // Drug router
 const drugRouter = require('./src/routes/drug');
@@ -47,9 +48,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+// Disease route
 app.use('/api/diseases', diseaseRouter);
+// Disease_type route
 app.use('/api/disease_type', diseaseTypeRouter);
-//Drug router
+//Drug route
 app.use('/api/drugs', drugRouter);
 //Drug level route
 app.use('/api/drugLevels', drugLevelRouter)

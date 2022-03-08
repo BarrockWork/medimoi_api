@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const {
     createDisease,
+    createManyDisease,
     findAll,
     findBySlug,
     updateBySlug,
@@ -11,10 +12,13 @@ const {
 
 /**
  * @apiGroup Disease
- * @api {POST} /api/diseases/new Create new disease
+ * @api {POST} /api/diseases/new Create single disease
  * @apiName CreateDisease
  *
  * @apiBody {String} name disease name.
+ * @apiBody {String} description disease description.
+ * @apiBody {String} incubationPeriod disease incubationPeriod.
+ * @apiBody {String} transmitting disease transmitting.
  * @apiBody {Number} disease_type_id  Disease type  id.
  *
  * @apiHeaderExample {json} Header-Example:
@@ -25,12 +29,62 @@ const {
  * @apiParamExample {json} Request-Example
  *  {
  *     name:       "Covid 19",
+ *     description: "maladie inconnue"
+ *     incubationPeriod: "15 jours",
+ *     transmitting: "orale",
  *     disease_type_id:     1
  *  }
  *
  * @apiVersion 0.1.0
  */
 router.post("/new", createDisease);
+
+/**
+ * @apiGroup Disease
+ * @api {POST} /api/diseases/news Create many disease
+ * @apiName CreateManyDisease
+ *
+ * @apiBody {String} name disease name.
+ * @apiBody {String} description disease description.
+ * @apiBody {String} incubationPeriod disease incubationPeriod.
+ * @apiBody {String} transmitting disease transmitting.
+ * @apiBody {Number} disease_type_id  Disease type  id.
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *      "entries": [
+ *          {
+ *            name: "Asthme",
+ *            description: "Les symptômes classiques de l’asthme sont une gêne respiratoire aiguë.",
+ *            incubationPeriod: "15 jours",
+ *            transmitting: "orale",
+ *            disease_type_id: 1,
+ *          },
+ *          {
+ *            name: "Convulsions",
+ *            description: " Les convulsions sont des manifestations fréquentes et durent habituellement de 2 à 3 minutes ",
+ *            incubationPeriod: "15 jours",
+ *            transmitting: "on ne sait pas",
+ *            disease_type_id: 1,
+ *          },
+ *          {
+ *            name: "Brûlures",
+ *            description: "Si la brûlure est phlycténulaire (présence de cloque) ou carbonisée (noire ou blanche et dure)",
+ *            incubationPeriod: "3 mois",
+ *            transmitting: "peau",
+ *            disease_type_id: 1
+ *          }
+ *      ]
+ *  }
+ *
+ * @apiVersion 0.1.0
+ */
+router.post("/news", createManyDisease);
 
 /**
  * @apiGroup Disease
@@ -63,13 +117,10 @@ router.get('/:nameSlug', findBySlug);
  * @apiName UpdateDiseaseBySlug
  *
  * @apiBody {String}  Optional name Disease name.
- * @apiBody {String}  Optional nameSlug Disease slug.
  * @apiBody {String} description disease.
  * @apiBody {String} incubationPeriod disease.
  * @apiBody {String} transmitting disease.
- * @apiBody {Boolean} Optional Disease slug.
- * @apiBody {Date} [createdAt=now]
- * @apiBody {Date} updatedAt
+ * @apiBody {Number} disease_type_id  Disease type  id.
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     'Content-Type': 'application/json'
@@ -81,7 +132,8 @@ router.get('/:nameSlug', findBySlug);
  *     nameSlug:  "new slug",
  *     description: "maladie inconnue",
  *     incubationPeriod: "15 jours",
- *     transmitting: 'on ne sait pas",
+ *     transmitting: "on ne sait pas",
+ *     disease_type_id: 1
  *  }
  *
  * @apiVersion 0.1.0

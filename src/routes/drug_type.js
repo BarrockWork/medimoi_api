@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {createDrugType, createManyDrugType, deleteBySlug, getAllDrugType, findBySlug, updateBySlug} = require('../controllers/drugTypeController');
+const {createDrugType, createManyDrugType, deleteBySlug, getAllDrugType, findBySlug, updateBySlug} = require('../controllers/DrugTypeController');
 
 /**
  * @apiGroup Drug_Type

@@ -1,6 +1,7 @@
 const Models = require('./../models');
 const {isEmpty, includes} = require("ramda");
 const {checkRequiredFields, createSlug,} = require('./../utils/requestHandler')
+const {extractFieldsToChange, verifySlugInDb} = require("../utils/requestHandler");
 
 const createDisease = async (req, res) => {
     try {
@@ -98,23 +99,29 @@ const findBySlug = async (req, res) => {
 }
 
 const updateBySlug = async (req, res) => {
-
     try {
-        const updateDisease = await Models.disease.update({
-            where: {
-                nameSlug: req.params.nameSlug
-            }, data: req.body
-        });
+        // Selection of fields
+        const onlyThoseFields = ['name', 'description', 'incubationPeriod', 'transmitting', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+        // Check if the new slug exists
+        const configRequestDB = await verifySlugInDb(Models,
+            "Disease",
+            req.params.nameSlug,
+            createSlug(req.body.name),
+            fieldsFiltered);
+
+        // Update the current entry
+        const disease = await Models.disease.update(configRequestDB);
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
-        res.status(200).json({
-            success: true, updateDisease
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false, error
-        });
+        // Success Response
+        res.status(200).json(disease);
+    }catch (error) {
+        return res.status(400).json(error);
     }
 }
 

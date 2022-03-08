@@ -21,7 +21,6 @@ const createDiseaseType = async (req, res) => {
             diseaseType
         });
     } catch (error) {
-        console.log(error);
         return res.status(400).json(req);
     }
 }
@@ -60,7 +59,6 @@ const createManyDiseaseType = async (req, res) => {
         // Success Response
         res.status(200).json(diseaseType);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }
@@ -73,7 +71,6 @@ const getAllDiseaseType = async (req, res) => {
 
         res.status(200).json(diseaseType)
     } catch (error) {
-        console.log(error);
         return res.status(400).json(req)
     }
 }
@@ -88,7 +85,6 @@ const findBySlug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(diseaseType)
     } catch (error) {
-        console.log(error);
         return res.status(400).json(error)
     }
 }
@@ -131,7 +127,6 @@ const deleteBySlug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(deleteDiseaseType)
     } catch (error) {
-        console.log(error)
         return res.status(400).json(error)
     }
 }

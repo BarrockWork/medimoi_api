@@ -26,7 +26,6 @@ const createDrug = async (req, res) => {
             success: true, drug
         });
     } catch (error) {
-        console.log(error);
         return res.status(400).json(req);
     }
 
@@ -70,7 +69,6 @@ const createManyDrug = async (req, res) => {
         // Success Response
         res.status(200).json(drugs);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }

@@ -20,7 +20,6 @@ const createDrugType = async (req, res) => {
             success: true, DrugType
         });
     } catch (error) {
-        console.log(error);
         return res.status(400).json(req);
     }
 }
@@ -59,7 +58,6 @@ const createManyDrugType = async (req, res) => {
         // Success Response
         res.status(200).json(levels);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }

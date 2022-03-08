@@ -19,7 +19,6 @@ const createDrugLevel = async (req, res) => {
             success: true, drugLevel
         });
     } catch (error) {
-        console.log(error);
         return res.status(400).json(req);
     }
 }
@@ -57,7 +56,6 @@ const createManyDrugLevel = async (req, res) => {
         // Success Response
         res.status(200).json(levels);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }
@@ -140,7 +138,6 @@ const deleteById = async (req, res) => {
 
         res.status(200).json(deleteDrugLevel)
     } catch (error) {
-        console.log(error)
         return res.status(400).json(error)
     }
 }

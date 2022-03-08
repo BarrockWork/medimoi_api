@@ -23,7 +23,6 @@ const createDisease = async (req, res) => {
             success: true, disease
         });
     } catch (error) {
-        console.log(error);
         return res.status(400).json(req);
     }
 }
@@ -65,7 +64,6 @@ const createManyDisease = async (req, res) => {
         // Success Response
         res.status(200).json(disease);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }
@@ -76,7 +74,7 @@ const findAll = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(disease)
     } catch (error) {
-        console.log(error);
+
         return res.status(400).json(req)
     }
 }
@@ -120,7 +118,7 @@ const updateBySlug = async (req, res) => {
 
         // Success Response
         res.status(200).json(disease);
-    }catch (error) {
+    } catch (error) {
         return res.status(400).json(error);
     }
 }
@@ -136,11 +134,10 @@ const deleteBySlug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(deleteDisease)
     } catch (error) {
-        console.log(error);
         return res.status(400).json(error)
     }
 }
 
 module.exports = {
-    createDisease,createManyDisease, findAll, findBySlug, updateBySlug, deleteBySlug
+    createDisease, createManyDisease, findAll, findBySlug, updateBySlug, deleteBySlug
 }

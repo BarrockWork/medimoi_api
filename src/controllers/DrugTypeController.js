@@ -1,6 +1,5 @@
 const Models = require('./../models');
-const {checkRequiredFields, transformIntValue} = require('./../utils/requestHandler')
-const {createSlug, extractFieldsToChange, verifySlugInDb} = require("../utils/requestHandler");
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb} = require("../utils/requestHandler");
 
 const createDrugType = async (req, res) => {
     try {

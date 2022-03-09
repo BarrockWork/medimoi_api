@@ -1,8 +1,5 @@
 const Models = require('./../models');
-const {isEmpty} = require("ramda");
-const {checkRequiredFields, createSlug} = require('./../utils/requestHandler')
-const {log} = require("debug");
-const {extractFieldsToChange, verifySlugInDb} = require("../utils/requestHandler");
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb} = require('./../utils/requestHandler')
 
 const createDrug = async (req, res) => {
     try {

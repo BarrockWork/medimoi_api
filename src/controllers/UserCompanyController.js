@@ -1,18 +1,32 @@
 const Models = require('./../models');
-const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb } = require('./../utils/requestHandler')
+const {
+    checkRequiredFields,
+    extractFieldsToChange,
+    transformIntValue,
+    selectUserGlobalInfos,
+    selectCompany
+} = require('./../utils/requestHandler')
 const {toLower} = require("ramda");
 
 const createOne = async (req, res) => {
     try {
         // Check the required fields
-        checkRequiredFields(req, res,['name']);
+        checkRequiredFields(
+            req,
+            res,
+            ['company_id', 'user_id']
+        );
 
-        // Insert the notification_type
-        const notificationsType = await Models.NotificationType.create({
+        // Insert the userCompany
+        const userCompany = await Models.UserCompany.create({
             data: {
-                name: req.body.name,
-                nameSlug: createSlug(req.body.name)
-            }
+                company_id: req.body.company_id,
+                user_id: req.body.user_id,
+            },
+            include: {
+                Company: selectCompany(),
+                User: selectUserGlobalInfos()
+            },
         })
 
         // The prisma client can run only 10 instances simultaneously,
@@ -20,7 +34,7 @@ const createOne = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsType);
+        res.status(200).json(userCompany);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -31,20 +45,24 @@ const createMany = async (req, res) => {
         // Check the required fields
         checkRequiredFields(req, res,['entries']);
 
-        const notifTypes = [];
+        const usersComps = [];
 
-        // Loop on the list of NotificationTypes
-        req.body.entries.forEach( notificationType => {
+        // Loop on the list of UserCompanies
+        req.body.entries.forEach( contact => {
             // Check the required fields
-            checkRequiredFields(notificationType, res,['name']);
-            notifTypes.push({
-                name: notificationType.name,
-                nameSlug: createSlug(notificationType.name)
+            checkRequiredFields(
+                contact,
+                res,
+                ['company_id', 'user_id']
+            );
+            usersComps.push({
+                company_id: contact.company_id,
+                user_id: contact.user_id,
             })
         })
 
-        const notificationsTypes = await Models.NotificationType.createMany({
-            data: notifTypes,
+        const userCompanies = await Models.UserCompany.createMany({
+            data: usersComps,
             skipDuplicates: true
         })
 
@@ -53,17 +71,23 @@ const createMany = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsTypes);
+        res.status(200).json(userCompanies);
     } catch (error) {
         res.status(400).json(error);
     }
 }
 
-const findOneByNameSlug = async (req, res) => {
+const findOneById = async (req, res) => {
     try {
-        const notificationType = await Models.NotificationType.findUnique({
+        // Check and transform the param is a number
+        const id = transformIntValue(req.params.id);
+        const contact = await Models.UserCompany.findUnique({
             where: {
-                nameSlug: req.params.nameSlug
+                id: id
+            },
+            include: {
+                Company: selectCompany(),
+                User: selectUserGlobalInfos()
             }
         });
 
@@ -72,7 +96,32 @@ const findOneByNameSlug = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(contact);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
+const findByUserId = async (req, res) => {
+    try {
+        // Check and transform the param is a number
+        const id = transformIntValue(req.params.id);
+        const userCompany = await Models.UserCompany.findUnique({
+            where: {
+                user_id: id
+            },
+            include: {
+                Company: selectCompany(),
+                User: selectUserGlobalInfos()
+            },
+        });
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(userCompany);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -82,7 +131,7 @@ const findAll = async (req, res) => {
     try {
         const configClient = {
             orderBy: {
-                nameSlug: "asc"
+                company_id: "asc"
             }
         };
 
@@ -100,14 +149,14 @@ const findAll = async (req, res) => {
             }
         }
 
-        const notificationsTypes = await Models.NotificationType.findMany(configClient)
+        const userCompanies = await Models.UserCompany.findMany(configClient)
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsTypes);
+        res.status(200).json(userCompanies);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -115,26 +164,29 @@ const findAll = async (req, res) => {
 
 const updateOne = async (req, res) => {
     try {
-        // Selection of fields
-        const onlyThoseFields = ['name', 'isActive'];
-        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+        // Check and transform the param is a number
+        const id = transformIntValue(req.params.id);
 
+        // Selection of fields
+        const onlyThoseFields = ['company_id', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
         // Check if the new slug exists
-        const configRequestDB = await verifySlugInDb(Models,
-            "NotificationType",
-            req.params.nameSlug,
-            createSlug(req.body.name),
-            fieldsFiltered);
+        const configRequestDB = {
+            where: {
+                id: id
+            },
+            data: fieldsFiltered
+        };
 
         // Update the current entry
-        const notificationType = await Models.NotificationType.update(configRequestDB);
+        const userCompanies = await Models.UserCompany.update(configRequestDB);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(userCompanies);
     }catch (error) {
         return res.status(400).json(error);
     }
@@ -142,20 +194,23 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
     try {
+        // Check and transform the param is a number
+        const id = transformIntValue(req.params.id);
+
         const configClient = {
             where: {
-                nameSlug: req.params.nameSlug
+                id: id
             },
         }
 
-        const notificationType = await Models.NotificationType.delete(configClient);
+        const userCompany = await Models.UserCompany.delete(configClient);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(userCompany);
     }catch (error) {
         return res.status(400).json(error);
     }
@@ -164,8 +219,9 @@ const deleteOne = async (req, res) => {
 module.exports = {
     createOne,
     createMany,
-    findOneByNameSlug,
+    findOneById,
     findAll,
+    findByUserId,
     updateOne,
     deleteOne
 }

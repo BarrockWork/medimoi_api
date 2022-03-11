@@ -7,8 +7,8 @@ const createOne = async (req, res) => {
         // Check the required fields
         checkRequiredFields(req, res,['name']);
 
-        // Insert the notification_type
-        const notificationsType = await Models.NotificationType.create({
+        // Insert the contact_type
+        const contactType = await Models.ContactType.create({
             data: {
                 name: req.body.name,
                 nameSlug: createSlug(req.body.name)
@@ -20,7 +20,7 @@ const createOne = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsType);
+        res.status(200).json(contactType);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -31,20 +31,20 @@ const createMany = async (req, res) => {
         // Check the required fields
         checkRequiredFields(req, res,['entries']);
 
-        const notifTypes = [];
+        const conTypes = [];
 
-        // Loop on the list of NotificationTypes
-        req.body.entries.forEach( notificationType => {
+        // Loop on the list of Contact_types
+        req.body.entries.forEach( contact_type => {
             // Check the required fields
-            checkRequiredFields(notificationType, res,['name']);
-            notifTypes.push({
-                name: notificationType.name,
-                nameSlug: createSlug(notificationType.name)
+            checkRequiredFields(contact_type, res,['name']);
+            conTypes.push({
+                name: contact_type.name,
+                nameSlug: createSlug(contact_type.name)
             })
         })
 
-        const notificationsTypes = await Models.NotificationType.createMany({
-            data: notifTypes,
+        const contactTypes = await Models.ContactType.createMany({
+            data: conTypes,
             skipDuplicates: true
         })
 
@@ -53,7 +53,7 @@ const createMany = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsTypes);
+        res.status(200).json(contactTypes);
     } catch (error) {
         res.status(400).json(error);
     }
@@ -61,7 +61,7 @@ const createMany = async (req, res) => {
 
 const findOneByNameSlug = async (req, res) => {
     try {
-        const notificationType = await Models.NotificationType.findUnique({
+        const contactType = await Models.ContactType.findUnique({
             where: {
                 nameSlug: req.params.nameSlug
             }
@@ -72,7 +72,7 @@ const findOneByNameSlug = async (req, res) => {
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(contactType);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -100,14 +100,14 @@ const findAll = async (req, res) => {
             }
         }
 
-        const notificationsTypes = await Models.NotificationType.findMany(configClient)
+        const contactTypes = await Models.ContactType.findMany(configClient)
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationsTypes);
+        res.status(200).json(contactTypes);
     } catch (error) {
         return res.status(400).json(error);
     }
@@ -121,20 +121,21 @@ const updateOne = async (req, res) => {
 
         // Check if the new slug exists
         const configRequestDB = await verifySlugInDb(Models,
-            "NotificationType",
+            "ContactType",
             req.params.nameSlug,
             createSlug(req.body.name),
             fieldsFiltered);
 
+        // res.status(200).json(configRequestDB);
         // Update the current entry
-        const notificationType = await Models.NotificationType.update(configRequestDB);
+        const Contact_type = await Models.ContactType.update(configRequestDB);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(Contact_type);
     }catch (error) {
         return res.status(400).json(error);
     }
@@ -148,14 +149,14 @@ const deleteOne = async (req, res) => {
             },
         }
 
-        const notificationType = await Models.NotificationType.delete(configClient);
+        const contactType = await Models.ContactType.delete(configClient);
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
 
         // Success Response
-        res.status(200).json(notificationType);
+        res.status(200).json(contactType);
     }catch (error) {
         return res.status(400).json(error);
     }

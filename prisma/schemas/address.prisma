@@ -16,7 +16,7 @@ model Address {
     user_id                 Int
     User                    User              @relation(fields: [user_id], references: [id])
     // -------------------------------------------------------
-    additionnalAddress      String            @db.VarChar(255)
+    additionnalAddress      String?           @db.VarChar(255)
     zipcode                 String            @db.VarChar(10)
     city                    String            @db.VarChar(50)
     region                  String            @db.VarChar(50)

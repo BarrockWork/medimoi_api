@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const {
   createOne,
+  createMany,
   getAllUsers,
   getUserByEmail,
   updateUserByEmail,
@@ -12,17 +13,26 @@ const {
  * Define parameters for the request
  *
  * @apiDefine UserParams
- * @apiBody {String} [firstName=john] firstName user's firstName.
- * @apiBody {String} [lastName=doe] user's lastName.
- * @apiBody {Int} [age=30]age user's age.
- * @apiBody {String} [email=john.doe@medimoi.com] email user's email
- * @apiBody {String} [password=password] password user's  password.
- * @apiBody {String} [cellphone=0123456789] cellphone user's  cellphone.
- * @apiBody {String} [homephone=0123456789] homephone user's  homephone.
- * @apiBody {String} [Workphone=""]  user's workphone.
- * @apiBody {Date} [createdAt=now()] Created date (YYYY-MM-DD hh:mm:ss).
- * @apiBody {Date} [updatedAt=updatedAt()] Updated date (YYYY-MM-DD hh:mm:ss).
- * @apiBody {Boolean} [isActive=true] If user is active at the creation
+ * @apiBody {String[2..50]} firstName user's firstName.
+ * @apiBody {String[2..50]} lastName user's lastName.
+ * @apiBody {Int} age user's age.
+ * @apiBody {String[2..50]} email user's email
+ * @apiBody {String[2..255]} password user's plain password.
+ * @apiBody {String[2..50]}  cellphone user's  cellphone.
+ * @apiBody {String[2..50]} homephone user's  homephone.
+ * @apiBody {String[2..50]}[workphone] workphone user's workphone.
+ * @apiBody {Boolean} [isActive=true] User state
+ */
+
+/**
+ * Define a global User not found
+ * @apiDefine UserNotFoundError
+ * @apiError UserNotFoundError User was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "UserNotFoundError"
+ *     }
  */
 
 /**
@@ -31,23 +41,21 @@ const {
  * @api {GET} /api/user Get all Users
  * @apiName getAllUsers
  *
- * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/users
+ * @apiSampleRequest http://localhost:4000/api/users/
  *
- * @apiSampleRequest http://localhost:4000/api/users/new
+ * @apiUse UserNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAllUsers);
+router.get('/:isActive?', getAllUsers);
 
 /**
- * @apiDescription This is how we get a user by ID
+ * @apiDescription This is how we get a user by email
  * @apiGroup User
- * @api {GET} /api/users/:id Get user by Id
+ * @api {GET} /api/users/:email Get user by Id
  * @apiName getUserByEmail
  *
- * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/users/4711
+ * @apiUse UserNotFoundError
  *
  * @apiVersion 0.1.0
  */
@@ -70,24 +78,91 @@ router.get('/:email', getUserByEmail);
  *  {
  *     firstName:       "john",
  *     lastName:        "doe",
- *     age:             "30",
- *     password:        "password",
+ *     age:             30,
+ *     email:           "jdoe@medimoi.com"
+ *     password:        "plain password",
  *     cellphone:       "0123456789"
  *     homephone:       "0123456789"
  *
  *  }
  *
  * @apiSampleRequest http://localhost:4000/api/users/new
+ *
  * @apiVersion 0.1.0
  */
 router.post('/new', createOne);
 
 /**
+ * @apiDescription This is how we create
+ * @apiGroup User
+ * @api {POST} /api/user/news Create many user
+ * @apiName createMany
+ *
+ * @apiUse UserParams
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *{
+      "entries":[
+ *    {
+ *      firstName:       "john",
+ *      lastName:        "doe",
+ *      age:             30,
+ *      email:           "jdoe@medimoi.com"
+ *      password:        "plain password",
+ *      cellphone:       "0123456789"
+ *      homephone:       "0123456789"
+ *
+ *    },
+ *   {
+ *      firstName:       "john",
+ *      lastName:        "doe",
+ *      age:             30,
+ *      email:           "jdoe@medimoi.com"
+ *      password:        "plain password",
+ *      cellphone:       "0123456789"
+ *      homephone:       "0123456789"
+ *
+ *    },
+ *    {
+ *     firstName:       "john",
+ *     lastName:        "doe",
+ *     age:             30,
+ *     email:           "jdoe@medimoi.com"
+ *     password:        "plain password",
+ *     cellphone:       "0123456789"
+ *     homephone:       "0123456789"
+ *
+ *     }
+ *    ]
+ * }
+ *
+ * @apiSampleRequest http://localhost:4000/api/users/news
+ *
+ * @apiVersion 0.1.0
+ */
+router.post('/news', createMany);
+
+/**
  * @apiDescription This is how we update a user by ID
  * @apiGroup User
- * @api {PUT} /api/user/:id Update user
+ * @api {PUT} /api/user/:id/edit Update user
  * @apiName updateUserByEmail
  *
+ *
+ * @apiBody {String[2..50]} [firstName] user's firstName.
+ * @apiBody {String[2..50]} [lastName] user's lastName.
+ * @apiBody {Int} [age] user's age.
+ * @apiBody {String[2..50]} [email] user's email
+ * @apiBody {String[2..255]} [password] user's  plain password.
+ * @apiBody {String[2..50]}  [cellphone] user's  cellphone.
+ * @apiBody {String[2..50]} [homephone] user's  homephone.
+ * @apiBody {String[2..50]} [workphone] user's workphone.
+ * @apiBody {String[2..50]} [isActive=true] User state
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -96,13 +171,14 @@ router.post('/new', createOne);
  *
  * @apiParamExample {json} Request-Example
  *  {
- *     id:       "150",
+ *     firstName:       "brian",
  *  }
  *
- * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/users/123
+ * @apiSampleRequest http://localhost:4000/api/users/:email/edit
  *
- * @apiSampleRequest http://localhost:4000/api/users/put
+ * @apiUse UserNotFoundError
+ *
+ * @apiParam {String[2..50]} email User Email
  *
  * @apiVersion 0.1.0
  */
@@ -111,10 +187,10 @@ router.put('/:email/edit', updateUserByEmail);
 /**
  * @apiDescription This is how we delete a user by ID
  * @apiGroup User
- * @api {DELETE} /api/user/:id Delete a user
+ * @api {DELETE} /api/user/:id/delete Delete a user
  * @apiName deleteUser
  *
- * @apiBody {Int}  ID User identifier.
+ * @apiBody {String[2..50]}  Email User email.
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -123,11 +199,13 @@ router.put('/:email/edit', updateUserByEmail);
  *
  * @apiParamExample {json} Request-Example
  *  {
- *     id:       "150",
+ *     email:       "jdoe@medimoi.com",
  *  }
- * @apiSampleRequest http://localhost:4000/api/users/delete
- * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/users/123
+ * @apiSampleRequest http://localhost:4000/api/users/:email/delete
+ *
+ * @apiParam {String[50]} email User Email
+ *
+ * @apiUse UserNotFoundError
  *
  * @apiVersion 0.1.0
  */

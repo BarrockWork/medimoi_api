@@ -9,26 +9,27 @@ const R = require('ramda');
  * @param reqType String
  */
 const checkRequiredFields = (req, res, requiredFields, reqType = 'POST') => {
-    // Get missing required fields.
-    let missingValues;
+  // Get missing required fields.
+  let missingValues;
 
-    if (reqType === "GET") {
-        missingValues = requiredFields.filter(field => !req.params[field])
-    }else {
-        // req = An object (exemple NotificationType in createMany function)
-        if(!req.body) {
-            missingValues = requiredFields.filter(field => !req[field])
-        }else{
-            // req = Request object
-            missingValues = requiredFields.filter(field => !req.body[field])
-        }
+  if (reqType === 'GET') {
+    missingValues = requiredFields.filter((field) => !req.params[field]);
+  } else {
+    // req = An object (exemple NotificationType in createMany function)
+    if (!req.body) {
+      missingValues = requiredFields.filter((field) => !req[field]);
+    } else {
+      // req = Request object
+      missingValues = requiredFields.filter((field) => !req.body[field]);
     }
+  }
 
-    // Dispatch an error for the try catch
-    if(!R.isEmpty(missingValues)){
-        throw `Required fields are missing : ${missingValues}`
-    }
-}
+  // Dispatch an error for the try catch
+  if (!R.isEmpty(missingValues)) {
+    throw `Required fields are missing : ${missingValues}`;
+  }
+};
+
 
 /**
  * Extract from req.body the only fields selected
@@ -38,28 +39,28 @@ const checkRequiredFields = (req, res, requiredFields, reqType = 'POST') => {
  * @returns {*}
  */
 const extractFieldsToChange = (req, res, fieldSelected) => {
-    const fieldsFiltered = {};
-    fieldSelected.forEach(field => {
-        if(req.body[field] !== null) {
-            fieldsFiltered[field] = req.body[field];
-        }
-    });
-
-    // Dispatch an error for the try catch
-    if(R.isEmpty(fieldsFiltered)){
-        throw `A required field is missing : ${fieldSelected}`
+  const fieldsFiltered = {};
+  fieldSelected.forEach((field) => {
+    if (req.body[field] !== null) {
+      fieldsFiltered[field] = req.body[field];
     }
+  });
 
-    return fieldsFiltered;
-}
+  // Dispatch an error for the try catch
+  if (R.isEmpty(fieldsFiltered)) {
+    throw `A required field is missing : ${fieldSelected}`;
+  }
+
+  return fieldsFiltered;
+};
 
 /**
  * Create a slug
  * @param textForSlug String
  */
 const createSlug = (textForSlug) => {
-    return slugify(textForSlug, {lower: true, remove: /[*+~.()'"!:@]/g});
-}
+  return slugify(textForSlug, { lower: true, remove: /[*+~.()'"!:@]/g });
+};
 
 /**
  * Check if slug already exists and returned an abject to the request
@@ -71,143 +72,174 @@ const createSlug = (textForSlug) => {
  * @param fieldsFiltered Array String
  * @returns {string}
  */
-const verifySlugInDb = async (Models, SchemaTarget, currentSlug, newSlug, fieldsFiltered) => {
-    try {
-        // Check slug in DB
-        const findData = await Models[SchemaTarget].findUnique({
-            where: {
-                nameSlug: newSlug
-            }
-        });
+const verifySlugInDb = async (
+  Models,
+  SchemaTarget,
+  currentSlug,
+  newSlug,
+  fieldsFiltered
+) => {
+  try {
+    // Check slug in DB
+    const findData = await Models[SchemaTarget].findUnique({
+      where: {
+        nameSlug: newSlug,
+      },
+    });
 
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    Models.$disconnect();
+
+    // If the slug exists
+    if (findData && newSlug !== currentSlug) {
+      let isResult = true;
+      let i = 1;
+      do {
+        const checkSlug = newSlug + `-${i}`;
+        const res = await Models[SchemaTarget].findUnique({
+          where: {
+            nameSlug: checkSlug,
+          },
+        });
+        isResult = !!res; // isResult = res ? true : false
+        if (isResult === false) {
+          newSlug = checkSlug;
+        }
+        i++;
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         Models.$disconnect();
-
-        // If the slug exists
-        if (findData && (newSlug !== currentSlug)) {
-            let isResult = true;
-            let i = 1;
-            do {
-                const checkSlug = newSlug +`-${i}`;
-                const res = await Models[SchemaTarget].findUnique({
-                    where: {
-                        nameSlug: checkSlug
-                    }
-                });
-                isResult = !!res;// isResult = res ? true : false
-                if(isResult === false){
-                    newSlug = checkSlug;
-                }
-                i++;
-                // The prisma client can run only 10 instances simultaneously,
-                // so it is better to stop the current instance before sending the response
-                Models.$disconnect();
-            } while (isResult === true);
-        }
-
-        // Initiate client params for the updating request
-        if ((newSlug !== currentSlug)) {
-            fieldsFiltered.nameSlug = newSlug;
-        }
-        return {
-            where: {
-                nameSlug: currentSlug
-            },
-            data: fieldsFiltered
-        };
-    } catch (error) {
-        throw `An error is occurred: ${error}`;
+      } while (isResult === true);
     }
-}
+
+    // Initiate client params for the updating request
+    if (newSlug !== currentSlug) {
+      fieldsFiltered.nameSlug = newSlug;
+    }
+    return {
+      where: {
+        nameSlug: currentSlug,
+      },
+      data: fieldsFiltered,
+    };
+  } catch (error) {
+    throw `An error is occurred: ${error}`;
+  }
+};
 
 /**
  * Check and parse a STRING value to INT value
  * @param value String
  */
 const transformIntValue = (value) => {
-    const result = parseInt(value);
+  const result = parseInt(value);
 
-    if (!R.is(Number, result)) {
-        throw `The value ${value} is NaN.`
-    }
-    return result;
-}
-
+  if (!R.is(Number, result)) {
+    throw `The value ${value} is NaN.`;
+  }
+  return result;
+};
 
 /**
  * Get user infos
  */
 const selectUserGlobalInfos = () => {
-    return {
+  return {
+    select: {
+      id: true,
+      UserType: {
         select: {
-            id: true,
-            UserType: {
-                select: {
-                    id:true,
-                    name: true,
-                    nameSlug: true,
-                }
-            },
-            firstName: true,
-            lastName: true,
-            age: true,
-            email: true,
-            cellphone: true,
-            homephone: true,
-            workphone: true,
-            lastConnectionId: true,
-            createdAt: true,
-            updatedAt: true,
-            isActive: true
-        }
-    }
-}
+          id: true,
+          name: true,
+          nameSlug: true,
+        },
+      },
+      firstName: true,
+      lastName: true,
+      age: true,
+      email: true,
+      cellphone: true,
+      homephone: true,
+      workphone: true,
+      lastConnectionId: true,
+      createdAt: true,
+      updatedAt: true,
+      isActive: true,
+    },
+  };
+};
 
 /**
  * Get contact_type infos
  */
 const selectContactType = () => {
-    return {
-        select: {
-            id: true,
-            name: true,
-            nameSlug: true,
-            isActive: true
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      name: true,
+      nameSlug: true,
+      isActive: true,
+    },
+  };
+};
+
+/**
+ * Get address_road_type infos
+ */
+const selectAddressRoadType = () => {
+  return {
+    select: {
+      id: true,
+      name: true,
+      nameSlug: true,
+    },
+  };
+};
+
+/**
+ * Get notification_type infos
+ */
+ const selectNotificationType = () => {
+  return {
+    select: {
+      id: true,
+      name: true,
+      nameSlug: true,
+    },
+  };
+};
 
 /**
  * Get company infos
  */
 const selectCompany = () => {
-    return {
-        select: {
-            id: true,
-            name: true,
-            nameSlug: true,
-            siret: true,
-            tva: true,
-            isActive: true
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      name: true,
+      nameSlug: true,
+      siret: true,
+      tva: true,
+      isActive: true,
+    },
+  };
+};
 
 /**
  * TODO
  */
-const errorHandler = () => {
+const errorHandler = () => {};
 
-}
-
-module.exports =  {
-    checkRequiredFields,
-    createSlug,
-    extractFieldsToChange,
-    verifySlugInDb,
-    transformIntValue,
-    selectUserGlobalInfos,
-    selectContactType,
-    selectCompany
-}
+module.exports = {
+  checkRequiredFields,
+  createSlug,
+  extractFieldsToChange,
+  verifySlugInDb,
+  transformIntValue,
+  selectUserGlobalInfos,
+  selectContactType,
+  selectCompany,
+  selectAddressRoadType,
+  selectNotificationType
+};

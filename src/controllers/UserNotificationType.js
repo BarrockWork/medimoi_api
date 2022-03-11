@@ -15,7 +15,6 @@ const createOne = async (req, res) => {
     // Success Response
     res.status(200).json(UserNotifications);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -23,7 +22,6 @@ const createOne = async (req, res) => {
 // get user notification type by id
 const getOneById = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['id'], 'GET');
 
     const configClient = {
       where: {
@@ -52,7 +50,6 @@ const getOneById = async (req, res) => {
     // Success Response
     res.status(200).json(UserNotificationById);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -101,7 +98,6 @@ const updateOne = async (req, res) => {
 // delete a user notification type
 const deleteOne = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['id'], 'GET');
 
     const configClient = {
       where: {

@@ -45,11 +45,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 //User Route
 app.use('/api/users', usersRouter);
-//UserType Route
 app.use('/api/user_type', userTypeRouter);
+//Address Route
 app.use('/api/address_road_type', addressRoadTypeRouter);
-app.use('/api/user_notification_type', userNotificationRouter);
 app.use('/api/address', addressRouter);
+//treatments Route
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);
@@ -58,14 +58,14 @@ app.use('/api/medicalAdministrations', medicalAdministrationRouter);
 // NotificationType Route
 app.use('/api/notification_type', NotificationTypeRouter);
 app.use('/api/notification_history', NotificationHistory);
-// ContactType Route
-app.use('/api/contact_type', ContactTypeRouter)
+app.use('/api/user_notification_type', userNotificationRouter);
 // Company Route
-app.use('/api/company', CompanyRouter)
+app.use('/api/company', CompanyRouter);
 // Contact Route
-app.use('/api/contact', ContactRouter)
+app.use('/api/contact', ContactRouter);
+app.use('/api/contact_type', ContactTypeRouter);
 // UserCompany Route
-app.use('/api/user_company', UserCompanyRouter)
+app.use('/api/user_company', UserCompanyRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,11 +1,40 @@
 const Models = require('./../models');
-const { checkRequiredFields } = require('./../utils/requestHandler');
+const {
+  checkRequiredFields,
+  selectUserGlobalInfos,
+  selectAddressRoadType,
+  transformIntValue,
+  extractFieldsToChange,
+} = require('./../utils/requestHandler');
 
 // create a user type
 const createOne = async (req, res) => {
   try {
+    checkRequiredFields(req, res, [
+      'numberRoad',
+      'streetName',
+      'zipcode',
+      'city',
+      'region',
+      'country',
+      'title',
+      'user_id',
+      'address_road_type_id',
+    ]);
+
     const newType = await Models.Address.create({
-      data: req.body,
+      data: {
+        numberRoad: req.body.numberRoad,
+        streetName: req.body.streetName,
+        additionnalAddress: req.body.additionnalAddress,
+        zipcode: req.body.zipcode,
+        city: req.body.city,
+        region: req.body.region,
+        country: req.body.country,
+        title: req.body.title,
+        user_id: parseInt(req.body.user_id),
+        address_road_type_id: req.body.address_road_type_id,
+      },
     });
 
     // The prisma client can run only 10 instances simultaneously,
@@ -15,7 +44,6 @@ const createOne = async (req, res) => {
     // Success Response
     res.status(200).json(newType);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -23,15 +51,13 @@ const createOne = async (req, res) => {
 // get user type by nameSlug field
 const getOneById = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['id'], 'GET');
-
     const configClient = {
       where: {
-        id: parseInt(req.params.id),
+        id: transformIntValue(req.params.id),
       },
       include: {
-        User: true,
-        AddressRoadType: true,
+        User: selectUserGlobalInfos(),
+        AddressRoadType: selectAddressRoadType(),
       },
     };
 
@@ -72,12 +98,26 @@ const getAll = async (req, res) => {
 
 const updateOne = async (req, res) => {
   try {
-    // Request Select
+    const onlyThoseFields = [
+      'numberRoad',
+      'name',
+      'additionnalAddress',
+      'zipcode',
+      'city',
+      'region',
+      'country',
+      'title',
+      'user_id',
+      'address_road_type_id',
+    ];
+    const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+    const id = transformIntValue(req.params.id);
+
     const configClient = {
       where: {
-        id: parseInt(req.params.id),
+        id: id,
       },
-      data: req.body,
+      data: fieldsFiltered,
     };
 
     const AddressType = await Models.Address.update(configClient);
@@ -96,11 +136,12 @@ const updateOne = async (req, res) => {
 // delete a user type
 const deleteOne = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['id'], 'GET');
+    //check juste entier
+    const id = transformIntValue(req.params.id);
 
     const configClient = {
       where: {
-        id: parseInt(req.params.id),
+        id: id,
       },
     };
 

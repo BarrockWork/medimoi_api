@@ -1,8 +1,9 @@
 const Models = require('./../models');
 const {
   checkRequiredFields,
-  createNameSlug,
+  createSlug,
   extractFieldsToChange,
+  verifySlugInDb,
 } = require('./../utils/requestHandler');
 
 // create a user type
@@ -13,7 +14,7 @@ const createOne = async (req, res) => {
     const newType = await Models.AddressRoadType.create({
       data: {
         name: reqName,
-        nameSlug: createNameSlug(req),
+        nameSlug: createSlug(reqName),
       },
     });
 
@@ -24,7 +25,6 @@ const createOne = async (req, res) => {
     // Success Response
     res.status(200).json(newType);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -75,15 +75,16 @@ const updateOne = async (req, res) => {
     const onlyThoseField = ['name'];
     const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseField);
 
-    // Request Select
-    const configClient = {
-      where: {
-        nameSlug: req.params.nameSlug,
-      },
-      data: fieldsFiltered,
-    };
+    // Check if the new slug exists
+    const configRequestDB = await verifySlugInDb(
+      Models,
+      'AddressRoadType',
+      req.params.nameSlug,
+      createSlug(req.body.name),
+      fieldsFiltered
+    );
 
-    const AddressType = await Models.AddressRoadType.update(configClient);
+    const AddressType = await Models.AddressRoadType.update(configRequestDB);
 
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
@@ -99,8 +100,6 @@ const updateOne = async (req, res) => {
 // delete a user type
 const deleteOne = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['nameSlug'], 'GET');
-
     const configClient = {
       where: {
         nameSlug: req.params.nameSlug,

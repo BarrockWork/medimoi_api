@@ -1,11 +1,19 @@
 const Models = require('./../models');
-const { checkRequiredFields } = require('./../utils/requestHandler');
+const {
+  checkRequiredFields,
+  selectUserGlobalInfos,
+  selectNotificationType,
+  transformIntValue,
+} = require('./../utils/requestHandler');
 
 // create a user notification type
 const createOne = async (req, res) => {
   try {
+    checkRequiredFields(req, res, ['user_notification_type_id']);
     const Notification = await Models.NotificationHistory.create({
-      data: req.body,
+      data: {
+        user_notification_type_id: req.body.user_notification_type_id,
+      },
     });
 
     // The prisma client can run only 10 instances simultaneously,
@@ -15,7 +23,6 @@ const createOne = async (req, res) => {
     // Success Response
     res.status(200).json(Notification);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -23,17 +30,16 @@ const createOne = async (req, res) => {
 // get user notification type by id
 const getOneById = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['id'], 'GET');
-
+    const id = transformIntValue(req.params.id);
     const configClient = {
       where: {
-        id: parseInt(req.params.id),
+        id: id,
       },
       include: {
         UserNotificationType: {
           include: {
-            User: true,
-            NotificationType: true,
+            User: selectUserGlobalInfos(),
+            NotificationType: selectNotificationType(),
           },
         },
       },
@@ -48,7 +54,6 @@ const getOneById = async (req, res) => {
     // Success Response
     res.status(200).json(getById);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -71,12 +76,17 @@ const getAll = async (req, res) => {
 
 const updateOne = async (req, res) => {
   try {
+    const id = transformIntValue(req.params.id);
+    checkRequiredFields(req, res, ['user_notification_type_id']);
+
     // Request Select
     const configClient = {
       where: {
-        id: parseInt(req.params.id),
+        id: id,
       },
-      data: req.body,
+      data: {
+        user_notification_type_id: req.body.user_notification_type_id,
+      },
     };
 
     const UpdateNotification = await Models.NotificationHistory.update(
@@ -97,11 +107,11 @@ const updateOne = async (req, res) => {
 // delete a user notification type
 const deleteOne = async (req, res) => {
   try {
-    checkRequiredFields(req, res, ['id'], 'GET');
+    const id = transformIntValue(req.params.id);
 
     const configClient = {
       where: {
-        id: parseInt(req.params.id),
+        id: id,
       },
     };
 

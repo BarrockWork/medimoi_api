@@ -87,10 +87,6 @@ const getTreatmentById = async (req, res) => {
 
 const getAllTreatments = async (req, res) => {
     try {
-        // const treatmemts = await Models.treatment.findMany({
-        //     select: selecttreatmentPeriodicityInfos()
-        // })
-
         const configClient = {
             orderBy: {
                 name: "asc"

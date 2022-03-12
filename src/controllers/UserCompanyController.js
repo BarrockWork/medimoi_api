@@ -106,7 +106,7 @@ const findByUserId = async (req, res) => {
     try {
         // Check and transform the param is a number
         const id = transformIntValue(req.params.id);
-        const userCompany = await Models.UserCompany.findMany({
+        const userCompany = await Models.UserCompany.findUnique({
             where: {
                 user_id: id
             },
@@ -194,9 +194,6 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
     try {
-        // Check required field
-        checkRequiredFields(req, res,['id'], 'GET');
-
         // Check and transform the param is a number
         const id = transformIntValue(req.params.id);
 

@@ -40,10 +40,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/treatments', treatmentRouter);
-app.use('/api/treatmentMedias', treatmentMediaRouter);
-app.use('/api/treatmentDrugs', treatmentDrugRouter);
-app.use('/api/treatmentPeriodicities', treatmentPeriodicityRouter);
-app.use('/api/medicalAdministrations', medicalAdministrationRouter);
+app.use('/api/treatment_medias', treatmentMediaRouter);
+app.use('/api/treatment_drugs', treatmentDrugRouter);
+app.use('/api/treatment_periodicities', treatmentPeriodicityRouter);
+app.use('/api/medical_administrations', medicalAdministrationRouter);
 // NotificationType Route
 app.use('/api/notification_type', NotificationTypeRouter)
 // ContactType Route

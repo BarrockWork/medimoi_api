@@ -195,6 +195,72 @@ const selectCompany = () => {
 }
 
 /**
+ * Get Drug infos
+ */
+const selectDrugInfos = () => {
+    return {
+        select:{
+            id:true,
+            name:true,
+            isActive:true,
+            description:true,
+            isPrescription:true
+        }
+    }
+}
+
+/**
+ * Treatment drung infos
+*/
+const selectTreatmentDrugsInfos = () => {
+    return {
+        select:{
+            id:true,
+            comments:true,
+            drug_id:true,
+            treatment_id:true,
+            isActive:true
+        }
+    }
+}
+
+const selectTreatmentMediasInfos = () => {
+    return {
+        select:{
+            id:true,
+            name:true,
+            mimeType:true,
+            isActive:true,
+        }
+    }
+}
+
+const selecttreatmentPeriodicityInfos = () =>{
+    return {
+        select:{
+            id:true,
+            name:true,
+            nameSlug:true,
+            isActive:true,
+        }
+    }
+}
+
+const selectTreatmentGlobalInfos = () => {
+    return {
+        id:true,
+        name:true,
+        startedAt:true,
+        finishedAt:true,
+        TreatmentPeriodicity:selecttreatmentPeriodicityInfos(),
+        TreatmentMedias:selectTreatmentMediasInfos(),
+        TreatmentDrugs:selectTreatmentDrugsInfos(),
+        User:selectUserGlobalInfos(),
+        isActive:true,
+    }
+}
+
+/**
  * TODO
  */
 const errorHandler = () => {
@@ -209,5 +275,10 @@ module.exports =  {
     transformIntValue,
     selectUserGlobalInfos,
     selectContactType,
-    selectCompany
+    selectCompany,
+    selectDrugInfos,
+    selectTreatmentDrugsInfos,
+    selectTreatmentMediasInfos,
+    selecttreatmentPeriodicityInfos,
+    selectTreatmentGlobalInfos
 }

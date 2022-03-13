@@ -32,7 +32,6 @@ const CompanyRouter = require('./src/routes/company');
 const ContactRouter = require('./src/routes/contact');
 // UserCompany router
 const UserCompanyRouter = require('./src/routes/user_company');
->>>>>>>>> Temporary merge branch 2
 
 const app = express();
 
@@ -74,7 +73,6 @@ app.use('/api/company', CompanyRouter)
 app.use('/api/contact', ContactRouter)
 // UserCompany Route
 app.use('/api/user_company', UserCompanyRouter)
->>>>>>>>> Temporary merge branch 2
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

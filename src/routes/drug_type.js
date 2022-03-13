@@ -99,7 +99,7 @@ router.get('/', getAllDrugType);
 
 
 /**
- * @apiGroup drugTypes
+ * @apiGroup Drug_Type
  * @api {GET} /api/drugTypes/:nameSlug Get drug by slug
  * @apiName GetDrugBySlug
  *

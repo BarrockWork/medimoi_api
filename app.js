@@ -17,6 +17,15 @@ const treatmentMediaRouter = require('./src/routes/treatment_media');
 const treatmentDrugRouter = require('./src/routes/treatment_drug');
 const treatmentPeriodicityRouter = require('./src/routes/treatment_periodicity');
 const medicalAdministrationRouter = require('./src/routes/medical_administration');
+const diseaseRouter = require('./src/routes/disease');
+// Diseasetype router
+const diseaseTypeRouter = require('./src/routes/disease_type');
+// Drug router
+const drugRouter = require('./src/routes/drug');
+//Drug Level router
+const drugLevelRouter = require('./src/routes/drug_level');
+//Drug Type router
+const drugTypeRouter = require('./src/routes/drug_type');
 // NotificationType router
 const NotificationTypeRouter = require('./src/routes/notification_type');
 const NotificationHistory = require('./src/routes/notification_history');
@@ -38,18 +47,22 @@ app.set('view engine', 'jade');
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-//User Route
 app.use('/api/users', usersRouter);
-app.use('/api/user_type', userTypeRouter);
-//Address Route
-app.use('/api/address_road_type', addressRoadTypeRouter);
-app.use('/api/address', addressRouter);
-//treatments Route
+// Disease route
+app.use('/api/diseases', diseaseRouter);
+// Disease_type route
+app.use('/api/disease_type', diseaseTypeRouter);
+//Drug route
+app.use('/api/drugs', drugRouter);
+//Drug level route
+app.use('/api/drugLevels', drugLevelRouter)
+//Drug Type route
+app.use('/api/drugTypes', drugTypeRouter)
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);

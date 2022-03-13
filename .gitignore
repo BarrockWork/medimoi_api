@@ -29,3 +29,6 @@ yarn-error.log*
 
 # PhpStorm
 .idea
+
+#apiDocs
+public/docs/assets/main.bundle.js

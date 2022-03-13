@@ -1,56 +1,46 @@
 // Import of the Prisma client
 const Models = require('../models');
+const {checkRequiredFields, extractFieldsToChange, transformIntValue} = require('../utils/requestHandler');
 const { isEmpty } = require('ramda');
 
 const createTreatmentMedia = async (req, res) => {
 
-    // Array of required fields.
-    const requiredFields = [
-        'name',
-        'mimeType', 
-        'treatment_id'
-    ];
+    // Check the required fields
+    checkRequiredFields(req, res, [
+        "name",
+        "mimeType",
+        "treatment_id"
+    ]);
 
-    // Get missing required fields.
-    const missingValues = requiredFields.filter(fileld => !req.body[fileld])
-
-    if(!isEmpty(missingValues)){
-        return res.status(400).json({
-            message: "Somes values are missings",
-            value: missingValues
-        })
-    }
+    // get values to add 
+    const{name, mimeType, treatment_id} = req.body;
 
     try {
         const treatmentMedia = await Models.treatmentMedia.create({
-            data: req.body
+            data: {
+                name,
+                mimeType,
+                treatment_id
+            }
         });
-        console.log(treatmentMedia);
 
         // The prisma client can run only 10 instances simultaneously, 
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
-        res.status(200).json({
-            success: true,
-            treatmentMedia
-        });
+
+        // Success response
+        res.status(200).json(treatmentMedia);
     } catch (error) {
         console.log(error)
-        res.status(400).json({
-            success: false,
-            error
-        });
+        res.status(400).json(error);
     }
-
 }
 
 const getTreatmentMediaById = async (req, res) => {
-    
-    const {id} = req.params;
     try {
         const treatmentMedia = await Models.treatmentMedia.findUnique({
             where: {
-                id: parseInt(id)
+                id: transformIntValue(req.params.id)
             },
 
             // you can include relation and elements like that.
@@ -58,118 +48,104 @@ const getTreatmentMediaById = async (req, res) => {
                 Treatment:{
                     select:{
                         id: true,
-                        name:true
+                        name:true,
+                        isActive:true
                     }
                 }
             }
         })
 
         await Models.$disconnect();
-        console.log(treatmentMedia);
-        res.status(200).json({
-            success: true,
-            treatmentMedia
-        });
+        res.status(200).json(treatmentMedia);
     } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
+        res.status(400).json(error);
     }
 }
 
-const getAllTreatmentMedias = async (req, res) => {
+const findAll = async (req, res) => {
     try {
-        const treatmemtMedias = await Models.treatmentMedia.findMany({
-            select: {
-                id:true,
-                name:true,
-                isActive:true
+
+        const configClient = {
+            orderBy: {
+                name: "asc"
             }
-        })
-        Models.$disconnect();
-        console.log(treatmemtMedias);
-        res.status(200).json({
-            success: true,
-            treatmemtMedias
-        });
+        };
+        // If param isActive is defined
+        if(req.params.isActive) {
+            if (toLower(req.params.isActive) === "true") {
+                configClient.where = {
+                    isActive: true
+                }
+            }
+            if (toLower(req.params.isActive) === "false") {
+                configClient.where = {
+                    isActive: false
+                }
+            }
+        }
+
+        const treatmemtMedias = await Models.treatmentMedia.findMany(configClient)
+        await Models.$disconnect();
+        res.status(200).json(treatmemtMedias);
     } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
+        res.status(400).json(error);
     }
 }
 
-const getTreatmentMediaByStatus = async (req, res) => {
-    const {isActive} = req.body
+const findManyByTreatmentId = async (req, res) => {
     try {
-        const treatmentMedias = await Models.treatmentMedia.findMany({
+        const treatmentMedia = await Models.treatmentMedia.findMany({
             where:{
-                isActive
+                treatment_id: transformIntValue(req.params.treatment_id)
             },
-            select: {
-                id:true,
-                name:true,
-                isActive:true
+            // you can include relation and elements like that.
+            include:{
+                Treatment:{
+                    select:{
+                        id: true,
+                        name:true,
+                        isActive:true
+                    }
+                }
             }
         })
 
-        Models.$disconnect();
-        console.log(treatmentMedias);
-        res.status(200).json({
-            success: true,
-            treatmentMedias
-        });
+        await Models.$disconnect();
+        res.status(200).json(treatmentMedia);
     } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
+        res.status(400).json(error);
     }
 }
 
 // Update function
 const updateTreatmentMedia = async (req, res) => {
-    const {id} = req.params;
-
     try {
+        const onlyThoseFields = ['name', 'isActive', 'mimeType'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
         const treatmentMedia = await Models.treatmentMedia.update({
             where:{
-                id: parseInt(id)
+                id: transformIntValue(req.params.id)
             },
-            data:req.body
+            data:fieldsFiltered
         });
+
         await Models.$disconnect();
-        console.log(treatmentMedia);
-        res.status(200).json({
-            success: true,
-            treatmentMedia
-        });
+        res.status(200).json(treatmentMedia);
     } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
+        res.status(400).json(error);
     }
 }
 
 // Delete function
 const deleteTreatmentMedia = async (req, res) => {
-    const {id} = req.params;
 
     try {
-        const deletedTreatmentMedia = await Models.treatmentMedia.delete({
+        await Models.treatmentMedia.delete({
             where:{
-                id: parseInt(id)
+                id: transformIntValue(req.params.id)
             }
         })
         await Models.$disconnect();
-        console.log(deletedTreatmentMedia);
         res.status(200).json({
             success: true,
             message: `Treatment media with id ${id} was deleted`
@@ -183,8 +159,8 @@ const deleteTreatmentMedia = async (req, res) => {
 module.exports = {
     createTreatmentMedia,
     getTreatmentMediaById,
-    getAllTreatmentMedias,
-    getTreatmentMediaByStatus,
     updateTreatmentMedia,
+    findAll,
+    findManyByTreatmentId,
     deleteTreatmentMedia
 }

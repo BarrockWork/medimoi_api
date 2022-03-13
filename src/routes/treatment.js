@@ -3,19 +3,41 @@ const router = express.Router();
 
 // import route functions from controller
 const {
-    createTreatment, getTreatmentById, getAllTreatments, getTreatmentByStatus, updateTreatment, deleteTreatment
+    createOne, createMany, getTreatmentById, getAllTreatments, getTreatmentByStatus, updateTreatment, deleteTreatment
 } = require('../controllers/TeatmentController');
 
+/** DEFINES ------------------------------------------------- */
 
 /**
- * @apiGroup Treatment
- * @api {POST} /api/treatments/new Create new treatment
- * @apiName CreateTreatment
- * 
- * @apiBody {String} name Treatment name.
+ * Define a global Treatment not found
+ * @apiDefine TreatmentNotFoundError
+ * @apiError TreatmentNotFound Treatment was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "TreatmentNotFound"
+ *     }
+*/
+
+/**
+ * Define parameters for the POST and PUT requests
+ *
+ * @apiDefine TreatmentPOSTParam
+ * @apiBody {String[2..50]} name Name.
  * @apiBody {Number} user_id The user id.
  * @apiBody {Number} treatment_periodicity_id  Treatment periodicity id.
- * @apiBody {Boolean} [isActive=true] Optional The treatmemt state.
+ * @apiBody {String[24..25]} startedAt  Treatment start date example: 2022-03-02 07:51:42.871.
+*/
+
+/* ROUTES --------------------------------------------*/
+
+/**
+ * @apiDescription Insert single Treatment
+ * @api {POST} /api/treatments/new Create new treatment
+ * @apiName CreateTreatment
+ * @apiGroup Treatment
+ * 
+ * @apiUse TreatmentPOSTParam
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -24,21 +46,24 @@ const {
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     name:                        "Treatment exemple",
- *     user_id:                      99
- *     treatment_periodicity_id:     99
+ *     "name":                        "Treatment exemple",
+ *     "user_id":                      1,
+ *     "treatment_periodicity_id":     1,
+ *     "startedAt":                     "2022-03-02 07:51:42.871"
  *  }
  * 
+ * @apiSampleRequest http://localhost:4000/api/treatments/new
  * @apiVersion 0.1.0
  */
-router.post("/new", createTreatment);
+router.post("/new", createOne);
 
 /**
+ * @apiDescription Insert Many Treatments
+ * @api {POST} /api/treatments/news Create many treatment
+ * @apiName CreateManyTreatment
  * @apiGroup Treatment
- * @api {GET} /api/treatments/status get treatment by status
- * @apiName GetTreatmentBySatus
  * 
- * @apiBody {Boolean} isActive The treatmemt status.
+ * @apiUse TreatmentPOSTParam
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -47,62 +72,71 @@ router.post("/new", createTreatment);
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     isActive: true
+ *      "entries": [
+ *           {
+ *               "name":                        "Treatment exemple 1",
+ *               "user_id":                      1,
+ *               "treatment_periodicity_id":     1,
+ *               "startedAt":                     "2022-03-02 07:51:42.871"
+ *           },
+ *           {
+ *               "name":                        "Treatment exemple 2",
+ *               "user_id":                      1,
+ *               "treatment_periodicity_id":     1,
+ *               "startedAt":                     "2022-03-02 07:51:42.871"
+ *           }
+ *      ]
  *  }
- * 
+ * @apiSampleRequest http://localhost:4000/api/treatments/news
  * @apiVersion 0.1.0
  */
-router.get("/status", getTreatmentByStatus);
+router.post("/news", createMany); // create Many
 
 /**
+ * @apiDescription Get single Treatment
+ * @api {POST} /api/treatments/:id Get treatment by id
+ * @apiName GetTreatment
  * @apiGroup Treatment
- * @api {GET} /api/treatments/:id Get treatment by Id
- * @apiName GetTreatmentById
  * 
- * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/treatments/4711
  * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatments/3
  * @apiVersion 0.1.0
  */
 router.get("/:id", getTreatmentById);
 
 
 
-// /**
-//  * @apiGroup Treatment
-//  * @api {GET} /api/treatments/status/:slug Get treatment by Slug
-//  * @apiName GetTreatmentBySlug
-//  * 
-//  * @apiExample {curl} Example usage:
-//  *     curl -i http://localhost:4000/api/treatments/slug/monthly
-//  * 
-//  * @apiVersion 0.1.0
-//  */
-
-
-
 /**
- * @apiGroup Treatment
- * @api {GET} /api/treatments Get all treatment
+ * @apiDescription Get all Treatments
+ * @api {POST} /api/treatments/all/:isActive? Get All treatments
  * @apiName GetAllTreatment
+ * @apiGroup Treatment
  * 
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/treatments
  * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatments/all/true
  * @apiVersion 0.1.0
  */
 router.get("/", getAllTreatments);
 
 
 /**
- * @apiGroup Treatment
+ * @apiDescription Update treatment
  * @api {PUT} /api/treatments/:id Update treatment
- * @apiName UpdateTreatmentById
+ * @apiName UpdateTreatment
+ * @apiGroup Treatment
  * 
- * @apiBody {String} [name=last] Treatment name.
- * @apiBody {Number} [user_id=last] The user id.
- * @apiBody {Number} [treatment_periodicity_id=last] Treatment periodicity id.
- * @apiBody {Boolean} [isActive=true] The treatmemt state.
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -111,25 +145,32 @@ router.get("/", getAllTreatments);
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     name:                        "Treatment exemple",
- *     user_id:                      9,
- *     treatment_periodicity_id:     9,
- *     isActive:                     true
+ *     name:     "new treatment name",
+ *     isActive:  false
  *  }
  * 
+ * @apiUse TreatmentNotFoundError
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatments/:id
  * @apiVersion 0.1.0
  */
 router.put("/:id", updateTreatment);
 
 
 /**
+ * @apiDescription Delete a single Treatment
+ * @api {DELETE} /api/treatments/:id Delete single treatment
+ * @apiName DeleteSingleTreatment
  * @apiGroup Treatment
- * @api {DELETE} /api/treatments/:id Delete treatment
- * @apiName DeleteTreatment
- * 
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/treatments/4711
- * 
+ * @apiParam {Numeric} Treatment id
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse TreatmentNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/treatments/:id
  * @apiVersion 0.1.0
  */
 router.delete("/:id", deleteTreatment);

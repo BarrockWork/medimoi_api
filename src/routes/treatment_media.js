@@ -2,19 +2,40 @@ const express = require('express');
 const router = express.Router();
 
 // import route functions from controller
-const { createTreatmentMedia, getTreatmentMediaById, getAllTreatmentMedias, getTreatmentMediaByStatus, updateTreatmentMedia, deleteTreatmentMedia } = require('../controllers/TreatmentMediaController');
-const action = () => {
-}
+const { createTreatmentMedia, getTreatmentMediaById, findAll, findManyByTreatmentId, updateTreatmentMedia, deleteTreatmentMedia } = require('../controllers/TreatmentMediaController');
+
+/** DEFINES ------------------------------------------------- */
 
 /**
- * @apiGroup TreatmentMedia
- * @api {POST} /api/treatmentMedias/new Create new treatment media.
- * @apiName CreateTreatmentMedia
- * 
- * @apiBody {String} name Treatment media name.
- * @apiBody {String} mimeType Treatment media mime type.
+ * Define a global Treatment media not found
+ * @apiDefine TreatmentMediaNotFoundError
+ * @apiError TreatmentMediaNotFound Treatment media was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "TreatmentMediaNotFound"
+ *     }
+*/
+
+/**
+ * Define parameters for the POST and PUT requests
+ *
+ * @apiDefine TreatmentMediaPOSTParam
+ * @apiBody {String[2..255]} name Treatment media name.
+ * @apiBody {String[2..50]} mimeType Treatment media mime type.
  * @apiBody {Number} treatment_id  Treatment id.
  * @apiBody {Boolean} [isActive=true] Treatmemt media state.
+*/
+
+/* ROUTES --------------------------------------------*/
+
+/**
+ * @apiDescription Insert single treatment media
+ * @api {POST} /api/treatment_medias/new Create new treatment media.
+ * @apiName CreateTreatmentMedia
+ * @apiGroup TreatmentMedia
+ * 
+ * @apiUse TreatmentMediaPOSTParam
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -23,69 +44,75 @@ const action = () => {
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     name:                        "some media name",
- *     mimeType:                   "some mime type",
- *     treatment_id:                1
+ *     "name":         "some media name",
+ *     "mimeType":     "some mime type",
+ *     "treatment_id": 1
  *  }
  * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_medias/new
  * @apiVersion 0.1.0
  */
 router.post("/new", createTreatmentMedia);
 
 /**
+ * @apiDescription get single treatment media by id
  * @apiGroup TreatmentMedia
- * @api {GET} /api/treatmentMedias/status get treatment media by status
- * @apiName GetTreatmentMediaByStatus
+ * @api {GET} /api/treatment_medias/:id Get treatment media by Id
+ * @apiName GetTreatmentMediaById
  * 
- * @apiBody {Boolean} isActive The treatmemt media status.
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     'Content-Type': 'application/json'
  *   }
  * 
- * @apiParamExample {json} Request-Example
- *  {
- *     isActive: true
- *  }
- * 
- * @apiVersion 0.1.0
- */
-router.get("/status", getTreatmentMediaByStatus);
-
-/**
- * @apiGroup TreatmentMedia
- * @api {GET} /api/treatmentMedias/:id Get treatment media by Id
- * @apiName GetTreatmentMediaById
- * 
- * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/treatmentMedias/4711
- * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_media/2
  * @apiVersion 0.1.0
  */
 router.get("/:id", getTreatmentMediaById);
 
 /**
+ * @apiDescription get many treatment media by id
  * @apiGroup TreatmentMedia
- * @api {GET} /api/treatmentMedias Get all treatment media
- * @apiName GetAllTreatmentMedia
+ * @api {GET} /api/treatment_medias/all Get Many treatment media
+ * @apiName GetManyTreatmentMedia
  * 
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/treatmentMedias
  * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_medias/all/false
+ */
+ router.get("all/:isActive?", findAll);
+
+/**
+ * @apiDescription get many treatment media by treatment_id
+ * @apiGroup TreatmentMedia
+ * @api {GET} /api/treatment_medias/:id Get many treatment media by treatment_id
+ * @apiName GetManyTreatmentMediaByTreatmentId
+ * 
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_media/treatment/1
  * @apiVersion 0.1.0
  */
-router.get("/", getAllTreatmentMedias);
+router.get("/treatment/:treatment_id", findManyByTreatmentId);
 
 
 /**
+ * @apiDescription Update treatment media
  * @apiGroup TreatmentMedia
- * @api {PUT} /api/treatmentMedias/:id Update treatment media
+ * @api {PUT} /api/treatment_medias/:id Update treatment media
  * @apiName UpdateTreatmentMedia
  * 
- * @apiBody {String} [name=last] Treatment media name.
- * @apiBody {String} [mimeType=last] Treatment media mime type.
- * @apiBody {Number} [treatment_id=last]  Treatment id.
+ * @apiBody {String[2..255]} [name=last] Treatment media name.
+ * @apiBody {String[2..50]} [mimeType=last] Treatment media mime type.
  * @apiBody {Boolean} [isActive=last] Treatmemt media state.
  * 
  * @apiHeaderExample {json} Header-Example:
@@ -95,25 +122,33 @@ router.get("/", getAllTreatmentMedias);
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     name:                        "some media name",
- *     mimeType:                   "some mime type",
- *     treatment_id:                1,
- *     isActive:                    false
+ *     name:          "some media name",
+ *     mimeType:      "some mime type",
+ *     isActive:      false
  *  }
  * 
+ * @apiUse TreatmentMediaNotFoundError
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_medias/1
  * @apiVersion 0.1.0
  */
 router.put("/:id", updateTreatmentMedia);
 
 
 /**
+ * @apiDescription Delete treatment media
  * @apiGroup TreatmentMedia
- * @api {DELETE} /api/treatmentMedias/:id Delete treatment media
+ * @api {DELETE} /api/treatment_medias/:id Delete treatment media
  * @apiName DeleteTreatmentMedia
  * 
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/treatmentMedias/4711
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
  * 
+ * @apiUse TreatmentMediaNotFoundError
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_medias/1
  * @apiVersion 0.1.0
  */
 router.delete("/:id", deleteTreatmentMedia);

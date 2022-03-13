@@ -28,7 +28,7 @@ const {
  *
  * @apiDefine NotificationTypePOSTParam
  * @apiBody {String[2..50]} name Name.
- */
+*/
 
 /* ROUTES --------------------------------------------*/
 

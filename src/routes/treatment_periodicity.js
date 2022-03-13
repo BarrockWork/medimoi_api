@@ -2,18 +2,37 @@ const express = require('express');
 const router = express.Router();
 
 // import route functions from controller
-const { createTreatmentPeriodicity, getTreatmentPeriodicityByStatus, getTreatmentPeriodicityById, getAllTreatmentPeriodicities, updateTreatmentPeriodicity, deleteTreatmentPeriodicity } = require('../controllers/TreatmentPeriodicityController');
-const action = () => {
-}
+const { createTreatmentPeriodicity, updateTreatmentPeriodicity, deleteTreatmentPeriodicityBySlug, createMany, getTreatmentPeriodicityBySlug, findAll } = require('../controllers/TreatmentPeriodicityController');
+
+/** DEFINES ------------------------------------------------- */
 
 /**
- * @apiGroup TreatmentPeriodicity
- * @api {POST} /api/treatmentPeriodicities/new Create new treatment periodicity.
+ * Define a global TreatmentPeriodicity not found
+ * @apiDefine TreatmentPeriodicityNotFoundError
+ * @apiError TreatmentPeriodicityNotFound TreatmentPeriodicity was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "TreatmentPeriodicityNotFound"
+ *     }
+*/
+
+/**
+ * Define parameters for the POST and PUT requests
+ *
+ * @apiDefine TreatmentPeriodicityPOSTParam
+ * @apiBody {String[2..50]} name Name.
+*/
+
+/* ROUTES --------------------------------------------*/
+
+/**
+ * @apiDescription Insert single TreatmentPeriodicity
+ * @api {POST} /api/treatment_periodicities/new Create new Treatment periodicity
  * @apiName CreateTreatmentPeriodicity
+ * @apiGroup TreatmentPeriodicity
  * 
- * @apiBody {String} name Treatment periodicity name.
- * @apiBody {String} nameSlug Treatment periodicity name slug.
- * @apiBody {Boolean} [isActive=true] treatment periodicity state.
+ * @apiUse TreatmentPeriodicityPOSTParam
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -22,20 +41,21 @@ const action = () => {
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     name:                        "some periodicity name",
- *     nameSlug:                    "some nameSlug"
+ *     "name":  "daily"
  *  }
  * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/new
  * @apiVersion 0.1.0
  */
 router.post("/new", createTreatmentPeriodicity);
 
 /**
+ * @apiDescription Insert multiple TreatmentPeriodicity
+ * @api {POST} /api/treatment_periodicities/news Create news treatment periodicity
+ * @apiName CreateMenyTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
- * @api {GET} /api/treatmentPeriodicities/status get treatment periodicity by status
- * @apiName GetTreatmentPeriodicityByStatus
  * 
- * @apiBody {Boolean} isActive The treatmemt periodicity status.
+ * @apiUse TreatmentPeriodicityPOSTParam
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -44,74 +64,109 @@ router.post("/new", createTreatmentPeriodicity);
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     isActive: true
+ *     "entries": [
+ *          {
+ *              "name":  "daily"
+ *          },
+ *          {
+ *              "name":  "weekly"
+ *          },
+ *          {
+ *              "name":  "monthly"
+ *          }
+ *      ]
  *  }
  * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/news
  * @apiVersion 0.1.0
  */
-router.get("/status", getTreatmentPeriodicityByStatus);
+router.post("/news", createMany);
 
 /**
+ * @apiDescription Get TreatmentPeriodicity by nameSlug
+ * @api {POST} /api/treatment_periodicities/slug/:nameSlug Get treatment periodicity by nameSlug
+ * @apiName GetByNameSlugTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
- * @api {GET} /api/treatmentPeriodicities/:id Get treatment periodicity by Id
- * @apiName GetTreatmentPeriodicityById
  * 
- * @apiExample {curl} Example usage:
- *      curl -i http://localhost:4000/api/treatmentPeriodicities/4711
+ * @apiParam {String[2..50]} nameSlug Name slug
  * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * @apiUse TreatmentPeriodicityNotFoundError
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/slug/:nameSlug
  * @apiVersion 0.1.0
- */
-router.get("/:id", getTreatmentPeriodicityById);
+*/
+router.get("/slug/:nameSlug", getTreatmentPeriodicityBySlug);
 
 /**
- * @apiGroup TreatmentPeriodicity
- * @api {GET} /api/treatmentPeriodicities Get all treatment periodicity
+ * @apiDescription Get all TreatmentPeriodicity
+ * @api {GET} /api/treatment_periodicities/all/:isActive? Get all TreatmentPeriodicity
  * @apiName GetAllTreatmentPeriodicity
- * 
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/treatmentPeriodicities
- * 
- * @apiVersion 0.1.0
- */
-router.get("/", getAllTreatmentPeriodicities);
-
-
-/**
  * @apiGroup TreatmentPeriodicity
- * @api {PUT} /api/treatmentPeriodicities/:id Update treatment periodicity
- * @apiName UpdateTreatmentPeriodicity
- * 
- * @apiBody {String} [name=last] Treatment periodicity name.
- * @apiBody {String} [nameSlug=last] Treatment periodicity name slug.
- * @apiBody {Boolean} [isActive=last] treatment periodicity state.
- * 
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     'Content-Type': 'application/json'
  *   }
- * 
- * @apiParamExample {json} Request-Example
- *  {
- *     name:                       "new name",
- *     nameSlug:                   "new name slug",
- *     isActive:                    false
- *  }
- * 
+ *
+ * @apiUse TreatmentPeriodicityNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/all/:isActive?
  * @apiVersion 0.1.0
  */
-router.put("/:id", updateTreatmentPeriodicity);
+ router.get("/all/:isActive?", findAll);
 
 
 /**
+ * @apiDescription Update a single TreatmentPeriodicity
+ * @api {PUT} /api/treatment_periodicities/slug/:nameSLug Update single TreatmentPeriodicity
+ * @apiName UpdateSingleTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
- * @api {DELETE} /api/treatmentPeriodicities/:id Delete treatment periodicity
- * @apiName DeleteTreatmentPeriodicity
- * 
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/treatmentPeriodicities/4711
- * 
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiBody {String[2..50]} [name="New name"] Name (50).
+ * @apiBody {Boolean} [isActive=true] Is active.
+ * @apiParam {String[2..50]} nameSlug Name slug
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     "name":       "New Name",
+ *     "isActive":   false
+ *  }
+ *
+ * @apiUse TreatmentPeriodicityNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/slug/:nameSlug
  * @apiVersion 0.1.0
  */
-router.delete("/:id", deleteTreatmentPeriodicity);
+ router.put("/slug/:nameSlug", updateTreatmentPeriodicity);
+
+
+/**
+ * @apiDescription Delete a single TreatmentPeriodicity
+ * @api {DELETE} /api/treatment_periodicities/slug/:nameSLug Delete single TreatmentPeriodicity
+ * @apiName DeleteSingleTreatmentPeriodicity
+ * @apiGroup TreatmentPeriodicity
+ * @apiParam {String[2..50]} nameSlug Name slug
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse TreatmentPeriodicityNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/slug/:nameSlug
+ * @apiVersion 0.1.0
+ */
+ router.delete("/slug/:nameSlug", deleteTreatmentPeriodicityBySlug);
 
 module.exports = router;

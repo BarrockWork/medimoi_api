@@ -1,237 +1,228 @@
 // Import of the Prisma client
+const { toLower } = require('ramda');
 const Models = require('../models');
-const { isEmpty } = require('ramda');
+const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, selectDrugInfos, transformIntValue} = require('./../utils/requestHandler')
 
-const createMedicalAdministration = async (req, res) => {
-
-    // Array of required fields.
-    const requiredFields = [
-        'name',
-        'nameSlug'
-    ];
-
-    // Get missing required fields.
-    const missingValues = requiredFields.filter(fileld => !req.body[fileld])
-
-    if(!isEmpty(missingValues)){
-        return res.status(400).json({
-            message: "Somes values are missings",
-            value: missingValues
-        })
-    }
-
+const createOne = async (req, res) => {
     try {
+        // Check the required fields
+        checkRequiredFields(req, res,['name']);
+
         const medicalAdministration = await Models.medicalAdministration.create({
-            data: req.body
+            data:{
+                name: req.body.name,
+                nameSlug: createSlug(req.body.name)
+            }
         });
-        console.log(medicalAdministration);
 
         // The prisma client can run only 10 instances simultaneously, 
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
-        res.status(200).json({
-            success: true,
-            medicalAdministration
-        });
+        //Success response
+        res.status(200).json(medicalAdministration);
     } catch (error) {
         console.log(error)
-        res.status(400).json({
-            success: false,
-            error
-        });
+        res.status(400).json(error);
     }
 
 }
 
-const getMedicalAdministrationById = async (req, res) => {
-    
-    const {id} = req.params;
+const createMany = async (req, res) => {
+    try {
+        // Check the required fields
+        checkRequiredFields(req, res, ['entries']);
+
+        const medicalAdmins = [];
+
+        // Loop on the list of MedicalAdministrations
+        req.body.entries.forEach( medicalAdministration => {
+            // Check the required fields
+            checkRequiredFields(medicalAdministration, res,['name']);
+            medicalAdmins.push({
+                name:medicalAdministration.name,
+                nameSlug:createSlug(medicalAdministration.name)
+            })
+        })
+
+        const medicalAdministrations = await Models.medicalAdministration.createMany({
+            data:medicalAdmins,
+            skipDuplicates: true
+        });
+
+        // The prisma client can run only 10 instances simultaneously, 
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(medicalAdministrations);
+    } catch (error) {
+        // console.log(error)
+        res.status(400).json(error);
+    }
+
+}
+
+const findOneById = async (req, res) => {
+    try {
+        // transform the param to number
+        const id = transformIntValue(req.params.id);
+        const medicalAdministration = await Models.medicalAdministration.findUnique({
+            where: {
+                id
+            },
+            include:{
+                Drugs:selectDrugInfos()
+            }
+        });
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(medicalAdministration);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+}
+
+
+const findOne = async (req, res) => {
     try {
         const medicalAdministration = await Models.medicalAdministration.findUnique({
             where: {
-                id: parseInt(id)
+                nameSlug: req.params.nameSlug
             },
-
-            // you can include relation and elements like that.
             include:{
-                Drugs:{
-                    select:{
-                        id:true,
-                        name:true,
-                        isActive:true
-                    }
-                }
+                Drugs:selectDrugInfos()
             }
         })
 
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
-        console.log(medicalAdministration);
-        res.status(200).json({
-            success: true,
-            medicalAdministration
-        });
+        
+        // Success response
+        res.status(200).json(medicalAdministration);
     } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
+        res.status(400).json(error);
     }
 }
 
-// get 
-const getMedicalAdministrationBySlug = async (req, res) => {
-    
-    const {slug} = req.params;
+const findAll = async (req, res) => {
     try {
-        const medicalAdministration = await Models.medicalAdministration.findUnique({
+
+        const configClient = {
+            orderBy: {
+                nameSlug: "asc"
+            }
+        };
+
+        // If param isActive is defined
+        if(req.params.isActive) {
+            if (toLower(req.params.isActive) === "true") {
+                configClient.where = {
+                    isActive: true
+                }
+            }
+            if (toLower(req.params.isActive) === "false") {
+                configClient.where = {
+                    isActive: false
+                }
+            }
+        }
+
+        const medicalAdministrations = await Models.medicalAdministration.findMany(configClient)
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response        
+        await Models.$disconnect();
+
+        // Success Response 
+        res.status(200).json(medicalAdministrations);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+}
+
+const updateOne = async (req, res) => {
+    try {
+        // Selection of fields
+        const onlyThoseFields = ['name', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+        // Check if the new slug exists
+        const configRequestDB = await verifySlugInDb(
+            Models,
+            "medicalAdministration",
+            req.params.nameSlug,
+            createSlug(req.body.name),
+            fieldsFiltered
+        );
+
+        // Update the current entry
+        const medicalAdministration = await Models.medicalAdministration.update(configRequestDB);
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        // Success Response
+        res.status(200).json(medicalAdministration);
+    }catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
+const deleteOneById = async (req, res) => {
+    try {
+        const configClient = {
             where: {
-                nameSlug: slug
-            },
-
-            // you can include relation and elements like that.
-            include:{
-                Drugs:{
-                    select:{
-                        id:true,
-                        name:true,
-                        isActive:true
-                    }
-                }
+                id: transformIntValue(req.params.id)
             }
-        })
+        }
 
+        const medicalAdministration = await Models.medicalAdministration.delete(configClient)
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response        
         await Models.$disconnect();
-        console.log(medicalAdministration);
-        res.status(200).json({
-            success: true,
-            medicalAdministration
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
-    }
-}
 
-const getAllMedicalAdministrations = async (req, res) => {
-    try {
-        const medicalAdministrations = await Models.medicalAdministration.findMany({
-            include:{
-                Drugs:{
-                    select:{
-                        id:true,
-                        name:true,
-                        isActive:true
-                    }
-                }
-            }
-        })
-        Models.$disconnect();
-        console.log(medicalAdministrations);
-        res.status(200).json({
-            success: true,
-            medicalAdministrations
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
-    }
-}
-
-const getMedicalAdministrationByStatus = async (req, res) => {
-    const {isActive} = req.body
-    try {
-        const medicalAdministrations = await Models.medicalAdministration.findMany({
-            where:{
-                isActive
-            },
-            include:{
-                Drugs:{
-                    select:{
-                        id:true,
-                        name:true,
-                        isActive:true
-                    }
-                }
-            }
-        })
-
-        Models.$disconnect();
-        console.log(medicalAdministrations);
-        res.status(200).json({
-            success: true,
-            medicalAdministrations
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
-    }
-}
-
-
-// Update function
-const updateMedicalAdministration = async (req, res) => {
-    const {id} = req.params;
-
-    try {
-        const medicalAdministration = await Models.medicalAdministration.update({
-            where:{
-                id: parseInt(id)
-            },
-            data:req.body
-        });
-        await Models.$disconnect();
-        console.log(medicalAdministration);
-        res.status(200).json({
-            success: true,
-            medicalAdministration
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({
-            success: false,
-            error
-        });
-    }
-}
-
-// Delete function
-const deleteMedicalAdministration = async (req, res) => {
-    const {id} = req.params;
-
-    try {
-        const deletedMedicalAdministration = await Models.medicalAdministration.delete({
-            where:{
-                id: parseInt(id)
-            }
-        })
-        await Models.$disconnect();
-        console.log(deletedMedicalAdministration);
-        res.status(200).json({
-            success: true,
-            message: `Medical administration with id ${id} was deleted`
-        });
+        // success response 
+        res.status(200).json(medicalAdministration);
     } catch (error) {
         console.log(error);
         res.status(400).json({success: false})
     }
 }
 
+const deleteOne = async (req, res) => {
+    try {
+        const configClient = {
+            where: {
+                nameSlug: req.params.nameSlug
+            }
+        }
+
+        const medicalAdministration = await Models.medicalAdministration.delete(configClient)
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response        
+        await Models.$disconnect();
+
+        // success response 
+        res.status(200).json(medicalAdministration);
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
 module.exports = {
-    createMedicalAdministration,
-    getMedicalAdministrationById,
-    getMedicalAdministrationBySlug,
-    getAllMedicalAdministrations,
-    getMedicalAdministrationByStatus,
-    updateMedicalAdministration,
-    deleteMedicalAdministration
+    createOne,
+    createMany,
+    findOne,
+    findAll,
+    updateOne,
+    deleteOne,
+    deleteOneById,
 }

@@ -22,6 +22,7 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 * [Stripe-node](https://github.com/stripe/stripe-node)
 * [Mailjet](https://fr.mailjet.com/)
 * [Slugify](https://www.npmjs.com/package/slugify)
+* [Jest](https://jestjs.io/fr/docs/getting-started)
 
 ## Pour initialiser le projet
 
@@ -40,3 +41,19 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 4. Exécuter l'application: yarn start ou npm run start
 ```
 
+## Pour les tests
+
+### 1/ Configuration des tests
+ Créer son fichier de test dans le dossier /src/__tests__
+ Exemple de nom de fichier de test :
+> example.test.js
+
+### 2/ Les commandes à exécuter pour les test
+```
+1. yarn
+    - yarn test : exécute tous les tests.
+    - yarn test-watch : exécute tous les tests avec le flag '--watch' qui permettra de relancer les tests à chaque modification des tests.
+2. npm 
+    - npm run test : exécute tous les tests.
+    - npm run test-watch : exécute tous les tests avec le flag '--watch' qui permettra de relancer les tests à chaque modification des tests.
+```

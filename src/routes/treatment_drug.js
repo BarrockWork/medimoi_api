@@ -44,8 +44,8 @@ const { createTreatmentDrug, createMany, getTreatmentDrugById, findAll, updateTr
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     treatment_id: 1,
- *     drug_id:      1,
+ *     "treatment_id": 1,
+ *     "drug_id":      1,
  *  }
  * 
  * @apiSampleRequest http://localhost:4000/api/treatment_drugs/new
@@ -119,8 +119,8 @@ router.post("/new", createTreatmentDrug);
   * 
   * @apiParamExample {json} Request-Example
   *  {
-  *     comments:         "Some comment",
-  *     isActive:         false
+  *     "comments":         "Some comment",
+  *     "isActive":         false
   *  }
   * 
   * @apiVersion 0.1.0

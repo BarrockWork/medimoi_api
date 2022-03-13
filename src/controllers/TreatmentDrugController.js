@@ -2,7 +2,7 @@
 const Models = require('../models');
 const { isEmpty } = require('ramda');
 const { checkRequiredFields, transformIntValue, extractFieldsToChange } = require('../utils/requestHandler');
-const { composeP } = require('ramda');
+const { composeP, toLower} = require('ramda');
 
 const createTreatmentDrug = async (req, res) => {
     try {

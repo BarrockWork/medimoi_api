@@ -113,7 +113,7 @@ router.get("/slug/:nameSlug", findOne);
 /**
  * @apiDescription Get all MedicalAdministration
  * @api {GET} /api/medical_administrations/all/:isActive? Get all MedicalAdministration
- * @apiName GetAllMedicalAadministration
+ * @apiName GetAllMedicalAdministration
  * @apiGroup MedicalAdministration
  *
  * @apiParam {Boolean} [isActive=none]

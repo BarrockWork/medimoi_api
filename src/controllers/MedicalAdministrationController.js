@@ -38,10 +38,7 @@ const createMany = async (req, res) => {
         req.body.entries.forEach( medicalAdministration => {
             // Check the required fields
             checkRequiredFields(medicalAdministration, res,['name']);
-            medicalAdmins.push({
-                name: medicalAdministration.name,
-                nameSlug: createSlug(medicalAdministration.name)
-            })
+            medicalAdmins.push(medicalAdministration)
         })
 
         const medicalAdministrations = await Models.medicalAdministration.createMany({

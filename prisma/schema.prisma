@@ -161,7 +161,7 @@ model TreatmentDrug {
   Treatment    Treatment @relation(name: "TreatmentToTreatmentDrug", fields: [treatment_id], references: [id])
   drug_id      Int
   Drug         Drug      @relation(name: "DrugToTreatmentDrug", fields: [drug_id], references: [id])
-  comments     String
+  comments     String?
   isActive     Boolean   @default(true)
 }
 

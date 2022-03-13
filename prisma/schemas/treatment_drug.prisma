@@ -14,7 +14,7 @@ model TreatmentDrug {
     drug_id        Int
     Drug           Drug            @relation(fields: [drug_id], references: [id])
     // -----------------------------------------------------
-    comments       String          @db.Text
+    comments       String?         @db.Text
     isActive       Boolean         @default(true)
 }
 

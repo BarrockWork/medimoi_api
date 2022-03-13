@@ -50,8 +50,8 @@ router.post("/new", createDrugType);
 
 /**
  * @apiDescription Insert many level of drugs
- * @api {POST} /api/drugs/news Create many DrugsLevel
- * @apiName CreateManyDrugsLevel
+ * @api {POST} /api/drugs/news Create many DrugsType
+ * @apiName CreateManyDrugsType
  * @apiGroup Drug_Type
  *
  *

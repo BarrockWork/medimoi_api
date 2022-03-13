@@ -20,7 +20,7 @@ const {createDrugLevel, createManyDrugLevel, getAllDrugLevel, getById, deleteByI
  *
  * @apiDefine DrugLevelParams
  * @apiBody {Int} level drug level.
- * @apiBody {String} description drug level.
+ * @apiBody {String} description description drug level.
  */
 
 

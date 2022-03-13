@@ -11,17 +11,35 @@ const {
 
 
 /**
- * @apiGroup Drug
- * @api {POST} /api/drugs/new Create new Drug
- * @apiName CreateDrug
+ * Define a global Drug not found
+ * @apiDefine DrugNotFoundError
+ * @apiError DrugNotFoundError Drug was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "DrugNotFoundError"
+ *     }
+ */
+
+
+/**
+ * Define parameters for the request
  *
- * @apiBody {String} name drug name.
- * @apiBody {String} description drug.
+ * @apiDefine DrugParams
+ * @apiBody {String[2..50]} name Drug name.
+ * @apiBody {String[2..50]} description Drug description.
  * @apiBody {Boolean} [isPrescription=false] Optional drug slug.
  * @apiBody {Number} drug_level_id  Drug level  id
  * @apiBody {Number} drug_type_id  Drug type  id
  * @apiBody {Number} medical_administration_id  Medical administration  id
+ */
+
+/**
+ * @apiGroup Drug
+ * @api {POST} /api/drugs/new Create new Drug
+ * @apiName CreateDrug
  *
+ * @apiUse DrugParams
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -49,6 +67,8 @@ router.post("/new", createDrug);
  * @apiName CreateManyDrugs
  * @apiGroup Drug
  *
+ *
+ * @apiUse DrugParams
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -93,6 +113,8 @@ router.post('/news', createManyDrug)
  * @api {GET} /api/drugs Get all Drug
  * @apiName GetAllDrug
  *
+ * @apiUse DrugNotFoundError
+ *
  * @apiExample {curl} Exemple uasage:
  *      curl -i http://localhost:4000/api/drugs
  *
@@ -104,6 +126,9 @@ router.get('/', getAllDrug);
  * @apiGroup Drug
  * @api {GET} /api/drugs/:nameSlug Get drug by slug
  * @apiName GetDrugBySlug
+ *
+ * @apiUse DrugNotFoundError
+ * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Exemple uasage:
  *      curl -i http://localhost:4000/api/drugs/test
@@ -118,13 +143,15 @@ router.get('/:nameSlug', findBySlug);
  * @api {PUT} /api/drugs/:nameSlug/edit Update drug
  * @apiName UpdatedrugBySlug
  *
- * @apiBody {String} name drug name.
- * @apiBody {String} description drug.
-     * @apiBody {Boolean} [isPrescription=false] Optional drug slug.
- * @apiBody {Number} drug_level_id  Drug level  id
- * @apiBody {Number} drug_type_id  Drug type  id
- * @apiBody {Number} medical_administration_id  Medical administration  id
+ * @apiBody {String[2..50]} [name] drug name.
+ * @apiBody {String[2..50]} [description] drug.
+ * @apiBody {Boolean} [isPrescription=false] Optional prescription.
+ * @apiBody {Boolean} [isActive=true] Optional active.
+ * @apiBody {Number} [drug_level_id]  Drug level  id
+ * @apiBody {Number} [drug_type_id]  Drug type  id
+ * @apiBody {Number} [medical_administration_id]  Medical administration  id
  *
+ * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -136,6 +163,7 @@ router.get('/:nameSlug', findBySlug);
  *    name: "lisopaine",
  *    description: "gellulle gout menthe",
  *    isPrescription: true,
+ *    isActive: true,
  *    drug_level_id: 1,
  *    drug_type_id: 1,
  *    medical_administration_id: 1
@@ -149,6 +177,9 @@ router.put('/:nameSlug/edit', updateBySlug);
  * @apiGroup Drug
  * @api {DELETE} /api/drugs/:nameSlug/delete Delete drug
  * @apiName DeleteDrug
+ *
+ * @apiUse DrugNotFoundError
+ * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Exemple uasage:
  *      curl -i http://localhost:4000/api/drugs/doliprane/delete

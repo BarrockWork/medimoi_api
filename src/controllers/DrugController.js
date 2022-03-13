@@ -19,9 +19,7 @@ const createDrug = async (req, res) => {
         });
 
         await Models.$disconnect();
-        res.status(200).json({
-            success: true, drug
-        });
+        res.status(200).json(drug);
     } catch (error) {
         return res.status(400).json(req);
     }
@@ -83,7 +81,7 @@ const getAllDrug = async (req, res) => {
 const updateBySlug = async (req, res) => {
     try {
         // Selection of fields
-        const onlyThoseFields = ['name', 'description', 'isPrescription', 'isActive'];
+        const onlyThoseFields = ['name', 'description', 'isPrescription', 'isActive', 'drug_level_id', 'drug_type_id', 'medical_administration_id'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
         // Check if the new slug exists

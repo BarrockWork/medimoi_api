@@ -12,12 +12,32 @@ const {
 
 
 /**
+ * Define a global DiseaseType not found
+ * @apiDefine DiseaseTypeNotFoundError
+ * @apiError DiseaseTypeNotFoundError Disease Type was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "DiseaseTypeNotFoundError"
+ *     }
+ */
+
+
+
+/**
+ * Define parameters for the request
+ *
+ * @apiDefine DiseaseTypeParams
+ * @apiBody {String[2..50]} name diseaseType name.
+ * @apiBody {String[2..50]} description diseaseType description.
+ */
+
+/**
  * @apiGroup Disease_type
  * @api {POST} /api/disease_type/new Create single Disease_Type
  * @apiName CreateDiseaseType
  *
- * @apiBody {String} name disease_type name.
- * @apiBody {String} description disease.
+ * @apiUse DiseaseTypeParams
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -39,8 +59,7 @@ router.post("/new", createDiseaseType);
  * @api {POST} /api/disease_type/news Create many disease type
  * @apiName CreateManyDiseaseType
  *
- * @apiBody {String} name disease_type name.
- * @apiBody {String} description disease.
+ * @apiUse DiseaseTypeParams
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -74,6 +93,8 @@ router.post("/news", createManyDiseaseType);
  * @api {GET} /api/disease_type Get all DiseaseType
  * @apiName GetAllDiseaseType
  *
+ * @apiUse DiseaseTypeNotFoundError
+ *
  * @apiExample {curl} Exemple uasage:
  *      curl -i http://localhost:4000/api/disease_type
  *
@@ -85,6 +106,9 @@ router.get('/', getAllDiseaseType);
  * @apiGroup Disease_type
  * @api {GET} /api/disease_type/:nameSlug/ Get DiseaseType by Slug
  * @apiName GetDiseaseBySlug
+ *
+ * @apiUse DiseaseTypeNotFoundError
+ * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Example usage:
  *     curl -i http://localhost:4000/api/disease_type/dermatologie/
@@ -98,12 +122,10 @@ router.get('/:nameSlug', findBySlug);
  * @api {PUT} /api/disease_type/:nameSlug/edit Update Disease_Type
  * @apiName UpdateDiseaseType
  *
- * @apiBody {String} name disease_type name.
- * @apiBody {String} name_slug disease slug.
- * @apiBody {String} description disease.
- * @apiBody {Boolean} [isActive=true] Optional disease slug.
- * @apiBody {Date} [createdAt=now]
- * @apiBody {Date} updatedAt
+ * @apiParam {String[2..50]} nameSlug NameSlug
+ *
+ * @apiBody {String[2..50]}  [name] Disease name.
+ * @apiBody {String[2..50]} [description] disease.
  *
  *
  * @apiHeaderExample {json} Header-Example:
@@ -114,7 +136,6 @@ router.get('/:nameSlug', findBySlug);
  * @apiParamExample {json} Request-Example
  *  {
  *     name:       "cardiovasculaires",
- *     name_slug:  "cardiovasculaires",
  *     description: "maladie du coeur",
  *  }
  *
@@ -127,6 +148,9 @@ router.put('/:nameSlug/edit', updateBySlug);
  * @apiGroup Disease_type
  * @api {DELETE} /api/disease_type/:nameSlug/delete Delete Disease_Type
  * @apiName DeleteDiseaseType
+ *
+ * @apiParam {String[2..50]} nameSlug NameSlug
+ * @apiUse DiseaseTypeNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
  *      curl -i http://localhost:4000/api/disease/dermatologie

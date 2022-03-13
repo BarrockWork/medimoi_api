@@ -14,9 +14,7 @@ const createDrugLevel = async (req, res) => {
         });
 
         await Models.$disconnect();
-        res.status(200).json({
-            success: true, drugLevel
-        });
+        res.status(200).json(drugLevel);
     } catch (error) {
         return res.status(400).json(req);
     }
@@ -116,7 +114,7 @@ const updateById = async (req, res) => {
 
         // Success Response
         res.status(200).json(drugLevels);
-    }catch (error) {
+    } catch (error) {
         return res.status(400).json(error);
     }
 }

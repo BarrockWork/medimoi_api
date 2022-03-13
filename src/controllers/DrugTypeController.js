@@ -15,9 +15,7 @@ const createDrugType = async (req, res) => {
         });
 
         await Models.$disconnect();
-        res.status(200).json({
-            success: true, DrugType
-        });
+        res.status(200).json(DrugType);
     } catch (error) {
         return res.status(400).json(req);
     }

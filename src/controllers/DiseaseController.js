@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const {checkRequiredFields, createSlug,extractFieldsToChange, verifySlugInDb} = require('./../utils/requestHandler')
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb} = require('./../utils/requestHandler')
 
 const createDisease = async (req, res) => {
     try {
@@ -17,9 +17,7 @@ const createDisease = async (req, res) => {
         });
 
         await Models.$disconnect();
-        res.status(200).json({
-            success: true, disease
-        });
+        res.status(200).json(disease);
     } catch (error) {
         return res.status(400).json(req);
     }
@@ -72,7 +70,6 @@ const findAll = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(disease)
     } catch (error) {
-
         return res.status(400).json(req)
     }
 }
@@ -97,7 +94,7 @@ const findBySlug = async (req, res) => {
 const updateBySlug = async (req, res) => {
     try {
         // Selection of fields
-        const onlyThoseFields = ['name', 'description', 'incubationPeriod', 'transmitting', 'isActive'];
+        const onlyThoseFields = ['name', 'description', 'incubationPeriod', 'transmitting', 'isActive', 'disease_type_id'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
         // Check if the new slug exists

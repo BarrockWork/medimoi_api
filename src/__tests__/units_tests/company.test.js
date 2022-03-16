@@ -20,10 +20,6 @@ const companyDefault = {
     tva: 'FR123456789'
 }
 
-const mock_db = {
-
-}
-
 /*
  * Init the company test group
  */

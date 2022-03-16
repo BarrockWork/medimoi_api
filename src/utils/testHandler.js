@@ -1,7 +1,7 @@
 const Models = require("./../models");
 
 // Function to test the maxLength of a field
-const testMaxLength = (schemaObject, field, maxLength) => {
+const testMaxLength = (schema, schemaObject, field, maxLength) => {
     test(`Check max length of ${field} = ${maxLength}`, async () => {
         // In order to check the assertions with async/await
         expect.assertions(1);
@@ -12,7 +12,7 @@ const testMaxLength = (schemaObject, field, maxLength) => {
             }
             schemaObject[field]  = fieldValue;
 
-            await Models.Company.create({
+            await Models[schema].create({
                 data: schemaObject
             })
         } catch(e) {

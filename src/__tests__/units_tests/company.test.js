@@ -24,26 +24,7 @@ const companyDefault = {
  * Init the company test group
  */
 describe("Company unit testing", () => {
-    testMaxLength(companyDefault, 'name', 50);
-    testMaxLength(companyDefault, 'siret', 50);
-    testMaxLength(companyDefault, 'tva', 50);
-
-    test('Check nameSlug is unique', async () => {
-        // In order to check the assertions with async/await
-        expect.assertions(1);
-        try{
-            let fieldValue = '';
-            for(let i = 0; i <= maxLength; i++) {
-                fieldValue += i.toString()
-            }
-            schemaObject[field]  = fieldValue;
-
-            await Models.Company.create({
-                data: schemaObject
-            })
-        } catch(e) {
-            // e = PrismaClientKnownRequestError
-            expect(e.code).toEqual('P2000');
-        }
-    })
+    testMaxLength('Company', companyDefault, 'name', 50);
+    testMaxLength('Company', companyDefault, 'siret', 50);
+    testMaxLength('Company', companyDefault, 'tva', 50);
 })

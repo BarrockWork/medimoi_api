@@ -2,9 +2,6 @@
   "name": "medimoi-back",
   "version": "0.0.0",
   "private": true,
-  "jest": {
-    "verbose": true
-  },
   "scripts": {
     "start": "dotenv -e .env.local -- npx nodemon ./bin/www",
     "status-migration": "dotenv -e .env.local -- npx prisma migrate status",

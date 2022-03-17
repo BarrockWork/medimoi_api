@@ -8,6 +8,8 @@
     "prismix": "npx prismix && prisma format",
     "create-migration": "dotenv -e .env.local -- npx prisma migrate dev --create-only",
     "execute-migration": "dotenv -e .env.local -- npx prisma migrate dev",
+    "execute-migration-test": "dotenv -e .env.test -- npx prisma migrate dev",
+    "reset-migration-test": "dotenv -e .env.test -- npx prisma migrate reset",
     "reset-migration": "dotenv -e .env.local -- npx prisma migrate reset",
     "status-migration-prod": "npx prisma migrate status",
     "create-migration-prod": "npx prisma migrate dev --create-only",
@@ -16,9 +18,9 @@
     "start-prod": "npx nodemon ./bin/www",
     "deploy-migration": "npx prisma migrate deploy",
     "apidoc-generate": "apidoc -i src/routes -o public/docs -c config/apidoc.json",
-    "test": "jest",
-    "test-watch": "jest --watch",
-    "test-coverage": "jest --coverage"
+    "test": "dotenv -e .env.test -- jest",
+    "test-watch": "dotenv -e .env.test -- jest --watch",
+    "test-coverage": "dotenv -e .env.test -- jest --coverage"
   },
   "dependencies": {
     "@prisma/client": "^3.8.0",

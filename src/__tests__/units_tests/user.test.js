@@ -4,7 +4,7 @@
  */
 
 const Models = require('./../../models');
-const { testMaxLength } = require('./../../utils/testHandler');
+const { testMaxLength, testUniqueness } = require('./../../utils/testHandler');
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
@@ -27,11 +27,12 @@ const userDefault = {
 /*
  * Init the user test group
  */
-describe('User_type unit testing', () => {
+describe('User unit testing', () => {
   testMaxLength('User', userDefault, 'firstName', 50);
   testMaxLength('User', userDefault, 'lastName', 50);
   testMaxLength('User', userDefault, 'email', 50);
   testMaxLength('User', userDefault, 'password', 255);
   testMaxLength('User', userDefault, 'cellphone', 50);
   testMaxLength('User', userDefault, 'homephone', 50);
+  testUniqueness('User', userDefault, 'email');
 });

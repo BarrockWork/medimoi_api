@@ -6,14 +6,17 @@ const testMaxLength = (schema, schemaObject, field, maxLength) => {
         // In order to check the assertions with async/await
         expect.assertions(1);
         try{
+            // Clone the schemaObject in order to avoid to modify the original
+            let cloneSchemaObject = {...schemaObject};
+
             let fieldValue = '';
             for(let i = 0; i <= maxLength; i++) {
                 fieldValue += i.toString()
             }
-            schemaObject[field]  = fieldValue;
+            cloneSchemaObject[field]  = fieldValue;
 
             await Models[schema].create({
-                data: schemaObject
+                data: cloneSchemaObject
             })
         } catch(e) {
             // e = PrismaClientKnownRequestError
@@ -22,6 +25,33 @@ const testMaxLength = (schema, schemaObject, field, maxLength) => {
     })
 }
 
+// Function to test if a field is unique
+const testUniqueness = (schema, schemaObject, field) => {
+    test(`Check uniqueness for ${field} field`, async () => {
+        // In order to check the assertions with async/await
+        expect.assertions(1);
+        try{
+            // Clone the schemaObject in order to avoid to modify the original
+            let cloneSchemaObject = {...schemaObject};
+
+            // Create a new entry
+            await Models[schema].create({
+                data: cloneSchemaObject
+            })
+
+            // Duplicate the previous entry
+            await Models[schema].create({
+                data: cloneSchemaObject
+            })
+
+        } catch(e) {
+            // e = PrismaClientKnownRequestError
+            expect(e.code).toEqual('P2002');
+        }
+    })
+}
+
 module.exports = {
-    testMaxLength
+    testMaxLength,
+    testUniqueness
 }

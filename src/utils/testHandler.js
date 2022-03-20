@@ -41,11 +41,10 @@ const testUniqueness = (schema, schemaObject, field) => {
 
             // Duplicate the previous entry
             await Models[schema].create({
-                data: schemaObject
+                data: cloneSchemaObject
             })
 
         } catch(e) {
-            console.log(e.code);
             // e = PrismaClientKnownRequestError
             expect(e.code).toEqual('P2002');
         }

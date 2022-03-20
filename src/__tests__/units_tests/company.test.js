@@ -5,20 +5,7 @@
 
 const Models = require('./../../models');
 const { createSlug } = require('./../../utils/requestHandler')
-const {testMaxLength} = require('./../../utils/testHandler')
-
-// jest.mock('@prisma/client', () => {
-//     return {
-//         PrismaClient: function() {
-//             return {
-//                 performance: {
-//                     create: jest.fn()
-//                 },
-//             };
-//         },
-//     };
-// })
-
+const {testMaxLength, testUniqueness} = require('./../../utils/testHandler')
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
@@ -27,8 +14,8 @@ afterAll(async () => {
 
 // Initialise a company object
 const companyDefault = {
-    name: 'Test',
-    nameSlug: createSlug('Test'),
+    name: 'Company Test',
+    nameSlug: createSlug('Company Test'),
     siret: '123456789',
     tva: 'FR123456789'
 }
@@ -40,4 +27,5 @@ describe("Company unit testing", () => {
     testMaxLength('Company', companyDefault, 'name', 50);
     testMaxLength('Company', companyDefault, 'siret', 50);
     testMaxLength('Company', companyDefault, 'tva', 50);
+    testUniqueness('Company', companyDefault, 'nameSlug');
 })

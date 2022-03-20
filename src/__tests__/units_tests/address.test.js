@@ -14,9 +14,9 @@ afterAll(async () => {
 // Initialize an address object
 const addressDefault = {
   numberRoad: 1,
-  name: 'madame',
-  user_id: 4,
-  address_road_type_id: 2,
+  streetName: 'madame',
+  user_id: 1,
+  address_road_type_id: 1,
   zipcode: '12345',
   city: 'bouillante',
   region: 'test',

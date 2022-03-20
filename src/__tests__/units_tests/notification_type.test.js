@@ -5,7 +5,7 @@
 
 const Models = require('./../../models');
 const { createSlug } = require('./../../utils/requestHandler')
-const {testMaxLength} = require('./../../utils/testHandler')
+const {testMaxLength, testUniqueness} = require('./../../utils/testHandler')
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
@@ -23,4 +23,6 @@ const notificationTypeDefault = {
  */
 describe("NotificationType unit testing", () => {
     testMaxLength('NotificationType', notificationTypeDefault, 'name', 50);
+    testUniqueness('NotificationType', notificationTypeDefault, 'nameSlug');
+
 })

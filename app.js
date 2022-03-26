@@ -47,12 +47,15 @@ app.set('view engine', 'jade');
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/user_type', userTypeRouter);
+app.use('/api/address', addressRouter);
+app.use('api/address_road_type', addressRoadTypeRouter);
 // Disease route
 app.use('/api/diseases', diseaseRouter);
 // Disease_type route
@@ -60,9 +63,9 @@ app.use('/api/disease_type', diseaseTypeRouter);
 //Drug route
 app.use('/api/drugs', drugRouter);
 //Drug level route
-app.use('/api/drugLevels', drugLevelRouter)
+app.use('/api/drugLevels', drugLevelRouter);
 //Drug Type route
-app.use('/api/drugTypes', drugTypeRouter)
+app.use('/api/drugTypes', drugTypeRouter);
 app.use('/api/treatments', treatmentRouter);
 app.use('/api/treatmentMedias', treatmentMediaRouter);
 app.use('/api/treatmentDrugs', treatmentDrugRouter);

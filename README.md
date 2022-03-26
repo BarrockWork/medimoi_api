@@ -23,7 +23,7 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 * [Mailjet](https://fr.mailjet.com/)
 * [Slugify](https://www.npmjs.com/package/slugify)
 * [Jest](https://jestjs.io/fr/docs/getting-started)
-
+* [Supertest](https://github.com/visionmedia/supertest)
 ## Pour initialiser le projet
 
 ### 1/ Configurer les variables d'environnements

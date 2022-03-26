@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "dotenv -e .env.local -- npx nodemon ./bin/www",
+    "start-test": "dotenv -e .env.test -- npx nodemon ./bin/www",
     "status-migration": "dotenv -e .env.local -- npx prisma migrate status",
     "prismix": "npx prismix && prisma format",
     "create-migration": "dotenv -e .env.local -- npx prisma migrate dev --create-only",
@@ -44,6 +45,7 @@
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "prisma": "^3.8.0",
-    "prismix": "^1.0.21"
+    "prismix": "^1.0.21",
+    "supertest": "^6.2.2"
   }
 }

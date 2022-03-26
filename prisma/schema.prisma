@@ -70,8 +70,8 @@ model UserCompany {
 
 model UserType {
   id        Int       @id @default(autoincrement())
-  name      String
-  nameSlug  String    @unique
+  name      String    @db.VarChar(50)
+  nameSlug  String    @db.VarChar(50) @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   Users     User[]    @relation(name: "UserToUserType")

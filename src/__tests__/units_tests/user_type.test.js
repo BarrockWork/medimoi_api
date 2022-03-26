@@ -12,16 +12,16 @@ afterAll(async () => {
   await Models.$disconnect();
 });
 
-// Initialize a user_type object
+// Initialise a user_Type object
 const userTypeDefault = {
-  name: 'User type',
-  nameSlug: createSlug('User type'),
+  name: 'user type',
+  nameSlug: createSlug('user type'),
 };
 
 /*
- * Init the user_type test group
+ * Init the company test group
  */
-describe('User_type unit testing', () => {
-  testMaxLength('ContactType', userTypeDefault, 'name', 50);
-  testUniqueness('ContactType', userTypeDefault, 'nameSlug');
+describe('User_Type unit testing', () => {
+  testMaxLength('UserType', userTypeDefault, 'name', 50);
+  testUniqueness('UserType', userTypeDefault, 'nameSlug');
 });

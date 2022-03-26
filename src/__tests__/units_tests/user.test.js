@@ -3,14 +3,22 @@
  *   - https://www.prisma.io/docs/reference/api-reference/error-reference
  */
 
-const Models = require('./../../models');
-const { testMaxLength, testUniqueness } = require('./../../utils/testHandler');
+const Models = require('../../models');
+const { createSlug } = require('../../utils/requestHandler');
+const {
+  testMaxLength,
+  testUniquenessWithDependency,
+} = require('../../utils/testHandler');
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
   await Models.$disconnect();
 });
 
+const userTypeDefault = {
+  name: 'User type',
+  nameSlug: createSlug('User type'),
+};
 // Initialize a user object
 const userDefault = {
   firstName: 'john',
@@ -34,5 +42,11 @@ describe('User unit testing', () => {
   testMaxLength('User', userDefault, 'password', 255);
   testMaxLength('User', userDefault, 'cellphone', 50);
   testMaxLength('User', userDefault, 'homephone', 50);
-  testUniqueness('User', userDefault, 'email');
+  testUniquenessWithDependency(
+    'UserType',
+    'User',
+    userTypeDefault,
+    userDefault,
+    'email'
+  );
 });

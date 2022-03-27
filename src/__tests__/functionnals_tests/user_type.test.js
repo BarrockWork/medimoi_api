@@ -7,6 +7,7 @@ const supertest = require('supertest');
 const createServerTest = require('./../server_test');
 const Models = require('./../../models');
 const R = require('ramda');
+const { UserTypeSchemaObject } = require('./../objectSchema_test');
 
 // Delete all record before starting the tests
 beforeAll(async () => {
@@ -15,24 +16,12 @@ beforeAll(async () => {
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
+  await Models.UserType.deleteMany({});
   await Models.$disconnect();
 });
 
 // Initialize express server
 const appTest = createServerTest();
-
-// Initialise a list of user_type object
-const schemaObject = [
-  {
-    name: 'User Type Test',
-  },
-  {
-    name: 'User Type Test 2 medimoi',
-  },
-  {
-    name: 'User Type Test 3 medimoi',
-  },
-];
 
 /*
  * Init the User Type test group
@@ -40,7 +29,7 @@ const schemaObject = [
 describe('user_type functional testing', () => {
   test('POST - /api/user_type/new', async () => {
     // Clone the schemaObject[0] in order to avoid to modify the original
-    let cloneSchemaObject = R.clone(schemaObject[0]);
+    let cloneSchemaObject = R.clone(UserTypeSchemaObject[0]);
 
     await supertest(appTest)
       .post('/api/user_type/new/')
@@ -64,7 +53,10 @@ describe('user_type functional testing', () => {
   test('POST - /api/user_type/news', async () => {
     // Clone the schemaObjects in order to avoid to modify the original
     let cloneSchemaObjects = {
-      entries: [R.clone(schemaObject[1]), R.clone(schemaObject[2])],
+      entries: [
+        R.clone(UserTypeSchemaObject[1]),
+        R.clone(UserTypeSchemaObject[2]),
+      ],
     };
     await supertest(appTest)
       .post('/api/user_type/news')
@@ -110,7 +102,7 @@ describe('user_type functional testing', () => {
 
   test('PUT - /api/user_type/:nameSlug/edit', async () => {
     // Clone the schemaObject in order to avoid to modify the original
-    let cloneSchemaObject = R.clone(schemaObject[0]);
+    let cloneSchemaObject = R.clone(UserTypeSchemaObject[0]);
     cloneSchemaObject.name = 'user_type Edition';
 
     await supertest(appTest)

@@ -13,6 +13,7 @@ const {
 // Disconnect prisma after all of the tests
 afterAll(async () => {
   await Models.$disconnect();
+  await Models.User.deleteMany({});
 });
 
 const userTypeDefault = {

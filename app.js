@@ -26,6 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Using routes
 app.use('/', routes.indexRouter);
+app.use('/api/address', routes.addressRouter);
+app.use('/api/address_road_type', routes.addressRoadTypeRouter);
 app.use('/api/company', routes.CompanyRouter);
 app.use('/api/contact', routes.ContactRouter);
 app.use('/api/contact_type', routes.ContactTypeRouter);
@@ -45,8 +47,6 @@ app.use('/api/user_company', routes.UserCompanyRouter);
 app.use('/api/user_notification_type', routes.userNotificationRouter);
 app.use('/api/users', routes.usersRouter);
 app.use('/api/user_type', routes.userTypeRouter);
-app.use('/api/address', routes.addressRouter);
-app.use('/api/address_road_type', routes.addressRoadTypeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

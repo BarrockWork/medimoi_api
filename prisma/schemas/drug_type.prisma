@@ -6,7 +6,7 @@ datasource db {
 
 model DrugType {
      id                     Int              @id @default(autoincrement())
-     name                   String           @db.VarChar(255)
+     name                   String           @db.VarChar(50)
      nameSlug               String           @db.VarChar(50) @unique
      description            String           @db.Text
      createdAt              DateTime         @default(now())

@@ -10,17 +10,38 @@ const UserTypeSchemaObject = [
   },
 ];
 
-const UserSchemaObject = {
-  firstName: 'john',
-  lastName: 'doe',
-  age: 30,
-  email: 'jd@medimoi.com',
-  password: 'password',
-  cellphone: '0123456789',
-  homephone: '0123456789',
-  role: 'user',
-  user_type_id: 1,
-};
+const UserSchemaObject = [
+  {
+    firstName: 'john',
+    lastName: 'doe',
+    age: 30,
+    email: 'jd@medimoi.com',
+    password: 'password',
+    cellphone: '0123456789',
+    homephone: '0123456789',
+    role: 'user',
+  },
+  {
+    firstName: 'john',
+    lastName: 'doe',
+    age: 30,
+    email: 'jdoeeee@medimoi.com',
+    password: 'password',
+    cellphone: '0123456789',
+    homephone: '0123456789',
+    role: 'user',
+  },
+  {
+    firstName: 'john',
+    lastName: 'doe',
+    age: 30,
+    email: 'jdowwww@medimoi.com',
+    password: 'password',
+    cellphone: '0123456789',
+    homephone: '0123456789',
+    role: 'user',
+  },
+];
 
 const AddressRoadTypeSchemaObject = {
   name: 'Address Road Type Test',

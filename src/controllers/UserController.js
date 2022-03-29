@@ -37,7 +37,6 @@ const createOne = async (req, res) => {
 
     res.status(200).json({ newUser });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({ error });
   }
 };
@@ -71,7 +70,6 @@ const getAllUsers = async (req, res) => {
     }
 
     const allUsers = await Models.User.findMany(configClient);
-    console.log(allUsers);
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
@@ -114,7 +112,6 @@ const updateUserByEmail = async (req, res) => {
       },
       data: req.body,
     });
-    user_type_id;
 
     res.status(200).json(updateUser);
   } catch (error) {
@@ -187,7 +184,6 @@ const createMany = async (req, res) => {
     // Success Response
     res.status(200).json(users);
   } catch (error) {
-    console.log(error);
     res.status(400).json(error);
   }
 };

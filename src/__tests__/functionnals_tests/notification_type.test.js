@@ -76,14 +76,14 @@ describe("Notification_type functional testing", () => {
                 expect(response.body.count).toEqual(2);
 
                 // Check the data in the database
-                const companies = await Models.NotificationType.findMany({
+                const notificationTypes = await Models.NotificationType.findMany({
                     where: {
                         nameSlug: {
                             contains: 'medimoi'
                         }
                     }
                 });
-                expect(companies).toHaveLength(2);
+                expect(notificationTypes).toHaveLength(2);
             })
     })
 
@@ -123,12 +123,12 @@ describe("Notification_type functional testing", () => {
                 expect(response.body.nameSlug).toBe("notif-edition");
 
                 // Check the data in the database
-                const company = await Models.NotificationType.findUnique({
+                const notificationType = await Models.NotificationType.findUnique({
                     where: {
                         nameSlug: "notif-edition"
                     }
                 });
-                expect(company.nameSlug).toBe("notif-edition");
+                expect(notificationType.nameSlug).toBe("notif-edition");
             })
     })
 
@@ -141,12 +141,12 @@ describe("Notification_type functional testing", () => {
                 expect(response.body.nameSlug).toBe("notification-type-2-medimoi");
 
                 // Check the data in the database
-                const company = await Models.NotificationType.findUnique({
+                const notificationType = await Models.NotificationType.findUnique({
                     where: {
                         nameSlug: "notification-type-2-medimoi"
                     }
                 });
-                expect(company).toBeNull();
+                expect(notificationType).toBeNull();
             })
     })
 

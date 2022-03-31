@@ -52,13 +52,13 @@ describe("Contact_type functional testing", () => {
                 expect(response.body.nameSlug).toBe("contact-type-0")
 
                 // Check the data in the database
-                const notificationType = await Models.ContactType.findUnique({
+                const contact_type = await Models.ContactType.findUnique({
                     where: {
                         nameSlug: "contact-type-0"
                     }
                 });
-                expect(notificationType).toBeTruthy()
-                expect(notificationType.nameSlug).toBe("contact-type-0")
+                expect(contact_type).toBeTruthy()
+                expect(contact_type.nameSlug).toBe("contact-type-0")
             })
     })
 
@@ -76,14 +76,14 @@ describe("Contact_type functional testing", () => {
                 expect(response.body.count).toEqual(2);
 
                 // Check the data in the database
-                const companies = await Models.ContactType.findMany({
+                const contact_types = await Models.ContactType.findMany({
                     where: {
                         nameSlug: {
                             contains: 'medimoi'
                         }
                     }
                 });
-                expect(companies).toHaveLength(2);
+                expect(contact_types).toHaveLength(2);
             })
     })
 
@@ -123,12 +123,12 @@ describe("Contact_type functional testing", () => {
                 expect(response.body.nameSlug).toBe("contacttype-edition");
 
                 // Check the data in the database
-                const company = await Models.ContactType.findUnique({
+                const contact_type = await Models.ContactType.findUnique({
                     where: {
                         nameSlug: "contacttype-edition"
                     }
                 });
-                expect(company.nameSlug).toBe("contacttype-edition");
+                expect(contact_type.nameSlug).toBe("contacttype-edition");
             })
     })
 
@@ -141,12 +141,12 @@ describe("Contact_type functional testing", () => {
                 expect(response.body.nameSlug).toBe("contact-type-2-medimoi");
 
                 // Check the data in the database
-                const company = await Models.NotificationType.findUnique({
+                const contact_type = await Models.NotificationType.findUnique({
                     where: {
                         nameSlug: "contact-type-2-medimoi"
                     }
                 });
-                expect(company).toBeNull();
+                expect(contact_type).toBeNull();
             })
     })
 

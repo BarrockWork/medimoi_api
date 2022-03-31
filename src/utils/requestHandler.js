@@ -162,7 +162,7 @@ const selectUserGlobalInfos = () => {
       cellphone: true,
       homephone: true,
       workphone: true,
-      lastConnectionId: true,
+      lastConnection: true,
       createdAt: true,
       updatedAt: true,
       isActive: true,

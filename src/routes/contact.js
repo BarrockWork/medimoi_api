@@ -107,25 +107,6 @@ router.post('/new', createOne);
 router.post('/news', createMany);
 
 /**
- * @apiDescription Get a Contact by id
- * @api {GET} /api/contact/:id Get Contact by id
- * @apiName GetByIdContact
- * @apiGroup Contact
- *
- * @apiParam {Number} id Id
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- * @apiUse ContactNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/contact/:id
- * @apiVersion 0.1.0
- */
-router.get('/:id', findOneById);
-
-/**
  * @apiDescription Get Contacts by User id
  * @api {GET} /api/contact/user/:id Get Contacts by User id
  * @apiName GetByUserIdContact
@@ -163,6 +144,25 @@ router.get('/user/:id', findByUserId);
  * @apiVersion 0.1.0
  */
 router.get('/all/:isActive?', findAll);
+
+/**
+ * @apiDescription Get a Contact by id
+ * @api {GET} /api/contact/:id Get Contact by id
+ * @apiName GetByIdContact
+ * @apiGroup Contact
+ *
+ * @apiParam {Number} id Id
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse ContactNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact/:id
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', findOneById);
 
 /**
  * @apiDescription Update a single Contact

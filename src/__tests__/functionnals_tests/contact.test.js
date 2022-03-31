@@ -201,7 +201,7 @@ describe("Contact functional testing", () => {
                 expect(response.body.firstName).toBe("LuffyContact Edition");
 
                 // Check the data in the database
-                const contact = await Models.NotificationType.findFirst({
+                const contact = await Models.Contact.findFirst({
                     where: {
                         firstName: {
                             equals: "LuffyContact Edition"

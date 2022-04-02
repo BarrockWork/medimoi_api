@@ -92,25 +92,6 @@ router.post('/new', createOne);
 router.post('/news', createMany);
 
 /**
- * @apiDescription Get a UserCompany by id
- * @api {GET} /api/user_company/:id Get UserCompany by id
- * @apiName GetByIdUserCompany
- * @apiGroup UserCompany
- *
- * @apiParam {Number} id Id
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- * @apiUse UserCompanyNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/user_company/:id
- * @apiVersion 0.1.0
- */
-router.get('/:id', findOneById);
-
-/**
  * @apiDescription Get UserCompanies by User id
  * @api {GET} /api/user_company/user/:id Get UserCompanies by User id
  * @apiName GetByUserIdUserCompany
@@ -148,6 +129,25 @@ router.get('/user/:id', findByUserId);
  * @apiVersion 0.1.0
  */
 router.get('/all/:isActive?', findAll);
+
+/**
+ * @apiDescription Get a UserCompany by id
+ * @api {GET} /api/user_company/:id Get UserCompany by id
+ * @apiName GetByIdUserCompany
+ * @apiGroup UserCompany
+ *
+ * @apiParam {Number} id Id
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse UserCompanyNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_company/:id
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', findOneById);
 
 /**
  * @apiDescription Update a single UserCompany

@@ -9,6 +9,7 @@ const { testMaxLength, testUniqueness } = require('./../../utils/testHandler');
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
+  await Models.UserType.deleteMany({});
   await Models.$disconnect();
 });
 

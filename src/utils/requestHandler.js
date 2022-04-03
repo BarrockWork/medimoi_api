@@ -30,7 +30,6 @@ const checkRequiredFields = (req, res, requiredFields, reqType = 'POST') => {
   }
 };
 
-
 /**
  * Extract from req.body the only fields selected
  * @param req Object Request
@@ -162,7 +161,7 @@ const selectUserGlobalInfos = () => {
       cellphone: true,
       homephone: true,
       workphone: true,
-      lastConnectionId: true,
+      lastConnection: true,
       createdAt: true,
       updatedAt: true,
       isActive: true,
@@ -200,7 +199,7 @@ const selectAddressRoadType = () => {
 /**
  * Get notification_type infos
  */
- const selectNotificationType = () => {
+const selectNotificationType = () => {
   return {
     select: {
       id: true,
@@ -230,87 +229,86 @@ const selectCompany = () => {
  * Get Drug infos
  */
 const selectDrugInfos = () => {
-    return {
-        select:{
-            id:true,
-            name:true,
-            isActive:true,
-            description:true,
-            isPrescription:true
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      name: true,
+      isActive: true,
+      description: true,
+      isPrescription: true,
+    },
+  };
+};
 
 /**
  * Treatment drung infos
-*/
+ */
 const selectTreatmentDrugsInfos = () => {
-    return {
-        select:{
-            id:true,
-            comments:true,
-            drug_id:true,
-            treatment_id:true,
-            isActive:true
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      comments: true,
+      drug_id: true,
+      treatment_id: true,
+      isActive: true,
+    },
+  };
+};
 
 const selectTreatmentMediasInfos = () => {
-    return {
-        select:{
-            id:true,
-            name:true,
-            mimeType:true,
-            isActive:true,
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      name: true,
+      mimeType: true,
+      isActive: true,
+    },
+  };
+};
 
-const selecttreatmentPeriodicityInfos = () =>{
-    return {
-        select:{
-            id:true,
-            name:true,
-            nameSlug:true,
-            isActive:true,
-        }
-    }
-}
+const selecttreatmentPeriodicityInfos = () => {
+  return {
+    select: {
+      id: true,
+      name: true,
+      nameSlug: true,
+      isActive: true,
+    },
+  };
+};
 
 const selectTreatmentGlobalInfos = () => {
-    return {
-        id:true,
-        name:true,
-        startedAt:true,
-        finishedAt:true,
-        TreatmentPeriodicity:selecttreatmentPeriodicityInfos(),
-        TreatmentMedias:selectTreatmentMediasInfos(),
-        TreatmentDrugs:selectTreatmentDrugsInfos(),
-        User:selectUserGlobalInfos(),
-        isActive:true,
-    }
-}
+  return {
+    id: true,
+    name: true,
+    startedAt: true,
+    finishedAt: true,
+    TreatmentPeriodicity: selecttreatmentPeriodicityInfos(),
+    TreatmentMedias: selectTreatmentMediasInfos(),
+    TreatmentDrugs: selectTreatmentDrugsInfos(),
+    User: selectUserGlobalInfos(),
+    isActive: true,
+  };
+};
 
 /**
  * TODO
  */
-const errorHandler = () => {
+const errorHandler = () => {};
 
-}
-
-module.exports =  {
-    checkRequiredFields,
-    createSlug,
-    extractFieldsToChange,
-    verifySlugInDb,
-    transformIntValue,
-    selectUserGlobalInfos,
-    selectContactType,
-    selectCompany,
-    selectDrugInfos,
-    selectTreatmentDrugsInfos,
-    selectTreatmentMediasInfos,
-    selecttreatmentPeriodicityInfos,
-    selectTreatmentGlobalInfos
-}
+module.exports = {
+  checkRequiredFields,
+  createSlug,
+  extractFieldsToChange,
+  verifySlugInDb,
+  transformIntValue,
+  selectAddressRoadType,
+  selectUserGlobalInfos,
+  selectContactType,
+  selectCompany,
+  selectDrugInfos,
+  selectTreatmentDrugsInfos,
+  selectTreatmentMediasInfos,
+  selecttreatmentPeriodicityInfos,
+  selectTreatmentGlobalInfos,
+};

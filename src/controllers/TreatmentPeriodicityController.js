@@ -1,7 +1,7 @@
 // Import of the Prisma client
 const Models = require('../models');
 const { isEmpty } = require('ramda');
-const { checkRequiredFields, createSlug } = require('../utils/requestHandler');
+const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb } = require('../utils/requestHandler');
 const { toLower } = require('ramda');
 
 const createTreatmentPeriodicity = async (req, res) => {
@@ -195,7 +195,6 @@ const findAll = async (req, res) => {
 // Update function
 const updateTreatmentPeriodicity = async (req, res) => {
     try {
-
         const onlyThoseFields = ['name', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
@@ -207,13 +206,14 @@ const updateTreatmentPeriodicity = async (req, res) => {
             createSlug(req.body.name),
             fieldsFiltered
         );
-
+        // console.log(req.body);
         // Update the current entry
         const treatmentPeriodicity = await Models.treatmentPeriodicity.update(configRequestDB);
 
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
+        console.log(error);
         res.status(400).json(error);
     }
 }

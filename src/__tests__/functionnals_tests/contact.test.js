@@ -25,7 +25,7 @@ const initSchemaObjects = async () => {
     const userType = await Models.UserType.create({
         data: {
             name: 'UserType For Contact',
-            nameSlug: 'UserType For Contact'
+            nameSlug: createSlug('UserType For Contact')
         },
     });
 
@@ -44,7 +44,7 @@ const initSchemaObjects = async () => {
         },
     });
 
-    // Initialise a list of contact_type object
+    // Initialize a list of contact_type object
     schemaObject = [
         {
             firstName: 'Luffy Contact',
@@ -73,9 +73,23 @@ const initSchemaObjects = async () => {
 // Delete all record before starting the tests and initiate the datas
 beforeAll( async () =>{
     await Models.Contact.deleteMany({});
-    await Models.ContactType.deleteMany({});
-    await Models.User.deleteMany({});
-    await Models.UserType.deleteMany({});
+    await Models.ContactType.deleteMany({
+        where: {
+            nameSlug: {
+                contains: 'contact-type-for-contact'
+            }
+        }
+    });
+    await Models.User.delete({
+        where: {
+            email: 'userforcontact@medimoi.com'
+        }
+    });
+    await Models.UserType.delete({
+        where: {
+            nameSlug: 'userType-for-contact'
+        }
+    });
     await initSchemaObjects();
 })
 

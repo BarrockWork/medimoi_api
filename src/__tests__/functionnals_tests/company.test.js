@@ -10,7 +10,13 @@ const R = require('ramda');
 
 // Delete all record before starting the tests
 beforeAll( async () =>{
-    await Models.Company.deleteMany({});
+    await Models.Company.deleteMany({
+        where: {
+            nameSlug: {
+                contains: 'company-test-functional'
+            }
+        }
+    });
 })
 
 // Disconnect prisma after all of the tests

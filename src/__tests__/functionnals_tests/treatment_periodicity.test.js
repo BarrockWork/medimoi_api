@@ -15,6 +15,7 @@ beforeAll( async () =>{
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
+    await Models.treatmentPeriodicity.deleteMany({});
     await Models.$disconnect();
 });
 

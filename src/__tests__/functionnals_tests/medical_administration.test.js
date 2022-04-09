@@ -16,6 +16,7 @@ beforeAll( async () =>{
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
+    await Models.medicalAdministration.deleteMany({});
     await Models.$disconnect();
 });
 

@@ -14,11 +14,11 @@ const testMaxLength = (schema, schemaObject, field, maxLength) => {
         fieldValue += i.toString();
       }
       cloneSchemaObject[field] = fieldValue;
-
       await Models[schema].create({
         data: cloneSchemaObject,
       });
     } catch (e) {
+      console.log(e);
       // e = PrismaClientKnownRequestError
       expect(e.code).toEqual('P2000');
     }

@@ -33,7 +33,9 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 
 ### 2/ Les commandes à exécuter pour le développement
 ```
-1. Installer les modules nodes: yarn install ou npm install 
+1. Installer les modules nodes:
+  a) Sans mettre à jour les packages (Recommandé ): yarn install --frozen-lockfile ou npm ci 
+  b) En mettant les package (Uniquement si necessaire car cela impacte l'équipe): yarn install ou npm install 
 2. Fusionner et générer le fichier schema pour prisma: npx prismix ou yarn prixmix
 3. Initialiser la base de données:
     - yarn create-migration ou npm run create-migration

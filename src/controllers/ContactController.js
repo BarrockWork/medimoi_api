@@ -74,6 +74,7 @@ const createMany = async (req, res) => {
 }
 
 const findOneById = async (req, res) => {
+    console.log("findOneById")
     try {
         // Check and transform the param is a number
         const id = transformIntValue(req.params.id);
@@ -99,6 +100,7 @@ const findOneById = async (req, res) => {
 }
 
 const findByUserId = async (req, res) => {
+    console.log("findByUserId")
     try {
         // Check and transform the param is a number
         const id = transformIntValue(req.params.id);
@@ -123,6 +125,7 @@ const findByUserId = async (req, res) => {
 }
 
 const findAll = async (req, res) => {
+    console.log("findAll")
     try {
         const configClient = {
             orderBy: {

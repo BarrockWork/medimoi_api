@@ -71,12 +71,14 @@ describe('user_type functional testing', () => {
         R.clone(UserTypeSchemaObject[2]),
       ],
     };
+    console.log(cloneSchemaObjects);
     await supertest(appTest)
       .post('/api/user_type/news')
       .send(cloneSchemaObjects)
       .expect(200)
       .then(async (response) => {
         // Check the response
+        // console.log(response);
         expect(response.body.count).toEqual(2);
 
         // Check the data in the database

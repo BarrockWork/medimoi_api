@@ -23,7 +23,7 @@ var createUser = {
   firstName: 'john',
   lastName: 'test',
   age: 30,
-  email: 'jtest@medimoi.com',
+  email: 'addressRT@medimoi.com',
   password: 'password',
   cellphone: '0123456789',
   homephone: '0123456789',
@@ -37,13 +37,6 @@ beforeAll(async () => {
     where: {
       nameSlug: {
         contains: 'address-func-test',
-      },
-    },
-  });
-  await Models.User.deleteMany({
-    where: {
-      email: {
-        contains: 'jtest@medimoi.com',
       },
     },
   });
@@ -66,7 +59,7 @@ afterAll(async () => {
   });
   await Models.User.delete({
     where: {
-      email: 'jtest@medimoi.com',
+      email: 'addressRT@medimoi.com',
     },
   });
   await Models.UserType.delete({
@@ -188,7 +181,7 @@ describe('Address functional testing', () => {
       });
   });
 
-  test('DELETE - /api/user_type/:email/delete', async () => {
+  test('DELETE - /api/user_type/:id/delete', async () => {
     const address = await Models.Address.findFirst({
       where: {
         country: 'Madagascar',
@@ -204,9 +197,9 @@ describe('Address functional testing', () => {
         expect(response.body.country).toBe('Madagascar');
 
         // Check the data in the database
-        const user = await Models.User.findUnique({
+        const user = await Models.Address.findFirst({
           where: {
-            email: 'jdoeeee@medimoi.com',
+            country: 'Madagascar',
           },
         });
         expect(user).toBeNull();

@@ -7,16 +7,29 @@ const supertest = require('supertest');
 const createServerTest = require('./../server_test');
 const Models = require('./../../models');
 const R = require('ramda');
+
 const { UserTypeSchemaObject } = require('./../objectSchema_test');
 
 // Delete all record before starting the tests
 beforeAll(async () => {
-  await Models.UserType.deleteMany({});
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: {
+        contains: 'functionnal-test',
+      },
+    },
+  });
 });
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
-  await Models.UserType.deleteMany({});
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: {
+        contains: 'functionnal-test',
+      },
+    },
+  });
   await Models.$disconnect();
 });
 
@@ -103,7 +116,7 @@ describe('user_type functional testing', () => {
   test('PUT - /api/user_type/:nameSlug/edit', async () => {
     // Clone the schemaObject in order to avoid to modify the original
     let cloneSchemaObject = R.clone(UserTypeSchemaObject[0]);
-    cloneSchemaObject.name = 'user_type Edition';
+    cloneSchemaObject.name = 'user_type edition functionnal test';
 
     await supertest(appTest)
       .put('/api/user_type/user-type-test/edit')
@@ -111,15 +124,17 @@ describe('user_type functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.nameSlug).toBe('user_type-edition');
+        expect(response.body.nameSlug).toBe(
+          'user_type-edition-functionnal-test'
+        );
 
         // Check the data in the database
         const user_type = await Models.UserType.findUnique({
           where: {
-            nameSlug: 'user_type-edition',
+            nameSlug: 'user_type-edition-functionnal-test',
           },
         });
-        expect(user_type.nameSlug).toBe('user_type-edition');
+        expect(user_type.nameSlug).toBe('user_type-edition-functionnal-test');
       });
   });
 

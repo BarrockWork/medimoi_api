@@ -10,9 +10,7 @@ const R = require('ramda');
 const { AddressRoadTypeSchemaObject } = require('../objectSchema_test');
 
 // Delete all record before starting the tests
-beforeAll(async () => {
-  await Models.AddressRoadType.deleteMany({});
-});
+beforeAll(async () => {});
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
@@ -67,7 +65,7 @@ describe('address_road_type functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.length).toBe(1);
+        expect(response.body.length).toBeGreaterThanOrEqual(1);
       });
   });
 

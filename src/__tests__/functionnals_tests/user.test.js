@@ -16,12 +16,25 @@ const { createSlug } = require('./../../utils/requestHandler');
 // Delete all record before starting the tests
 beforeAll(async () => {
   await Models.User.deleteMany({});
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: {
+        contains: 'user-type-test',
+      },
+    },
+  });
 });
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
   await Models.User.deleteMany({});
-  await Models.UserType.deleteMany({});
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: {
+        contains: 'user-type-test',
+      },
+    },
+  });
   await Models.$disconnect();
 });
 
@@ -65,7 +78,7 @@ describe('user functional testing', () => {
       });
   });
 
-  test('POST - /api/user_type/news', async () => {
+  test('POST - /api/users/news', async () => {
     // Clone the schemaObjects in order to avoid to modify the original
     let cloneSchemaObjects = {
       entries: [R.clone(UserSchemaObject[1]), R.clone(UserSchemaObject[2])],
@@ -88,7 +101,7 @@ describe('user functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.count).toEqual(2);
+        expect(response.body.count).toBe(2);
 
         // Check the data in the database
         const users = await Models.User.findMany({
@@ -155,7 +168,7 @@ describe('user functional testing', () => {
       });
   });
 
-  test('DELETE - /api/user_type/:email/delete', async () => {
+  test('DELETE - /api/users/:email/delete', async () => {
     await supertest(appTest)
       .delete('/api/users/jdoeeee@medimoi.com/delete')
       .expect(200)

@@ -14,24 +14,21 @@ const {
 const { createSlug } = require('./../../utils/requestHandler');
 
 // Delete all record before starting the tests
-beforeAll(async () => {
-  await Models.User.deleteMany({});
-  await Models.UserType.deleteMany({
-    where: {
-      nameSlug: {
-        contains: 'user-type-test',
-      },
-    },
-  });
-});
+beforeAll(async () => {});
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
-  await Models.User.deleteMany({});
+  await Models.User.deleteMany({
+    where: {
+      lastName: {
+        contains: 'doe',
+      },
+    },
+  });
   await Models.UserType.deleteMany({
     where: {
       nameSlug: {
-        contains: 'user-type-test',
+        contains: 'user-func-test',
       },
     },
   });
@@ -42,7 +39,9 @@ afterAll(async () => {
 const appTest = createServerTest();
 
 //Initialize User Type Creation
-let createType = UserTypeSchemaObject[0];
+var createType = {
+  name: 'User Func Test',
+};
 createType.nameSlug = createSlug(createType.name);
 const userType = Models.UserType.create({
   data: createType,
@@ -65,16 +64,16 @@ describe('user functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.newUser.email).toBe('jd@medimoi.com');
+        expect(response.body.newUser.email).toBe('janedoe@medimoi.com');
 
         // Check the data in the database
         const user = await Models.User.findUnique({
           where: {
-            email: 'jd@medimoi.com',
+            email: 'janedoe@medimoi.com',
           },
         });
         expect(user).toBeTruthy();
-        expect(user.email).toBe('jd@medimoi.com');
+        expect(user.email).toBe('janedoe@medimoi.com');
       });
   });
 
@@ -87,10 +86,10 @@ describe('user functional testing', () => {
     //create a new user type for creating a User
     const userType = await Models.UserType.findUnique({
       where: {
-        nameSlug: 'user-type-test',
+        nameSlug: 'user-func-test',
       },
     });
-
+    // console.log(userType);
     cloneSchemaObjects.entries.forEach((entry) => {
       entry.user_type_id = userType.id;
     });
@@ -107,7 +106,7 @@ describe('user functional testing', () => {
         const users = await Models.User.findMany({
           where: {
             firstName: {
-              contains: 'john',
+              contains: 'jane',
             },
           },
         });
@@ -118,11 +117,11 @@ describe('user functional testing', () => {
   test('GET - /api/users/:email', async () => {
     // Clone the schemaObjects in order to avoid to modify the original
     await supertest(appTest)
-      .get('/api/users/jd@medimoi.com')
+      .get('/api/users/janedoe@medimoi.com')
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body[0].email).toBe('jd@medimoi.com');
+        expect(response.body.email).toBe('janedoe@medimoi.com');
       });
   });
 
@@ -133,6 +132,7 @@ describe('user functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
+        // console.log(response);
         expect(response.body.length).toBeGreaterThan(1);
       });
   });
@@ -144,24 +144,25 @@ describe('user functional testing', () => {
 
     const userType = await Models.UserType.findUnique({
       where: {
-        nameSlug: 'user-type-test',
+        nameSlug: 'user-func-test',
       },
     });
 
     cloneSchemaObject.user_type_id = userType.id;
 
     await supertest(appTest)
-      .put('/api/users/jd@medimoi.com/edit')
+      .put('/api/users/janedoe@medimoi.com/edit')
       .send(cloneSchemaObject)
       .expect(200)
       .then(async (response) => {
+
         // Check the response
         expect(response.body.firstName).toBe('johnnie');
 
         // Check the data in the database
         const user = await Models.User.findUnique({
           where: {
-            email: 'jd@medimoi.com',
+            email: 'janedoe@medimoi.com',
           },
         });
         expect(user.firstName).toBe('johnnie');
@@ -170,11 +171,11 @@ describe('user functional testing', () => {
 
   test('DELETE - /api/users/:email/delete', async () => {
     await supertest(appTest)
-      .delete('/api/users/jdoeeee@medimoi.com/delete')
+      .delete('/api/users/jane@medimoi.com/delete')
       .expect(200)
       .then(async (response) => {
         // Check the response (prisma return the deleted object datas
-        expect(response.body.email).toBe('jdoeeee@medimoi.com');
+        expect(response.body.email).toBe('jane@medimoi.com');
 
         // Check the data in the database
         const user = await Models.User.findUnique({

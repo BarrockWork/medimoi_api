@@ -7,40 +7,73 @@ const supertest = require('supertest');
 const createServerTest = require('./../server_test');
 const Models = require('./../../models');
 const R = require('ramda');
-const {
-  UserSchemaObject,
-  UserTypeSchemaObject,
-  AddressRoadTypeSchemaObject,
-  AddressSchemaObject,
-} = require('./../objectSchema_test');
+const { AddressSchemaObject } = require('./../objectSchema_test');
 const { createSlug } = require('./../../utils/requestHandler');
 
 //Initialize Dependency for Address Creation
-var createAddressRT = AddressRoadTypeSchemaObject;
-var createType = UserTypeSchemaObject[0];
+var createAddressRT = {
+  name: 'Address Func Test',
+};
+createAddressRT.nameSlug = createSlug(createAddressRT.name);
+var createType = {
+  name: 'Address Func Test',
+};
 createType.nameSlug = createSlug(createType.name);
-var createUser = UserSchemaObject[0];
-
-const DepModels = (Schema, Object) => {
-  Models[Schema].create({
-    data: Object,
-  });
+var createUser = {
+  firstName: 'john',
+  lastName: 'test',
+  age: 30,
+  email: 'jtest@medimoi.com',
+  password: 'password',
+  cellphone: '0123456789',
+  homephone: '0123456789',
+  role: 'user',
 };
 
 // Delete all record before starting the tests
 beforeAll(async () => {
-  await Models.User.deleteMany({});
-  await DepModels('AddressRoadType', createAddressRT);
-  await DepModels('UserType', createType);
-  createUser.user_type_id = userType.id;
-  await DepModels('User', createUser);
+  await Models.Address.deleteMany({});
+  await Models.AddressRoadType.deleteMany({
+    where: {
+      nameSlug: {
+        contains: 'address-func-test',
+      },
+    },
+  });
+  await Models.User.deleteMany({
+    where: {
+      email: {
+        contains: 'jtest@medimoi.com',
+      },
+    },
+  });
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: {
+        contains: 'address-func-test',
+      },
+    },
+  });
 });
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
-  await Models.User.deleteMany({});
-  await Models.UserType.deleteMany({});
-  await Models.AddressRoadType.deleteMany({});
+  await Models.Address.deleteMany({});
+  await Models.AddressRoadType.delete({
+    where: {
+      nameSlug: 'address-func-test',
+    },
+  });
+  await Models.User.delete({
+    where: {
+      email: 'jtest@medimoi.com',
+    },
+  });
+  await Models.UserType.delete({
+    where: {
+      nameSlug: 'address-func-test',
+    },
+  });
   await Models.$disconnect();
 });
 
@@ -48,133 +81,127 @@ afterAll(async () => {
 const appTest = createServerTest();
 
 //Initialize User Type Creation
-createType.nameSlug = createSlug(createType.name);
+const userTypeCreation = Models.UserType.create({
+  data: createType,
+});
+
+//Initialize Address Road Type Creation
+const ARTCreation = Models.AddressRoadType.create({
+  data: createAddressRT,
+});
+
+// Initialize User Creation
+
+const UserCreation = Models.User.create({
+  data: createUser,
+});
 
 /*
  * Init the User Type test group
  */
-describe('user functional testing', () => {
+describe('Address functional testing', () => {
   test('POST - /api/address/new', async () => {
     // Clone the schemaObject[0] in order to avoid to modify the original
-    let cloneSchemaObject = R.clone(UserSchemaObject[0]);
-    cloneSchemaObject.user_type_id = newUserType.id;
+    let cloneSchemaObject = R.clone(AddressSchemaObject);
+    const newUserType = await userTypeCreation;
+    createUser.user_type_id = newUserType.id;
+    const newUser = await UserCreation;
+    const newART = await ARTCreation;
+    cloneSchemaObject.user_id = newUser.id;
+    cloneSchemaObject.address_road_type_id = newART.id;
 
     await supertest(appTest)
-      .post('/api/users/new/')
+      .post('/api/address/new/')
       .send(cloneSchemaObject)
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.newUser.email).toBe('jd@medimoi.com');
+        expect(response.body.country).toBe('France');
 
         // Check the data in the database
-        const user = await Models.User.findUnique({
+        const address = await Models.Address.findFirst({
           where: {
-            email: 'jd@medimoi.com',
+            country: 'France',
           },
         });
-        expect(user).toBeTruthy();
-        expect(user.email).toBe('jd@medimoi.com');
+        expect(address).toBeTruthy();
+        expect(address.streetName).toBe('madame');
       });
   });
 
-  test('POST - /api/user_type/news', async () => {
-    // Clone the schemaObjects in order to avoid to modify the original
-    let cloneSchemaObjects = {
-      entries: [R.clone(UserSchemaObject[1]), R.clone(UserSchemaObject[2])],
-    };
-
-    //create a new user type for creating a User
-    const userType = await Models.UserType.findUnique({
+  test('GET - /api/address/:id', async () => {
+    // get the actual Id of the address in case if we run many tests
+    const address = await Models.Address.findFirst({
       where: {
-        nameSlug: 'user-type-test',
+        country: 'France',
       },
     });
-
-    cloneSchemaObjects.entries.forEach((entry) => {
-      entry.user_type_id = userType.id;
-    });
+    const id = address.id;
 
     await supertest(appTest)
-      .post('/api/users/news')
-      .send(cloneSchemaObjects)
+      .get(`/api/address/${id}`)
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.count).toEqual(2);
-
-        // Check the data in the database
-        const users = await Models.User.findMany({
-          where: {
-            firstName: {
-              contains: 'john',
-            },
-          },
-        });
-        expect(users).toHaveLength(3);
+        expect(response.body.country).toBe('France');
       });
   });
 
-  test('GET - /api/users/:email', async () => {
+  test('GET - /api/address/', async () => {
     // Clone the schemaObjects in order to avoid to modify the original
     await supertest(appTest)
-      .get('/api/users/jd@medimoi.com')
+      .get('/api/address/')
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body[0].email).toBe('jd@medimoi.com');
+        expect(response.body.length).toBe(1);
       });
   });
 
-  test('GET - /api/users/', async () => {
-    // Clone the schemaObjects in order to avoid to modify the original
-    await supertest(appTest)
-      .get('/api/users/')
-      .expect(200)
-      .then(async (response) => {
-        // Check the response
-        expect(response.body.length).toBeGreaterThan(1);
-      });
-  });
-
-  test('PUT - /api/users/:email/edit', async () => {
+  test('PUT - /api/address/:id/edit', async () => {
     // Clone the schemaObject in order to avoid to modify the original
-    let cloneSchemaObject = R.clone(UserSchemaObject[0]);
-    cloneSchemaObject.firstName = 'johnnie';
+    let cloneSchemaObject = R.clone(AddressSchemaObject);
+    cloneSchemaObject.country = 'Madagascar';
 
-    const userType = await Models.UserType.findUnique({
+    const address = await Models.Address.findFirst({
       where: {
-        nameSlug: 'user-type-test',
+        country: 'France',
       },
     });
-
-    cloneSchemaObject.user_type_id = userType.id;
+    const id = address.id;
 
     await supertest(appTest)
-      .put('/api/users/jd@medimoi.com/edit')
+      .put(`/api/address/${id}/edit`)
       .send(cloneSchemaObject)
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.firstName).toBe('johnnie');
+        expect(response.body.country).toBe('Madagascar');
 
         // Check the data in the database
-        const user = await Models.User.findUnique({
+        const testAddress = await Models.Address.findFirst({
           where: {
-            email: 'jd@medimoi.com',
+            country: 'Madagascar',
           },
         });
-        expect(user.firstName).toBe('johnnie');
+        expect(testAddress.country).toBe('Madagascar');
       });
   });
 
   test('DELETE - /api/user_type/:email/delete', async () => {
+    const address = await Models.Address.findFirst({
+      where: {
+        country: 'Madagascar',
+      },
+    });
+    const id = address.id;
+
     await supertest(appTest)
-      .delete('/api/users/jdoeeee@medimoi.com/delete')
+      .delete(`/api/address/${id}/delete`)
       .expect(200)
       .then(async (response) => {
         // Check the response (prisma return the deleted object datas
-        expect(response.body.email).toBe('jdoeeee@medimoi.com');
+        expect(response.body.country).toBe('Madagascar');
 
         // Check the data in the database
         const user = await Models.User.findUnique({

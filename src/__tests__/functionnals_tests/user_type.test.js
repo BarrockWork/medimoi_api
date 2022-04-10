@@ -15,7 +15,7 @@ beforeAll(async () => {
   await Models.UserType.deleteMany({
     where: {
       nameSlug: {
-        contains: 'functionnal-test',
+        contains: 'user-type-test',
       },
     },
   });
@@ -26,7 +26,7 @@ afterAll(async () => {
   await Models.UserType.deleteMany({
     where: {
       nameSlug: {
-        contains: 'functionnal-test',
+        contains: 'user-type-test',
       },
     },
   });
@@ -78,7 +78,6 @@ describe('user_type functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
-        // console.log(response);
         expect(response.body.count).toEqual(2);
 
         // Check the data in the database
@@ -118,7 +117,7 @@ describe('user_type functional testing', () => {
   test('PUT - /api/user_type/:nameSlug/edit', async () => {
     // Clone the schemaObject in order to avoid to modify the original
     let cloneSchemaObject = R.clone(UserTypeSchemaObject[0]);
-    cloneSchemaObject.name = 'user_type edition functionnal test';
+    cloneSchemaObject.name = 'user type test 4';
 
     await supertest(appTest)
       .put('/api/user_type/user-type-test/edit')
@@ -126,32 +125,30 @@ describe('user_type functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.nameSlug).toBe(
-          'user_type-edition-functionnal-test'
-        );
+        expect(response.body.nameSlug).toBe('user-type-test-4');
 
         // Check the data in the database
         const user_type = await Models.UserType.findUnique({
           where: {
-            nameSlug: 'user_type-edition-functionnal-test',
+            nameSlug: 'user-type-test-4',
           },
         });
-        expect(user_type.nameSlug).toBe('user_type-edition-functionnal-test');
+        expect(user_type.nameSlug).toBe('user-type-test-4');
       });
   });
 
   test('DELETE - /api/user_type/:nameSlug/delete', async () => {
     await supertest(appTest)
-      .delete('/api/user_type/user-type-test-2-medimoi/delete')
+      .delete('/api/user_type/user-type-test-4/delete')
       .expect(200)
       .then(async (response) => {
         // Check the response (prisma return the deleted object datas
-        expect(response.body.nameSlug).toBe('user-type-test-2-medimoi');
+        expect(response.body.nameSlug).toBe('user-type-test-4');
 
         // Check the data in the database
         const user_type = await Models.UserType.findUnique({
           where: {
-            nameSlug: 'user-type-test-2-medimoi',
+            nameSlug: 'user-type-test-4',
           },
         });
         expect(user_type).toBeNull();

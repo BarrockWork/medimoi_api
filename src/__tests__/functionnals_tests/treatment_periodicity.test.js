@@ -4,33 +4,46 @@
  */
 
 const supertest = require('supertest');
-const createServerTest = require("./../server_test");
-const Models = require('./../../models');
+const createServerTest = require("../server_test");
+const Models = require('../../models');
 const R = require('ramda');
 
-// Delete all record before starting the tests
+// // Delete all record before starting the tests
 beforeAll( async () =>{
-    await Models.treatmentPeriodicity.deleteMany({});
+    await Models.treatmentPeriodicity.deleteMany({
+        where:{
+            name:{
+                contains: "Treatment Periodicity Functional"
+            }
+        }
+    });
+    await Models.$disconnect();
 });
 
-// Disconnect prisma after all of the tests
+// // Disconnect prisma after all of the tests
 afterAll(async () => {
-    await Models.treatmentPeriodicity.deleteMany({});
+    await Models.treatmentPeriodicity.deleteMany({
+        where:{
+            name:{
+                contains: "Treatment Periodicity Functional"
+            }
+        }
+    });
     await Models.$disconnect();
 });
 
 const appTest = createServerTest();
 
-// Initialise a list of company object
+// // Initialise a list of company object
 const schemaObject = [
     {
-        name: 'Treatment Periodicity Test Functional',
+        name: 'Treatment Periodicity Functional',
     },
     {
-        name: 'Treatment Periodicity Test Functional medimoi',
+        name: 'Treatment Periodicity Functional medimoi',
     },
     {
-        name: 'Treatment Periodicity Test Functional medimoi 2',
+        name: 'Treatment Periodicity Functional medimoi 2',
     }
 ];
 
@@ -47,16 +60,14 @@ describe("Treatment Periodicity functional testing", () => {
         .expect(200)
         .then(async (response) => {
             // Check the response
-            expect(response.body.nameSlug).toBe("treatment-periodicity-test-functional")
+            expect(response.body.nameSlug).toBe("treatment-periodicity-functional");
 
             // Check the data in the database
-            const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
-                where: {
-                    nameSlug: "treatment-periodicity-test-functional"
+            await Models.treatmentPeriodicity.delete({
+                where:{
+                    id: response.body.id
                 }
-            });
-            expect(treatmentPeriodicity).toBeTruthy();
-            expect(treatmentPeriodicity.name).toBe("Treatment Periodicity Test Functional");
+            })
         });
     });
 
@@ -65,7 +76,7 @@ describe("Treatment Periodicity functional testing", () => {
         let cloneSchemaObjects = {
             "entries": [R.clone(schemaObject[1]), R.clone(schemaObject[2])]
         };
-        const req = await supertest(appTest)
+        await supertest(appTest)
         .post('/api/treatment_periodicities/news')
         .send(cloneSchemaObjects)
         .expect(200)
@@ -73,73 +84,128 @@ describe("Treatment Periodicity functional testing", () => {
             // Check the response
             expect(response.body.count).toBe(2);
 
-            const treatmentPeriodicities = await Models.treatmentPeriodicity.findMany({});
-            expect(treatmentPeriodicities.length).toBe(3);
+            await Models.treatmentPeriodicity.deleteMany({
+                where:{
+                    name:{
+                        contains: "Treatment Periodicity Functional"
+                    }
+                }
+            });
         })
     });
 
     test('GET - /api/treatment_periodicities/all', async () => {
+        let cloneSchemaObjects = [R.clone(schemaObject[1]), R.clone(schemaObject[2])];
+        cloneSchemaObjects[0].nameSlug = "treatment-periodicity-functional-medimoi";
+        cloneSchemaObjects[1].nameSlug = "treatment-periodicity-functional-medimoi-2";
+        await Models.treatmentPeriodicity.createMany({
+            data: cloneSchemaObjects
+        });
+
         await supertest(appTest)
         .get('/api/treatment_periodicities/all')
         .expect(200)
         .then(async (response) => {
             // Check the response
-            expect(response.body.length).toBe(3);
+            const treatmentPeriodicities = response.body;
+            // console.log(treatmentPeriodicities, "treatmentPeriodicities");
+            expect(response.body.length).toBe(2);
+            await Models.treatmentPeriodicity.deleteMany({
+                where:{
+                    name:{
+                        contains: "medimoi"
+                    }
+                }
+            });
         });
     });
 
     test('GET - /api/treatment_periodicities/slug/:nameSlug', async () => {
+        let cloneSchemaObjects = R.clone(schemaObject[0]);
+        cloneSchemaObjects.nameSlug = "treatment-periodicity-functional";
+        await Models.treatmentPeriodicity.create({
+            data: cloneSchemaObjects
+        });
         await supertest(appTest)
-        .get('/api/treatment_periodicities/slug/treatment-periodicity-test-functional')
+        .get('/api/treatment_periodicities/slug/treatment-periodicity-functional')
         .expect(200)
         .then(async (response) => {
             // Check the response
-            expect(response.body.nameSlug).toBe("treatment-periodicity-test-functional")
-
-            // Check the data in the database
-            const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
-                where: {
-                    nameSlug: "treatment-periodicity-test-functional"
+            expect(response.body.nameSlug).toBe("treatment-periodicity-functional")
+            await Models.treatmentPeriodicity.deleteMany({
+                where:{
+                    name:{
+                        contains: "Treatment Periodicity Functional"
+                    }
                 }
             });
-            expect(treatmentPeriodicity).toBeTruthy();
-            expect(treatmentPeriodicity.name).toBe("Treatment Periodicity Test Functional");
         });
     });
 
     test('PUT - /api/treatment_periodicities/slug/nameSlug', async () => {
+
+        let cloneSchemaObjects = R.clone(schemaObject[0]);
+        cloneSchemaObjects.nameSlug = "treatment-periodicity-functional";
+        await Models.treatmentPeriodicity.create({
+            data: cloneSchemaObjects
+        });
+
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
         cloneSchemaObject.name = "Treatment updated";
 
         await supertest(appTest)
-        .put('/api/treatment_periodicities/slug/treatment-periodicity-test-functional')
+        .put('/api/treatment_periodicities/slug/treatment-periodicity-functional')
         .send(cloneSchemaObject)
         .expect(200)
         .then(async (response) => {
             // check the response)
             expect(response.body.name).toBe("Treatment updated");
-
-            const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
-                where: {
-                    nameSlug: "treatment-updated"
+            // console.log(response.body, "response.body");
+            await Models.treatmentPeriodicity.deleteMany({
+                where:{
+                    name:{
+                        contains: "Treatment updated"
+                    }
                 }
             });
-
-            expect(treatmentPeriodicity).toBeTruthy();
-            expect(treatmentPeriodicity.name).toBe("Treatment updated");
-            expect(treatmentPeriodicity.nameSlug).toBe("treatment-updated");
         });
     });
 
     test('DELETE - /api/treatment_periodicities/slug/nameSlug', async () => {
+        let cloneSchemaObjects = [R.clone(schemaObject[1]), R.clone(schemaObject[2])];
+        cloneSchemaObjects[0].name = "Treatment Periodicity Functional to delete";
+        cloneSchemaObjects[0].nameSlug = "treatment-periodicity-functional-to-delete";
+
+        cloneSchemaObjects[1].name = "Treatment Periodicity Functional to delete 2";
+        cloneSchemaObjects[1].nameSlug = "treatment-periodicity-functional-to-delete-2";
+        
+        await Models.treatmentPeriodicity.createMany({
+        data: cloneSchemaObjects
+    });
+
         await supertest(appTest)
-        .delete('/api/treatment_periodicities/slug/treatment-periodicity-test-functional-medimoi-2')
+        .delete('/api/treatment_periodicities/slug/treatment-periodicity-functional-to-delete')
         .expect(200)
         .then(async () => {
             // Check the response
-            const treatmentPeriodicities = await Models.treatmentPeriodicity.findMany({});
-            expect(treatmentPeriodicities.length).toBe(2);
+            const treatmentPeriodicities = await Models.treatmentPeriodicity.findMany({
+                where: {
+                    name:{
+                        contains: "to delete"
+                    }
+                }
+            });
+            // console.log(treatmentPeriodicities, "treatmentPeriodicities rest");
+            expect(treatmentPeriodicities.length).toBe(1);
+
+            await Models.treatmentPeriodicity.deleteMany({
+                where:{
+                    name:{
+                        contains: "to delete"
+                    }
+                }
+            });
         })
     });
 });

@@ -144,7 +144,7 @@ describe("Medical Administration functional testing", () => {
         .expect(200)
         .then(async (response) => {
             // check the response
-            console.log(response.body);
+            // console.log(response.body);
             expect(response.body.length).toBeGreaterThan(2);
         })
         .then(async ()=>{
@@ -162,7 +162,7 @@ describe("Medical Administration functional testing", () => {
                     }
                 }
             });
-            console.log(medicalAdministrations);
+            // console.log(medicalAdministrations);
         })
     });
 
@@ -185,7 +185,7 @@ describe("Medical Administration functional testing", () => {
         .expect(200)
         .then(async (response) => {
             // check the response
-            console.log(response.body);
+            // console.log(response.body);
             expect(response.body.name).toBe("Medical Administration Functional updated");
         })
         .then(async () => {
@@ -196,7 +196,7 @@ describe("Medical Administration functional testing", () => {
             });
         })
         .catch((err) => {
-            console.log(err);
+            // console.log(err);
         })
         .finally(Models.$disconnect());
     });
@@ -228,7 +228,7 @@ describe("Medical Administration functional testing", () => {
                     }
                 }
             });
-            console.log(medicalAdministrations);
+            // console.log(medicalAdministrations);
             // test que l'élément à bien été supprimé
             expect(medicalAdministrations.length).toBe(1);
         })

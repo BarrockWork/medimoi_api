@@ -109,7 +109,7 @@ describe("Treatment Periodicity functional testing", () => {
             // Check the response
             const treatmentPeriodicities = response.body;
             // console.log(treatmentPeriodicities, "treatmentPeriodicities");
-            expect(response.body.length).toBe(2);
+            expect(response.body.length).toBeGreaterThanOrEqual(2);
             await Models.treatmentPeriodicity.deleteMany({
                 where:{
                     name:{

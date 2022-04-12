@@ -8,12 +8,12 @@ const { createSlug } = require('../../utils/requestHandler')
 const {testMaxLength, testUniqueness} = require('../../utils/testHandler')
 
 beforeAll(async () => {
-    await Models.medicalAdministration.deleteMany({});
+    // await Models.medicalAdministration.deleteMany({});
 });
 
 // disconnect client after all of the tests
 afterAll(async () => {
-    await Models.medicalAdministration.deleteMany({});
+    // await Models.medicalAdministration.deleteMany({});
     await Models.$disconnect();
 })
 

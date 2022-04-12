@@ -137,7 +137,7 @@ const updateTreatmentMedia = async (req, res) => {
 
 // Delete function
 const deleteTreatmentMedia = async (req, res) => {
-    console.log("deleteTreatmentMedia");
+    // console.log("deleteTreatmentMedia");
     const {id} = req.params;
     try {
         await Models.treatmentMedia.delete({
@@ -151,7 +151,7 @@ const deleteTreatmentMedia = async (req, res) => {
             message: `Treatment media with id ${id} was deleted`
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         res.status(400).json({success: false})
     }
 }

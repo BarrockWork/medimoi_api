@@ -1,3 +1,4 @@
+
 // Import of the Prisma client
 const Models = require('../models');
 const {checkRequiredFields, extractFieldsToChange, transformIntValue} = require('../utils/requestHandler');

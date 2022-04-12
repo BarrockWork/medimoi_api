@@ -1,7 +1,6 @@
 // Import of the Prisma client
 const Models = require('../models');
 const {checkRequiredFields, extractFieldsToChange, transformIntValue} = require('../utils/requestHandler');
-const { isEmpty } = require('ramda');
 
 const createTreatmentMedia = async (req, res) => {
 
@@ -31,7 +30,6 @@ const createTreatmentMedia = async (req, res) => {
         // Success response
         res.status(200).json(treatmentMedia);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }
@@ -138,7 +136,8 @@ const updateTreatmentMedia = async (req, res) => {
 
 // Delete function
 const deleteTreatmentMedia = async (req, res) => {
-
+    console.log("deleteTreatmentMedia");
+    const {id} = req.params;
     try {
         await Models.treatmentMedia.delete({
             where:{

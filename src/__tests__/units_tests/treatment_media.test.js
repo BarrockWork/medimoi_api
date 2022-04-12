@@ -6,8 +6,13 @@
 const Models = require('../../models');
 const { testMaxLength } = require('../../utils/testHandler');
 
+beforeAll(async () => {
+    await Models.treatmentMedia.deleteMany({});
+});
+
 //disconnect client after all of the tests
 afterAll(async () => {
+    await Models.treatmentMedia.deleteMany({});
     await Models.$disconnect();
 });
 

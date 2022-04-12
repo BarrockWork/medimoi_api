@@ -5,6 +5,7 @@ const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb }
 const { toLower } = require('ramda');
 
 const createTreatmentPeriodicity = async (req, res) => {
+    // console.log("createTreatmentPeriodicity");
     try {
 
         checkRequiredFields(req, res, ['name']);
@@ -21,6 +22,7 @@ const createTreatmentPeriodicity = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
+        // console.error(error, "createTreatmentPeriodicity");
         res.status(400).json({
             success: false,
             error
@@ -30,6 +32,7 @@ const createTreatmentPeriodicity = async (req, res) => {
 }
 
 const createMany = async (req, res) => {
+    // console.log("createMany");
     try {
         // Check the required fields
         checkRequiredFields(req, res,['entries']);
@@ -59,14 +62,14 @@ const createMany = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicities);
     } catch (error) {
-        // console.log(error)
+        // console.error(error, "createMany");
         res.status(400).json(error);
     }
 
 }
 
 const getTreatmentPeriodicityById = async (req, res) => {
-    
+    // console.log("getTreatmentPeriodicityById");
     const {id} = req.params;
     try {
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
@@ -87,20 +90,15 @@ const getTreatmentPeriodicityById = async (req, res) => {
         })
 
         await Models.$disconnect();
-        res.status(200).json({
-            success: true,
-            treatmentPeriodicity
-        });
+        res.status(200).json(treatmentPeriodicity);
     } catch (error) {
-        res.status(400).json({
-            success: false,
-            error
-        });
+        // console.error(error, "getTreatmentPeriodicityById");
+        res.status(400).json(error);
     }
 }
 
 const getTreatmentPeriodicityBySlug = async (req, res) => {
-    
+    // console.log("getTreatmentPeriodicityBySlug");
     const {nameSlug} = req.params;
     try {
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
@@ -123,11 +121,13 @@ const getTreatmentPeriodicityBySlug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
+        console.error(error, "getTreatmentPeriodicityBySlug");
         res.status(400).json(error);
     }
 }
 
 const findAll = async (req, res) => {
+    // console.log("findAll");
     try {
         const configClient = {
             orderBy: {
@@ -155,6 +155,7 @@ const findAll = async (req, res) => {
         res.status(200).json(treatmemtPeriodicities);
     } catch (error) {
         // console.log(error)
+        console.error(error, "findAll");
         res.status(400).json(error);
     }
 }
@@ -178,13 +179,13 @@ const findAll = async (req, res) => {
 //         })
 
 //         Models.$disconnect();
-//         console.log(treatmemtPeriodicities);
+        // console.log(treatmemtPeriodicities);
 //         res.status(200).json({
 //             success: true,
 //             treatmemtPeriodicities
 //         });
 //     } catch (error) {
-//         console.log(error);
+        // console.log(error);
 //         res.status(400).json({
 //             success: false,
 //             error
@@ -194,6 +195,7 @@ const findAll = async (req, res) => {
 
 // Update function
 const updateTreatmentPeriodicity = async (req, res) => {
+    // console.log("updateTreatmentPeriodicity");
     try {
         const onlyThoseFields = ['name', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
@@ -213,17 +215,18 @@ const updateTreatmentPeriodicity = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
-        console.log(error);
+        console.error(error, "updateTreatmentPeriodicity");
         res.status(400).json(error);
     }
 }
 
 // Delete function
 const deleteTreatmentPeriodicity = async (req, res) => {
+    // console.log("deleteTreatmentPeriodicity");
     const {id} = req.params;
 
     try {
-        const deletedTreatmentPeriodicity = await Models.treatmentPeriodicity.delete({
+        await Models.treatmentPeriodicity.delete({
             where:{
                 id: parseInt(id)
             }
@@ -235,16 +238,18 @@ const deleteTreatmentPeriodicity = async (req, res) => {
         });
     } catch (error) {
         // console.log(error);
+        // console.error(error, "deleteTreatmentPeriodicity");
         res.status(400).json({success: false})
     }
 }
 
 // Delete function by slug
 const deleteTreatmentPeriodicityBySlug = async (req, res) => {
+    // console.log("deleteTreatmentPeriodicityBySlug");
     const {nameSlug} = req.params;
 
     try {
-        const deletedTreatmentPeriodicity = await Models.treatmentPeriodicity.delete({
+        await Models.treatmentPeriodicity.delete({
             where:{
                 nameSlug
             }
@@ -255,6 +260,7 @@ const deleteTreatmentPeriodicityBySlug = async (req, res) => {
             message: `Treatment periodicity with slugName ${nameSlug} was deleted`
         });
     } catch (error) {
+        // console.error(error, "deleteTreatmentPeriodicityBySlug");
         res.status(400).json({success: false})
     }
 }

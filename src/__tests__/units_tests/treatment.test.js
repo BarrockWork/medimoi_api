@@ -7,12 +7,13 @@ const Models = require('../../models');
 const { testMaxLength} = require('../../utils/testHandler');
 
 beforeAll(async () => {
-    await Models.treatment.deleteMany({});
+    // await Models.treatment.deleteMany({});
+    // await Models.$disconnect();
 })
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
-    await Models.treatment.deleteMany({});
+    // await Models.treatment.deleteMany({});
     await Models.$disconnect();
 });
 

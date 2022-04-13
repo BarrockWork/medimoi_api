@@ -24,7 +24,7 @@ beforeEach(async () => {
     /** User type */
     user_type = await Models.userType.findFirst({
         where: {
-            nameSlug: "treatment-media-post-user-type"
+            nameSlug: "treatment-media-user-type"
         }
     })
     if(R.isNil(user_type)){

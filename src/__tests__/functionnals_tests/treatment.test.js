@@ -56,7 +56,7 @@ describe("Treatment functional testing", () => {
         /** User type */
         let user_type = await Models.userType.findFirst({
             where: {
-                nameSlug: "treatment-media-post-user-type"
+                nameSlug: "treatment-media-user-type"
             }
         })
         if(R.isNil(user_type)){
@@ -139,7 +139,7 @@ describe("Treatment functional testing", () => {
         /** User type */
         let user_type = await Models.userType.findFirst({
             where: {
-                nameSlug: "treatment-media-post-user-type"
+                nameSlug: "treatment-media-user-type"
             }
         })
         if(R.isNil(user_type)){
@@ -223,7 +223,7 @@ describe("Treatment functional testing", () => {
         /** User type */
         let user_type = await Models.userType.findFirst({
             where: {
-                nameSlug: "treatment-media-post-user-type"
+                nameSlug: "treatment-media-user-type"
             }
         })
         if(R.isNil(user_type)){
@@ -308,7 +308,7 @@ describe("Treatment functional testing", () => {
         /** User type */
         let user_type = await Models.userType.findFirst({
             where: {
-                nameSlug: "treatment-media-post-user-type"
+                nameSlug: "treatment-media-user-type"
             }
         })
         if(R.isNil(user_type)){
@@ -389,7 +389,7 @@ describe("Treatment functional testing", () => {
         /** User type */
         let user_type = await Models.userType.findFirst({
             where: {
-                nameSlug: "treatment-media-post-user-type"
+                nameSlug: "treatment-media-user-type"
             }
         })
         if(R.isNil(user_type)){

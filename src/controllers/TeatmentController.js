@@ -23,7 +23,6 @@ const createOne = async (req, res) => {
         //Success response
         res.status(200).json(treatmemt);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }
@@ -59,7 +58,6 @@ const createMany = async (req, res) => {
         //Success response
         res.status(200).json(result);
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 }
@@ -133,19 +131,20 @@ const updateTreatment = async (req, res) => {
 
 // Delete function
 const deleteTreatment = async (req, res) => {
+    // console.log(req.params, "deleteTreatment params")
+    const id = transformIntValue(req.params.id);
+    
     try {
         const deletedTreatment = await Models.treatment.delete({
             where:{
-                id: transformIntValue(req.params.id)
+                id
             }
         })
         await Models.$disconnect();
-        res.status(200).json({
-            success: true,
-            message: `Treatment with id ${id} was deleted`
-        });
+        res.status(200).json(`Treatment with id ${id} was deleted`);
     } catch (error) {
-        res.status(400).json({success: false})
+        // console.log(error, "error")
+        res.status(400).json(error)
     }
 }
 

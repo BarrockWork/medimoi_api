@@ -93,6 +93,24 @@ router.post("/new", createOne);
 router.post("/news", createMany); // create Many
 
 /**
+ * @apiDescription Get all Treatments
+ * @api {POST} /api/treatments/all/:isActive? Get All treatments
+ * @apiName GetAllTreatment
+ * @apiGroup Treatment
+ * 
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatments/all
+ * @apiVersion 0.1.0
+ */
+router.get("/all", getAllTreatments);
+
+/**
  * @apiDescription Get single Treatment
  * @api {POST} /api/treatments/:id Get treatment by id
  * @apiName GetTreatment
@@ -111,24 +129,6 @@ router.post("/news", createMany); // create Many
 router.get("/:id", getTreatmentById);
 
 
-
-/**
- * @apiDescription Get all Treatments
- * @api {POST} /api/treatments/all/:isActive? Get All treatments
- * @apiName GetAllTreatment
- * @apiGroup Treatment
- * 
- * 
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- * 
- * 
- * @apiSampleRequest http://localhost:4000/api/treatments/all/true
- * @apiVersion 0.1.0
- */
-router.get("/", getAllTreatments);
 
 
 /**

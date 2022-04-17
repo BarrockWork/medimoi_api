@@ -71,7 +71,7 @@ describe('user_type functional testing', () => {
         R.clone(UserTypeSchemaObject[2]),
       ],
     };
-    console.log(cloneSchemaObjects);
+
     await supertest(appTest)
       .post('/api/user_type/news')
       .send(cloneSchemaObjects)

@@ -14,16 +14,22 @@ var createType = {
 };
 createType.nameSlug = createSlug(createType.name);
 
-var createNotifType = {
-  name: 'UNT Func Test',
-};
-createNotifType.nameSlug = createSlug(createNotifType.name);
-
+var createNotifType = [
+  {
+    name: 'UNT Func Test',
+  },
+  {
+    name: 'UNT Func Test 2',
+  },
+];
+createNotifType.forEach((item) => {
+  item.nameSlug = createSlug(item.name);
+});
 var createUser = {
   firstName: 'user',
   lastName: 'test',
   age: 30,
-  email: 'utest@medimoi.com',
+  email: 'futest@medimoi.com',
   password: 'password',
   cellphone: '0123456789',
   homephone: '0123456789',
@@ -31,41 +37,24 @@ var createUser = {
 };
 
 // Delete all record before starting the tests
-beforeAll(async () => {
-  // await Models.user_notification_type.deleteMany({});
-  // await Models.User.deleteMany({
-  //   where: {
-  //     email: {
-  //       contains: 'utest@medimoi.com',
-  //     },
-  //   },
-  // });
-  // await Models.UserType.deleteMany({
-  //   where: {
-  //     nameSlug: {
-  //       contains: 'user_notification_type-func-test',
-  //     },
-  //   },
-  // });
-});
+beforeAll(async () => {});
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
-  await Models.NotificationHistory.deleteMany({});
   await Models.UserNotificationType.deleteMany({});
-  await Models.User.delete({
-    where: {
-      email: 'utest@medimoi.com',
-    },
-  });
-  await Models.UserType.delete({
-    where: {
-      nameSlug: 'UNT-func-test',
-    },
-  });
   await Models.NotificationType.delete({
     where: {
-      nameSlug: 'UNT-func-test',
+      nameSlug: 'unt-func-test',
+    },
+  });
+  await Models.User.delete({
+    where: {
+      email: 'futest@medimoi.com',
+    },
+  });
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: 'unt-func-test',
     },
   });
   await Models.$disconnect();
@@ -84,10 +73,12 @@ const UserCreation = Models.User.create({
   data: createUser,
 });
 
-const NTCreation = Models.NotificationType.create({
-  data: createNotifType,
-});
-
+// Initialize User Notification Type Creation
+const NTCreation = (test) => {
+  return Models.NotificationType.create({
+    data: test,
+  });
+};
 /*
  * Init the User Type test group
  */
@@ -98,10 +89,9 @@ describe('user_notification_type functional testing', () => {
     const newUserType = await userTypeCreation;
     createUser.user_type_id = newUserType.id;
     const newUser = await UserCreation;
-    const newNT = await NTCreation;
+    const newNT = await NTCreation(createNotifType[0]);
     cloneSchemaObject.user_id = newUser.id;
     cloneSchemaObject.notification_type_id = newNT.id;
-
     await supertest(appTest)
       .post('/api/user_notification_type/new/')
       .send(cloneSchemaObject)
@@ -114,67 +104,48 @@ describe('user_notification_type functional testing', () => {
       .get('/api/user_notification_type/')
       .expect(200)
       .then(async (response) => {
+        // console.log(response);
         // Check the response
-        expect(response.body.length).toBe(1);
+        expect(response.body.length).toBeGreaterThanOrEqual(1);
       });
   });
 
-  // test('PUT - /api/user_notification_type/:id/edit', async () => {
-  //   // Clone the schemaObject in order to avoid to modify the original
-  //   let cloneSchemaObject = R.clone(user_notification_typeSchemaObject);
-  //   cloneSchemaObject.country = 'Madagascar';
+  test('PUT - /api/user_notification_type/:id/edit', async () => {
+    // Clone the schemaObject in order to avoid to modify the original
+    const newNT = await NTCreation(createNotifType[1]);
+    const GetUserUNT = await Models.User.findFirst({
+      where: {
+        email: 'futest@medimoi.com',
+      },
+    });
+    const newObject = {
+      notification_type_id: newNT.id,
+      user_id: GetUserUNT.id,
+    };
 
-  //   const user_notification_type = await Models.user_notification_type.findFirst({
-  //     where: {
-  //       country: 'France',
-  //     },
-  //   });
-  //   const id = user_notification_type.id;
+    const user_notification_type = await Models.UserNotificationType.findMany(
+      {}
+    );
+    const id = user_notification_type[0].id;
 
-  //   await supertest(appTest)
-  //     .put(`/api/user_notification_type/${id}/edit`)
-  //     .send(cloneSchemaObject)
-  //     .expect(200)
-  //     .then(async (response) => {
-  //       // Check the response
-  //       expect(response.body.country).toBe('Madagascar');
+    await supertest(appTest)
+      .put(`/api/user_notification_type/${id}/edit`)
+      .send(newObject)
+      .expect(200);
+    // .then(async (response) => {
+    //   // Check the response
+    //   expect(response.body.country).toBe('Madagascar');
+  });
 
-  //       // Check the data in the database
-  //       const testuser_notification_type = await Models.user_notification_type.findFirst({
-  //         where: {
-  //           country: 'Madagascar',
-  //         },
-  //       });
-  //       expect(testuser_notification_type.country).toBe('Madagascar');
-  //     });
-  // });
+  test('DELETE - /api/user_notification_type/:email/delete', async () => {
+    const user_notification_type = await Models.UserNotificationType.findMany(
+      {}
+    );
+    const idUNT = user_notification_type[0].id;
+    // console.log(user_notification_type[0].id);
 
-  // test('DELETE - /api/user_type/:email/delete', async () => {
-  //   const user_notification_type = await Models.user_notification_type.findMany(
-  //     {
-  //       orderBy: {
-  //         id: 'asc',
-  //       },
-  //     }
-  //   );
-  //   const id = user_notification_type.id;
-
-  //   console.log(user_notification_type);
-
-  //   await supertest(appTest)
-  //     .delete(`/api/user_notification_type/${id}/delete`)
-  //     .expect(200)
-  //     .then(async (response) => {
-  //       // Check the response (prisma return the deleted object datas
-  //       expect(response.body.country).toBe('Madagascar');
-
-  //       // Check the data in the database
-  //       const user = await Models.User.findUnique({
-  //         where: {
-  //           email: 'jdoeeee@medimoi.com',
-  //         },
-  //       });
-  //       expect(user).toBeNull();
-  //     });
-  // });
+    await supertest(appTest)
+      .delete(`/api/user_notification_type/${idUNT}/delete`)
+      .expect(200);
+  });
 });

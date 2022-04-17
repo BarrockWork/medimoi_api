@@ -45,13 +45,21 @@ beforeAll(async () => {});
 afterAll(async () => {
   await Models.NotificationHistory.deleteMany({});
   await Models.UserNotificationType.deleteMany({});
-  await Models.NotificationType.deleteMany({});
+  await Models.NotificationType.deleteMany({
+    where: {
+      nameSlug: { contains: 'nh-func-test' },
+    },
+  });
   await Models.User.delete({
     where: {
       email: 'nhtest@medimoi.com',
     },
   });
-  await Models.UserType.deleteMany({});
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: 'nh-func-test',
+    },
+  });
   await Models.$disconnect();
 });
 
@@ -95,6 +103,7 @@ describe('notification_history functional testing', () => {
 
     let NHObject = {};
     NHObject.user_notification_type_id = UNTCreation.id;
+
     await supertest(appTest)
       .post('/api/notification_history/new/')
       .send(NHObject)
@@ -142,18 +151,12 @@ describe('notification_history functional testing', () => {
       .expect(200);
   });
 
-  test('DELETE - /api/user_type/:email/delete', async () => {
-    const notification_history = await Models.NotificationHistory.findMany({
-      orderBy: {
-        id: 'asc',
-      },
-    });
-    const id = notification_history[0].id;
-
-    console.log(notification_history);
+  test('DELETE - /api/notification_history/:id/delete', async () => {
+    const notification_history = await Models.NotificationHistory.findMany({});
+    const DeleteId = notification_history[0].id;
 
     await supertest(appTest)
-      .delete(`/api/notification_history/${id}/delete`)
+      .delete(`/api/notification_history/${DeleteId}/delete`)
       .expect(200);
   });
 });

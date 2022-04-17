@@ -10,7 +10,6 @@ const R = require('ramda');
 
 // Delete all record before starting the tests
 beforeAll(async () => {
-    await Models.Disease.deleteMany({});
     await Models.DiseaseType.deleteMany({});
 })
 

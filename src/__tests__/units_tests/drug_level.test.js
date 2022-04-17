@@ -2,9 +2,9 @@
  *   Link for the errors reference of prisma:
  *   - https://www.prisma.io/docs/reference/api-reference/error-reference
  */
-
 const Models = require('./../../models');
-const {testMaxLength, testUniqueness} = require('./../../utils/testHandler')
+
+const {testMaxLength} = require('./../../utils/testHandler')
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
@@ -21,5 +21,5 @@ const drugLevelDefault = {
  * Init the Drug test group
  */
 describe("drugLevel unit testing", () => {
-    testMaxLength('drugLevel', drugLevelDefault, 'description');
+    testMaxLength('drugLevel', drugLevelDefault, 'description', 191)
 })

@@ -19,7 +19,7 @@ const DiseaseDefault = {
     description: 'ceci est une description',
     incubationPeriod: 'ceci est une incubation',
     transmitting: 'transmission',
-    disease_type_id: 1,
+    disease_type_id: 3,
 }
 
 /*

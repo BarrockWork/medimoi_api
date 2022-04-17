@@ -10,7 +10,7 @@ const R = require('ramda');
 
 // Delete all record before starting the tests
 beforeAll(async () => {
-    await Models.DrugType.deleteMany({});
+    await Models.Disease.deleteMany({});
 })
 
 // Disconnect prisma after all of the tests
@@ -24,55 +24,63 @@ const appTest = createServerTest()
 // Initialise a list of drug object
 const schemaObject = [
     {
-        name: 'Drug-type Test',
+        name: 'Disease Test',
         description: 'ceci est un test',
-
+        incubationPeriod: '10 days',
+        transmitting: 'orale',
+        disease_type_id: 4
     },
     {
-        name: 'Drug-type Test Functional medimoi',
+        name: 'Disease Test Functional medimoi',
         description: 'ceci est un test',
+        incubationPeriod: '10 days',
+        transmitting: 'orale',
+        disease_type_id: 4
     },
     {
-        name: 'Drug-type Test Functional medimoi 2',
+        name: 'Disease Test Functional medimoi 2',
         description: 'ceci est un test',
+        incubationPeriod: '10 days',
+        transmitting: 'orale',
+        disease_type_id: 4
     },
 ]
 
 /*
- * Init the contact_type test group
+ * Init the disease test group
  */
-describe("Drug_type functional testing", () => {
+describe("Disease functional testing", () => {
 
-    test("POST - /api/drugTypes/new", async () => {
+    test("POST - /api/diseases/new", async () => {
         // Clone the schemaObject[0] in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
 
         await supertest(appTest)
-            .post("/api/drugTypes/new")
+            .post("/api/diseases/new")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("drug-type-test")
+                expect(response.body.nameSlug).toBe("disease-test")
 
                 // Check the data in the database
-                const Drug_type = await Models.DrugType.findUnique({
+                const disease_type = await Models.Disease.findUnique({
                     where: {
-                        nameSlug: "Drug-type-test"
+                        nameSlug: "disease-test"
                     }
                 });
-                expect(Drug_type).toBeTruthy()
-                expect(Drug_type.nameSlug).toBe("drug-type-test")
+                expect(disease_type).toBeTruthy()
+                expect(disease_type.nameSlug).toBe("disease-test")
             })
     })
 
-    test("POST - /api/drugTypes/news", async () => {
-        // Clone the schemaObjects in order to avoid to modify the original
+    test("POST - /api/diseases/news", async () => {
+
         let cloneSchemaObjects = {
             "entries": [R.clone(schemaObject[1]), R.clone(schemaObject[2])]
         };
         await supertest(appTest)
-            .post("/api/drugTypes/news")
+            .post("/api/diseases/news")
             .send(cloneSchemaObjects)
             .expect(200)
             .then(async (response) => {
@@ -80,31 +88,32 @@ describe("Drug_type functional testing", () => {
                 expect(response.body.count).toEqual(2);
 
                 // Check the data in the database
-                const contact_types = await Models.DrugType.findMany({
+                const diseases = await Models.Disease.findMany({
                     where: {
                         nameSlug: {
                             contains: 'medimoi'
                         }
                     }
                 });
-                expect(contact_types).toHaveLength(2);
-            })
-    })
-    test("GET - /api/drugTypes/:nameSlug", async () => {
-        // Clone the schemaObjects in order to avoid to modify the original
-        await supertest(appTest)
-            .get("/api/drugTypes/drug-type-test")
-            .expect(200)
-            .then(async (response) => {
-                // Check the response
-                expect(response.body.nameSlug).toBe("drug-type-test")
+                expect(diseases).toHaveLength(2);
             })
     })
 
-    test("GET - /api/drugTypes/", async () => {
+    test("GET - /api/diseases/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/drugTypes/")
+            .get("/api/diseases/disease-test")
+            .expect(200)
+            .then(async (response) => {
+                // Check the response
+                expect(response.body.nameSlug).toBe("disease-test")
+            })
+    })
+
+    test("GET - /api/diseases/", async () => {
+        // Clone the schemaObjects in order to avoid to modify the original
+        await supertest(appTest)
+            .get("/api/disease_type/")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -112,46 +121,44 @@ describe("Drug_type functional testing", () => {
             })
     })
 
-    test("PUT - /api/drugTypes/:nameSlug/edit", async () => {
+    test("PUT - /api/diseases/:nameSlug/edit", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
-        cloneSchemaObject.name = "Drug-type Test Edition"
+        cloneSchemaObject.name = "Disease Test Edition"
 
         await supertest(appTest)
-            .put("/api/drugTypes/drug_type-test/edit")
+            .put("/api/diseases/disease-test/edit")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("drug-type-test-edition");
+                expect(response.body.nameSlug).toBe("disease-test-edition");
 
                 // Check the data in the database
-                const Drug_type = await Models.DrugType.findUnique({
+                const disease = await Models.Disease.findUnique({
                     where: {
-                        nameSlug: "drug-type-test-edition"
+                        nameSlug: "disease-test-edition"
                     }
                 });
-                expect(Drug_type.nameSlug).toBe("drug-type-test-edition");
+                expect(disease.nameSlug).toBe("disease-test-edition");
             })
     })
 
-    test("DELETE - /api/drugTypes/:nameSlug/delete", async () => {
+    test("DELETE - /api/diseases/:nameSlug/delete", async () => {
         await supertest(appTest)
-            .delete("/api/drugTypes/drug-type-test-functional-medimoi-2/delete")
+            .delete("/api/diseases/disease-test-functional-medimoi-2/delete")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.nameSlug).toBe("drug-type-test-functional-medimoi-2");
+                expect(response.body.nameSlug).toBe("disease-test-functional-medimoi-2");
 
                 // Check the data in the database
-                const Drug_type = await Models.DrugType.findUnique({
+                const disease = await Models.Disease.findUnique({
                     where: {
-                        nameSlug: "drug-type-test-functional-medimoi-2"
+                        nameSlug: "disease-test-functional-medimoi-2"
                     }
                 });
-                expect(Drug_type).toBeNull();
+                expect(disease).toBeNull();
             })
     })
-
-
 })

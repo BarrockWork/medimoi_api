@@ -19,7 +19,7 @@ const drugDefault = {
     description: 'ceci est une description',
     isPrescription: false,
     drug_level_id: 1,
-    drug_type_id: 1,
+    drug_type_id: 3,
     medical_administration_id: 1,
 }
 

@@ -10,7 +10,7 @@ const R = require('ramda');
 
 // Delete all record before starting the tests
 beforeAll(async () => {
-    await Models.DrugType.deleteMany({});
+    await Models.DrugLevel.deleteMany({});
 })
 
 // Disconnect prisma after all of the tests
@@ -24,16 +24,16 @@ const appTest = createServerTest()
 // Initialise a list of drug object
 const schemaObject = [
     {
-        name: 'Drug-type Test',
+        level: 1,
         description: 'ceci est un test',
 
     },
     {
-        name: 'Drug-type Test Functional medimoi',
+        level: 2,
         description: 'ceci est un test',
     },
     {
-        name: 'Drug-type Test Functional medimoi 2',
+        level: 3,
         description: 'ceci est un test',
     },
 ]
@@ -41,38 +41,37 @@ const schemaObject = [
 /*
  * Init the contact_type test group
  */
-describe("Drug_type functional testing", () => {
+describe("Drug_Level functional testing", () => {
 
-    test("POST - /api/drugTypes/new", async () => {
+    test("POST - /api/drugLevels/new", async () => {
         // Clone the schemaObject[0] in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
 
         await supertest(appTest)
-            .post("/api/drugTypes/new")
+            .post("/api/drugLevels/new")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("drug-type-test")
 
                 // Check the data in the database
-                const Drug_type = await Models.DrugType.findUnique({
+                const Drug_level = await Models.DrugLevel.findFirst({
                     where: {
-                        nameSlug: "Drug-type-test"
+                        level: 1
                     }
                 });
-                expect(Drug_type).toBeTruthy()
-                expect(Drug_type.nameSlug).toBe("drug-type-test")
+                expect(Drug_level).toBeTruthy()
+                expect(Drug_level.level).toBe(1);
             })
     })
 
-    test("POST - /api/drugTypes/news", async () => {
+    test("POST - /api/drugLevels/news", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         let cloneSchemaObjects = {
             "entries": [R.clone(schemaObject[1]), R.clone(schemaObject[2])]
         };
         await supertest(appTest)
-            .post("/api/drugTypes/news")
+            .post("/api/drugLevels/news")
             .send(cloneSchemaObjects)
             .expect(200)
             .then(async (response) => {
@@ -80,31 +79,32 @@ describe("Drug_type functional testing", () => {
                 expect(response.body.count).toEqual(2);
 
                 // Check the data in the database
-                const contact_types = await Models.DrugType.findMany({
+                const drug_levels = await Models.DrugLevel.findMany({
                     where: {
-                        nameSlug: {
-                            contains: 'medimoi'
+                        description: {
+                            contains: 'test'
                         }
                     }
                 });
-                expect(contact_types).toHaveLength(2);
-            })
-    })
-    test("GET - /api/drugTypes/:nameSlug", async () => {
-        // Clone the schemaObjects in order to avoid to modify the original
-        await supertest(appTest)
-            .get("/api/drugTypes/drug-type-test")
-            .expect(200)
-            .then(async (response) => {
-                // Check the response
-                expect(response.body.nameSlug).toBe("drug-type-test")
+                expect(drug_levels).toHaveLength(3);
             })
     })
 
-    test("GET - /api/drugTypes/", async () => {
+    test("GET - /api/drugLevels/:id", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/drugTypes/")
+            .get("/api/drugLevels/4")
+            .expect(200)
+            .then(async (response) => {
+                // Check the response
+                expect(response.body.length).toBe(1)
+            })
+    })
+
+    test("GET - /api/drugLevels/", async () => {
+        // Clone the schemaObjects in order to avoid to modify the original
+        await supertest(appTest)
+            .get("/api/drugLevels/")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -112,46 +112,45 @@ describe("Drug_type functional testing", () => {
             })
     })
 
-    test("PUT - /api/drugTypes/:nameSlug/edit", async () => {
+    test("PUT - /api/drugLevels/:id/edit", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
-        cloneSchemaObject.name = "Drug-type Test Edition"
+        cloneSchemaObject.description = "ceci est un ancien test"
 
         await supertest(appTest)
-            .put("/api/drugTypes/drug_type-test/edit")
+            .put("/api/drugLevels/4/edit")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("drug-type-test-edition");
+                expect(response.body.description).toBe("ceci est un ancien test");
 
                 // Check the data in the database
-                const Drug_type = await Models.DrugType.findUnique({
+                const Drug_level = await Models.DrugLevel.findUnique({
                     where: {
-                        nameSlug: "drug-type-test-edition"
+                        id: 4,
                     }
                 });
-                expect(Drug_type.nameSlug).toBe("drug-type-test-edition");
+                expect(Drug_level.description).toBe("ceci est un ancien test");
             })
     })
 
-    test("DELETE - /api/drugTypes/:nameSlug/delete", async () => {
+    test("DELETE - /api/drugLevels/:id/delete", async () => {
         await supertest(appTest)
-            .delete("/api/drugTypes/drug-type-test-functional-medimoi-2/delete")
+            .delete("/api/drugLevels/3/delete")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.nameSlug).toBe("drug-type-test-functional-medimoi-2");
+                expect(response.body.level).toBe(2);
 
                 // Check the data in the database
-                const Drug_type = await Models.DrugType.findUnique({
+                const Drug_level = await Models.DrugLevel.findUnique({
                     where: {
-                        nameSlug: "drug-type-test-functional-medimoi-2"
+                        id: 3
                     }
                 });
-                expect(Drug_type).toBeNull();
+                expect(Drug_level).toBeNull();
             })
     })
-
 
 })

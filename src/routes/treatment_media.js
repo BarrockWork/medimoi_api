@@ -54,6 +54,23 @@ const { createTreatmentMedia, getTreatmentMediaById, findAll, findManyByTreatmen
  */
 router.post("/new", createTreatmentMedia);
 
+
+/**
+ * @apiDescription get many treatment media by id
+ * @apiGroup TreatmentMedia
+ * @api {GET} /api/treatment_medias/all Get Many treatment media
+ * @apiName GetManyTreatmentMedia
+ * 
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * 
+ * @apiSampleRequest http://localhost:4000/api/treatment_medias/all/false
+ */
+router.get("/all/:isActive?", findAll);
+
 /**
  * @apiDescription get single treatment media by id
  * @apiGroup TreatmentMedia
@@ -70,22 +87,6 @@ router.post("/new", createTreatmentMedia);
  * @apiVersion 0.1.0
  */
 router.get("/:id", getTreatmentMediaById);
-
-/**
- * @apiDescription get many treatment media by id
- * @apiGroup TreatmentMedia
- * @api {GET} /api/treatment_medias/all Get Many treatment media
- * @apiName GetManyTreatmentMedia
- * 
- * 
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- * 
- * @apiSampleRequest http://localhost:4000/api/treatment_medias/all/false
- */
- router.get("all/:isActive?", findAll);
 
 /**
  * @apiDescription get many treatment media by treatment_id

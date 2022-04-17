@@ -10,13 +10,7 @@ const R = require('ramda');
 
 // Delete all record before starting the tests
 beforeAll( async () =>{
-    await Models.Company.deleteMany({
-        where: {
-            nameSlug: {
-                contains: 'company-test-functional'
-            }
-        }
-    });
+    await Models.NotificationType.deleteMany({});
 })
 
 // Disconnect prisma after all of the tests
@@ -27,60 +21,54 @@ afterAll(async () => {
 // Initialize express server
 const appTest = createServerTest()
 
-// Initialise a list of company object
+// Initialise a list of notification_type object
 const schemaObject = [
     {
-        name: 'Company Test Functional',
-        siret: '123456789',
-        tva: 'FR123456789'
+        name: 'Notification type 0'
     },
     {
-        name: 'Company Test Functional medimoi',
-        siret: '123456789',
-        tva: 'FR123456789'
+        name: 'Notification type  1 medimoi'
     },
     {
-        name: 'Company Test Functional medimoi 2',
-        siret: '123456789',
-        tva: 'FR123456789'
+        name: 'Notification type  2 medimoi'
     },
 ]
 
 /*
- * Init the company test group
+ * Init the notification_type test group
  */
-describe("Company functional testing", () => {
+describe("Notification_type functional testing", () => {
 
-    test("POST - /api/company/new", async () => {
+    test("POST - /api/notification_type/new", async () => {
         // Clone the schemaObject[0] in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
 
         await supertest(appTest)
-            .post("/api/company/new")
+            .post("/api/notification_type/new")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("company-test-functional")
+                expect(response.body.nameSlug).toBe("notification-type-0")
 
                 // Check the data in the database
-                const company = await Models.Company.findUnique({
+                const notificationType = await Models.NotificationType.findUnique({
                     where: {
-                        nameSlug: "company-test-functional"
+                        nameSlug: "notification-type-0"
                     }
                 });
-                expect(company).toBeTruthy()
-                expect(company.nameSlug).toBe("company-test-functional")
+                expect(notificationType).toBeTruthy()
+                expect(notificationType.nameSlug).toBe("notification-type-0")
             })
     })
 
-    test("POST - /api/company/news", async () => {
+    test("POST - /api/notification_type/news", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         let cloneSchemaObjects = {
             "entries": [R.clone(schemaObject[1]), R.clone(schemaObject[2])]
         };
         await supertest(appTest)
-            .post("/api/company/news")
+            .post("/api/notification_type/news")
             .send(cloneSchemaObjects)
             .expect(200)
             .then(async (response) => {
@@ -88,32 +76,32 @@ describe("Company functional testing", () => {
                 expect(response.body.count).toEqual(2);
 
                 // Check the data in the database
-                const companies = await Models.Company.findMany({
+                const notificationTypes = await Models.NotificationType.findMany({
                     where: {
                         nameSlug: {
                             contains: 'medimoi'
                         }
                     }
                 });
-                expect(companies).toHaveLength(2);
+                expect(notificationTypes).toHaveLength(2);
             })
     })
 
-    test("GET - /api/company/slug/:nameSlug", async () => {
+    test("GET - /api/notification_type/slug/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/company/slug/company-test-functional")
+            .get("/api/notification_type/slug/notification-type-0")
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("company-test-functional")
+                expect(response.body.nameSlug).toBe("notification-type-0")
             })
     })
 
-    test("GET - /api/company/all", async () => {
+    test("GET - /api/notification_type/all", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/company/all")
+            .get("/api/notification_type/all")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -121,44 +109,44 @@ describe("Company functional testing", () => {
             })
     })
 
-    test("PUT - /api/company/slug/:nameSlug", async () => {
+    test("PUT - /api/notification_type/slug/:nameSlug", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
-        cloneSchemaObject.name = "Company Edition"
+        cloneSchemaObject.name = "Notif Edition"
 
         await supertest(appTest)
-            .put("/api/company/slug/company-test-functional")
+            .put("/api/notification_type/slug/notification-type-0")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("company-edition");
+                expect(response.body.nameSlug).toBe("notif-edition");
 
                 // Check the data in the database
-                const company = await Models.Company.findUnique({
+                const notificationType = await Models.NotificationType.findUnique({
                     where: {
-                        nameSlug: "company-edition"
+                        nameSlug: "notif-edition"
                     }
                 });
-                expect(company.nameSlug).toBe("company-edition");
+                expect(notificationType.nameSlug).toBe("notif-edition");
             })
     })
 
-    test("DELETE - /api/company/slug/:nameSlug", async () => {
+    test("DELETE - /api/notification_type/slug/:nameSlug", async () => {
         await supertest(appTest)
-            .delete("/api/company/slug/company-test-functional-medimoi-2")
+            .delete("/api/notification_type/slug/notification-type-2-medimoi")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.nameSlug).toBe("company-test-functional-medimoi-2");
+                expect(response.body.nameSlug).toBe("notification-type-2-medimoi");
 
                 // Check the data in the database
-                const company = await Models.Company.findUnique({
+                const notificationType = await Models.NotificationType.findUnique({
                     where: {
-                        nameSlug: "company-test-functional-medimoi-2"
+                        nameSlug: "notification-type-2-medimoi"
                     }
                 });
-                expect(company).toBeNull();
+                expect(notificationType).toBeNull();
             })
     })
 

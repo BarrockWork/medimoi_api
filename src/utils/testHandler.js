@@ -18,7 +18,6 @@ const testMaxLength = (schema, schemaObject, field, maxLength) => {
         data: cloneSchemaObject,
       });
     } catch (e) {
-      console.log(e);
       // e = PrismaClientKnownRequestError
       expect(e.code).toEqual('P2000');
     }

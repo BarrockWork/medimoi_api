@@ -80,14 +80,18 @@ beforeAll( async () =>{
             }
         }
     });
-    await Models.User.delete({
+    await Models.User.deleteMany({
         where: {
-            email: 'userforcontact@medimoi.com'
+            email: {
+                contains:'userforcontact'
+            }
         }
     });
-    await Models.UserType.delete({
+    await Models.UserType.deleteMany({
         where: {
-            nameSlug: 'userType-for-contact'
+            nameSlug: {
+                contains: 'for-contact'
+            }
         }
     });
     await initSchemaObjects();

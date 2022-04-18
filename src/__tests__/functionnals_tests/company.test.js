@@ -124,7 +124,7 @@ describe("Company functional testing", () => {
     test("PUT - /api/company/slug/:nameSlug", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
-        cloneSchemaObject.name = "Company Edition"
+        cloneSchemaObject.name = "company-test-functional Edition"
 
         await supertest(appTest)
             .put("/api/company/slug/company-test-functional")
@@ -132,15 +132,15 @@ describe("Company functional testing", () => {
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("company-edition");
+                expect(response.body.nameSlug).toBe("company-test-functional-edition");
 
                 // Check the data in the database
                 const company = await Models.Company.findUnique({
                     where: {
-                        nameSlug: "company-edition"
+                        nameSlug: "company-test-functional-edition"
                     }
                 });
-                expect(company.nameSlug).toBe("company-edition");
+                expect(company.nameSlug).toBe("company-test-functional-edition");
             })
     })
 

@@ -11,7 +11,13 @@ const R = require('ramda');
 // Delete all record before starting the tests
 beforeAll( async () =>{
     await Models.Contact.deleteMany({});
-    await Models.ContactType.deleteMany({});
+    await Models.ContactType.deleteMany({
+        where: {
+            nameSlug: {
+                contains: 'uniquect'
+            }
+        }
+    });
 })
 
 // Disconnect prisma after all of the tests
@@ -25,13 +31,13 @@ const appTest = createServerTest()
 // Initialise a list of contact_type object
 const schemaObject = [
     {
-        name: 'Contact type 0'
+        name: 'Contact type uniqueCT 0'
     },
     {
-        name: 'Contact type  1 medimoi'
+        name: 'Contact type uniqueCT 1 medimoi'
     },
     {
-        name: 'Contact type  2 medimoi'
+        name: 'Contact type uniqueCT 2 medimoi'
     },
 ]
 
@@ -50,16 +56,16 @@ describe("Contact_type functional testing", () => {
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("contact-type-0")
+                expect(response.body.nameSlug).toBe("contact-type-uniquect-0")
 
                 // Check the data in the database
                 const contact_type = await Models.ContactType.findUnique({
                     where: {
-                        nameSlug: "contact-type-0"
+                        nameSlug: "contact-type-uniquect-0"
                     }
                 });
                 expect(contact_type).toBeTruthy()
-                expect(contact_type.nameSlug).toBe("contact-type-0")
+                expect(contact_type.nameSlug).toBe("contact-type-uniquect-0")
             })
     })
 
@@ -91,11 +97,11 @@ describe("Contact_type functional testing", () => {
     test("GET - /api/contact_type/slug/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/contact_type/slug/contact-type-0")
+            .get("/api/contact_type/slug/contact-type-uniquect-0")
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("contact-type-0")
+                expect(response.body.nameSlug).toBe("contact-type-uniquect-0")
             })
     })
 
@@ -113,38 +119,38 @@ describe("Contact_type functional testing", () => {
     test("PUT - /api/contact_type/slug/:nameSlug", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
-        cloneSchemaObject.name = "ContactType Edition"
+        cloneSchemaObject.name = "Contact type uniqueCT Edition"
 
         await supertest(appTest)
-            .put("/api/contact_type/slug/contact-type-0")
+            .put("/api/contact_type/slug/contact-type-uniquect-0")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("contacttype-edition");
+                expect(response.body.nameSlug).toBe("contact-type-uniquect-edition");
 
                 // Check the data in the database
                 const contact_type = await Models.ContactType.findUnique({
                     where: {
-                        nameSlug: "contacttype-edition"
+                        nameSlug: "contact-type-uniquect-edition"
                     }
                 });
-                expect(contact_type.nameSlug).toBe("contacttype-edition");
+                expect(contact_type.nameSlug).toBe("contact-type-uniquect-edition");
             })
     })
 
     test("DELETE - /api/contact_type/slug/:nameSlug", async () => {
         await supertest(appTest)
-            .delete("/api/contact_type/slug/contact-type-2-medimoi")
+            .delete("/api/contact_type/slug/contact-type-uniquect-2-medimoi")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.nameSlug).toBe("contact-type-2-medimoi");
+                expect(response.body.nameSlug).toBe("contact-type-uniquect-2-medimoi");
 
                 // Check the data in the database
                 const contact_type = await Models.NotificationType.findUnique({
                     where: {
-                        nameSlug: "contact-type-2-medimoi"
+                        nameSlug: "contact-type-uniquect-2-medimoi"
                     }
                 });
                 expect(contact_type).toBeNull();

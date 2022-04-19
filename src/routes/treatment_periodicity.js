@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 // import route functions from controller
-const { createTreatmentPeriodicity, updateTreatmentPeriodicity, deleteTreatmentPeriodicityBySlug, createMany, getTreatmentPeriodicityBySlug, findAll } = require('../controllers/TreatmentPeriodicityController');
+const { createTreatmentPeriodicity, getTreatmentPeriodicityById, updateTreatmentPeriodicity, deleteTreatmentPeriodicityBySlug, createMany, getTreatmentPeriodicityBySlug, findAll } = require('../controllers/TreatmentPeriodicityController');
+const {findOneById} = require("./../controllers/ContactController");
 
 /** DEFINES ------------------------------------------------- */
 
@@ -121,6 +122,25 @@ router.get("/slug/:nameSlug", getTreatmentPeriodicityBySlug);
  * @apiVersion 0.1.0
  */
  router.get("/all/:isActive?", findAll);
+
+/**
+ * @apiDescription Get a TreatmentPeriodicity by id
+ * @api {GET} /api/treatment_periodicities/:id Get Contact by id
+ * @apiName GetByIdTreatmentPeriodicity
+ * @apiGroup TreatmentPeriodicity
+ *
+ * @apiParam {Number} id Id
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse ContactNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/:id
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', getTreatmentPeriodicityById);
 
 
 /**

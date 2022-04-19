@@ -69,7 +69,6 @@ const createMany = async (req, res) => {
 }
 
 const getTreatmentPeriodicityById = async (req, res) => {
-    // console.log("getTreatmentPeriodicityById");
     const {id} = req.params;
     try {
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
@@ -98,7 +97,6 @@ const getTreatmentPeriodicityById = async (req, res) => {
 }
 
 const getTreatmentPeriodicityBySlug = async (req, res) => {
-    // console.log("getTreatmentPeriodicityBySlug");
     const {nameSlug} = req.params;
     try {
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
@@ -127,7 +125,6 @@ const getTreatmentPeriodicityBySlug = async (req, res) => {
 }
 
 const findAll = async (req, res) => {
-    // console.log("findAll");
     try {
         const configClient = {
             orderBy: {
@@ -136,18 +133,18 @@ const findAll = async (req, res) => {
         };
 
         // If param isActive is defined
-        if(req.params.isActive) {
-            if (toLower(req.params.isActive) === "true") {
+        if(req.query.isActive) {
+            if (toLower(req.query.isActive) === "true") {
                 configClient.where = {
                     isActive: true
                 }
             }
-            if (toLower(req.params.isActive) === "false") {
+            if (toLower(req.query.isActive) === "false") {
                 configClient.where = {
                     isActive: false
                 }
             }
-        }        
+        }
 
         const treatmemtPeriodicities = await Models.treatmentPeriodicity.findMany(configClient)
 
@@ -160,41 +157,35 @@ const findAll = async (req, res) => {
     }
 }
 
-// const getTreatmentPeriodicityByStatus = async (req, res) => {
-//     const {isActive} = req.body
-//     try {
-//         const treatmemtPeriodicities = await Models.treatmentPeriodicity.findMany({
-//             where:{
-//                 isActive
-//             },
-//             include:{
-//                 Treatments:{
-//                     select:{
-//                         id:true,
-//                         name:true,
-//                         isActive:true
-//                     }
-//                 }
-//             }
-//         })
-
-//         Models.$disconnect();
-        // console.log(treatmemtPeriodicities);
-//         res.status(200).json({
-//             success: true,
-//             treatmemtPeriodicities
-//         });
-//     } catch (error) {
-        // console.log(error);
-//         res.status(400).json({
-//             success: false,
-//             error
-//         });
-//     }
-// }
-
 // Update function
-const updateTreatmentPeriodicity = async (req, res) => {
+const updateTreatmentPeriodicityById = async (req, res) => {
+    // console.log("updateTreatmentPeriodicity");
+    try {
+        const onlyThoseFields = ['name', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+        // Check if the new slug exists
+        const configRequestDB = await verifySlugInDb(
+            Models,
+            "treatmentPeriodicity",
+            req.params.id,
+            createSlug(req.body.name),
+            fieldsFiltered
+        );
+        // console.log(req.body);
+        // Update the current entry
+        const treatmentPeriodicity = await Models.treatmentPeriodicity.update(configRequestDB);
+
+        await Models.$disconnect();
+        res.status(200).json(treatmentPeriodicity);
+    } catch (error) {
+        // console.error(error, "updateTreatmentPeriodicity");
+        res.status(400).json(error);
+    }
+}
+
+// Update function by slug
+const updateTreatmentPeriodicityBySlug = async (req, res) => {
     // console.log("updateTreatmentPeriodicity");
     try {
         const onlyThoseFields = ['name', 'isActive'];
@@ -221,7 +212,7 @@ const updateTreatmentPeriodicity = async (req, res) => {
 }
 
 // Delete function
-const deleteTreatmentPeriodicity = async (req, res) => {
+const deleteTreatmentPeriodicityById = async (req, res) => {
     // console.log("deleteTreatmentPeriodicity");
     const {id} = req.params;
 
@@ -271,7 +262,8 @@ module.exports = {
     getTreatmentPeriodicityById,
     getTreatmentPeriodicityBySlug,
     findAll,
-    updateTreatmentPeriodicity,
-    deleteTreatmentPeriodicity,
+    updateTreatmentPeriodicityById,
+    updateTreatmentPeriodicityBySlug,
+    deleteTreatmentPeriodicityById,
     deleteTreatmentPeriodicityBySlug
 }

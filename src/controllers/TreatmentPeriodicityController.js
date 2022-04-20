@@ -1,7 +1,12 @@
 // Import of the Prisma client
 const Models = require('../models');
-const { isEmpty } = require('ramda');
-const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb } = require('../utils/requestHandler');
+const {
+    checkRequiredFields,
+    createSlug,
+    extractFieldsToChange,
+    verifySlugInDb,
+    extractQueryParameters
+} = require('../utils/requestHandler');
 const { toLower } = require('ramda');
 
 const createTreatmentPeriodicity = async (req, res) => {
@@ -126,33 +131,16 @@ const getTreatmentPeriodicityBySlug = async (req, res) => {
 
 const findAll = async (req, res) => {
     try {
-        const configClient = {
-            orderBy: {
-                nameSlug: "asc"
-            }
-        };
-
-        // If param isActive is defined
-        if(req.query.isActive) {
-            if (toLower(req.query.isActive) === "true") {
-                configClient.where = {
-                    isActive: true
-                }
-            }
-            if (toLower(req.query.isActive) === "false") {
-                configClient.where = {
-                    isActive: false
-                }
-            }
-        }
-
+        const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
         const treatmemtPeriodicities = await Models.treatmentPeriodicity.findMany(configClient)
-
+        const totalCount = await Models.treatmentPeriodicity.count();
         await Models.$disconnect();
+
+        // Add to ResponseHeaders the totalcount
+        res.header('Access-Control-Expose-Headers', 'Content-Range');
+        res.header('content-range', totalCount);
         res.status(200).json(treatmemtPeriodicities);
     } catch (error) {
-        // console.log(error)
-        console.error(error, "findAll");
         res.status(400).json(error);
     }
 }

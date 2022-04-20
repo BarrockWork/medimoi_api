@@ -159,7 +159,6 @@ const findAll = async (req, res) => {
 
 // Update function
 const updateTreatmentPeriodicityById = async (req, res) => {
-    // console.log("updateTreatmentPeriodicity");
     try {
         const onlyThoseFields = ['name', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
@@ -172,7 +171,7 @@ const updateTreatmentPeriodicityById = async (req, res) => {
             createSlug(req.body.name),
             fieldsFiltered
         );
-        // console.log(req.body);
+
         // Update the current entry
         const treatmentPeriodicity = await Models.treatmentPeriodicity.update(configRequestDB);
 

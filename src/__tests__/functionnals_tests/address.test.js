@@ -31,23 +31,7 @@ var createUser = {
 };
 
 // Delete all record before starting the tests
-beforeAll(async () => {
-  await Models.Address.deleteMany({});
-  await Models.AddressRoadType.deleteMany({
-    where: {
-      nameSlug: {
-        contains: 'address-func-test',
-      },
-    },
-  });
-  await Models.UserType.deleteMany({
-    where: {
-      nameSlug: {
-        contains: 'address-func-test',
-      },
-    },
-  });
-});
+beforeAll(async () => {});
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {

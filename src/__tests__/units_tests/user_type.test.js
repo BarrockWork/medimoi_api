@@ -9,14 +9,18 @@ const { testMaxLength, testUniqueness } = require('./../../utils/testHandler');
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
-  await Models.UserType.deleteMany({});
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: 'user-type-for-unit-test',
+    },
+  });
   await Models.$disconnect();
 });
 
 // Initialise a user_Type object
 const userTypeDefault = {
-  name: 'user type',
-  nameSlug: createSlug('user type'),
+  name: 'user type for unit test',
+  nameSlug: createSlug('user type for unit test'),
 };
 
 /*

@@ -35,7 +35,7 @@ const UserSchemaObject = [
     firstName: 'jane',
     lastName: 'doe',
     age: 30,
-    email: 'jado@medimoi.com',
+    email: 'janedo@medimoi.com',
     password: 'password',
     cellphone: '0123456789',
     homephone: '0123456789',
@@ -72,7 +72,7 @@ const TreatmentPeriodicityDatas = [
   {
     name: 'Treament Periodicity Test 3 medimoi',
     nameSlug: 'treament-periodicity-test-3-medimoi',
-  }
+  },
 ];
 
 const UserTypeDatas = [
@@ -87,15 +87,15 @@ const UserTypeDatas = [
   {
     name: 'User Type Test 3 medimoi',
     nameSlug: 'user-type-test-3-medimoi',
-  }
-]
+  },
+];
 
 const TreatmentSchemaObject = {
   name: 'Treatment Test',
   user_id: 1,
   treatment_periodicity_id: 1,
-  startedAt: new Date("2022-04-03 16:56:07.210Z"),
-}
+  startedAt: new Date('2022-04-03 16:56:07.210Z'),
+};
 
 module.exports = {
   AddressSchemaObject,
@@ -104,6 +104,5 @@ module.exports = {
   UserTypeSchemaObject,
   TreatmentPeriodicityDatas,
   UserTypeDatas,
-  TreatmentSchemaObject
-  
+  TreatmentSchemaObject,
 };

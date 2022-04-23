@@ -7,10 +7,7 @@ const supertest = require('supertest');
 const createServerTest = require('./../server_test');
 const Models = require('./../../models');
 const R = require('ramda');
-const {
-  UserSchemaObject,
-  UserTypeSchemaObject,
-} = require('./../objectSchema_test');
+const { UserSchemaObject } = require('./../objectSchema_test');
 const { createSlug } = require('./../../utils/requestHandler');
 
 // Delete all record before starting the tests
@@ -20,8 +17,8 @@ beforeAll(async () => {});
 afterAll(async () => {
   await Models.User.deleteMany({
     where: {
-      lastName: {
-        contains: 'doe',
+      email: {
+        contains: 'jane',
       },
     },
   });
@@ -155,7 +152,6 @@ describe('user functional testing', () => {
       .send(cloneSchemaObject)
       .expect(200)
       .then(async (response) => {
-
         // Check the response
         expect(response.body.firstName).toBe('johnnie');
 

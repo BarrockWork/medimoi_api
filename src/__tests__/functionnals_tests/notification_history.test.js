@@ -44,7 +44,13 @@ beforeAll(async () => {});
 // Disconnect prisma after all of the tests
 afterAll(async () => {
   await Models.NotificationHistory.deleteMany({});
-  await Models.UserNotificationType.deleteMany({});
+  await Models.UserNotificationType.deleteMany({
+    where: {
+      id: {
+        in: [UNT1, UNT2],
+      },
+    },
+  });
   await Models.NotificationType.deleteMany({
     where: {
       nameSlug: { contains: 'nh-func-test' },
@@ -82,6 +88,8 @@ const NTCreation = (test) => {
   });
 };
 var cloneSchemaObject = {};
+var UNT1 = null;
+var UNT2 = null;
 
 /*
  ** Init the User Type test group
@@ -100,9 +108,9 @@ describe('notification_history functional testing', () => {
     const UNTCreation = await Models.UserNotificationType.create({
       data: cloneSchemaObject,
     });
-
+    UNT1 = UNTCreation.id;
     let NHObject = {};
-    NHObject.user_notification_type_id = UNTCreation.id;
+    NHObject.user_notification_type_id = UNT1;
 
     await supertest(appTest)
       .post('/api/notification_history/new/')
@@ -141,6 +149,8 @@ describe('notification_history functional testing', () => {
     const UNTCreation = await Models.UserNotificationType.create({
       data: cloneSchemaObject,
     });
+    UNT2 = UNTCreation.id;
+
     let NHObject = {};
     NHObject.user_notification_type_id = UNTCreation.id;
     const notification_history = await Models.NotificationHistory.findMany({});

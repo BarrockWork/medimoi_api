@@ -67,7 +67,7 @@ const createSlug = (textForSlug) => {
  *
  * @param Models Prisma Client
  * @param SchemaTarget Schema
- * @param currentSlug String
+ * @param currentSlugOrId
  * @param newSlug String
  * @param fieldsFiltered Array String
  * @returns {string}
@@ -75,11 +75,24 @@ const createSlug = (textForSlug) => {
 const verifySlugInDb = async (
   Models,
   SchemaTarget,
-  currentSlug,
+  currentSlugOrId,
   newSlug,
   fieldsFiltered
 ) => {
   try {
+      let currentSlug = currentSlugOrId;
+
+      // Check if is id or nameSlug in the request params
+      const checkIsIdOrName = parseInt(currentSlugOrId);
+      if (R.is(Number, checkIsIdOrName)) {
+          const res = await Models[SchemaTarget].findUnique({
+              where: {
+                  id: checkIsIdOrName,
+              },
+          });
+          currentSlug = res.nameSlug;
+      }
+
     // Check slug in DB
     const findData = await Models[SchemaTarget].findUnique({
       where: {
@@ -127,6 +140,39 @@ const verifySlugInDb = async (
     throw `An error is occurred: ${error}`;
   }
 };
+
+/**
+ * Extract the parameters and return the configuration for prisma client
+ * @param queryParams (Example: req.query or req.params)
+ * @param targetParams (Example: ['sort', 'range', 'filter']
+ * @returns {{}}
+ */
+const extractQueryParameters = (queryParams, targetParams) => {
+    const configClient = {};
+    targetParams.forEach(qP => {
+        const parsingParam = JSON.parse(queryParams[qP]);
+        switch (qP) {
+            case 'sort':
+                configClient.orderBy = {
+                    id: R.toLower(parsingParam[1])
+                }
+                break;
+            case 'range':
+                configClient.skip = parsingParam[0];
+                configClient.take = parsingParam[1];
+                break;
+            case 'filter':
+                //TODO
+                break;
+            default:
+                configClient.orderBy= {
+                    id: "asc"
+                }
+        }
+    })
+
+    return configClient;
+}
 
 /**
  * Check and parse a STRING value to INT value
@@ -304,6 +350,7 @@ module.exports =  {
     createSlug,
     extractFieldsToChange,
     verifySlugInDb,
+    extractQueryParameters,
     transformIntValue,
     selectUserGlobalInfos,
     selectContactType,

@@ -18,6 +18,7 @@ app.set('view engine', 'jade');
 
 // Configurations for express server
 app.use(cors());
+app.options('*', cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -10,7 +10,13 @@ const R = require('ramda');
 
 // Delete all record before starting the tests
 beforeAll( async () =>{
-    await Models.NotificationType.deleteMany({});
+    await Models.NotificationType.deleteMany({
+        where: {
+            nameSlug: {
+                contains: 'uniquent'
+            }
+        }
+    });
 })
 
 // Disconnect prisma after all of the tests
@@ -24,13 +30,13 @@ const appTest = createServerTest()
 // Initialise a list of notification_type object
 const schemaObject = [
     {
-        name: 'Notification type 0'
+        name: 'Notification type uniqueNT 0'
     },
     {
-        name: 'Notification type  1 medimoi'
+        name: 'Notification type  uniqueNT 1 medimoi'
     },
     {
-        name: 'Notification type  2 medimoi'
+        name: 'Notification type  uniqueNT 2 medimoi'
     },
 ]
 
@@ -49,16 +55,16 @@ describe("Notification_type functional testing", () => {
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("notification-type-0")
+                expect(response.body.nameSlug).toBe("notification-type-uniquent-0")
 
                 // Check the data in the database
                 const notificationType = await Models.NotificationType.findUnique({
                     where: {
-                        nameSlug: "notification-type-0"
+                        nameSlug: "notification-type-uniquent-0"
                     }
                 });
                 expect(notificationType).toBeTruthy()
-                expect(notificationType.nameSlug).toBe("notification-type-0")
+                expect(notificationType.nameSlug).toBe("notification-type-uniquent-0")
             })
     })
 
@@ -90,11 +96,11 @@ describe("Notification_type functional testing", () => {
     test("GET - /api/notification_type/slug/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/notification_type/slug/notification-type-0")
+            .get("/api/notification_type/slug/notification-type-uniquent-0")
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("notification-type-0")
+                expect(response.body.nameSlug).toBe("notification-type-uniquent-0")
             })
     })
 
@@ -112,38 +118,38 @@ describe("Notification_type functional testing", () => {
     test("PUT - /api/notification_type/slug/:nameSlug", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
-        cloneSchemaObject.name = "Notif Edition"
+        cloneSchemaObject.name = "Notification type uniqueNT Edition"
 
         await supertest(appTest)
-            .put("/api/notification_type/slug/notification-type-0")
+            .put("/api/notification_type/slug/notification-type-uniquent-0")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("notif-edition");
+                expect(response.body.nameSlug).toBe("notification-type-uniquent-edition");
 
                 // Check the data in the database
                 const notificationType = await Models.NotificationType.findUnique({
                     where: {
-                        nameSlug: "notif-edition"
+                        nameSlug: "notification-type-uniquent-edition"
                     }
                 });
-                expect(notificationType.nameSlug).toBe("notif-edition");
+                expect(notificationType.nameSlug).toBe("notification-type-uniquent-edition");
             })
     })
 
     test("DELETE - /api/notification_type/slug/:nameSlug", async () => {
         await supertest(appTest)
-            .delete("/api/notification_type/slug/notification-type-2-medimoi")
+            .delete("/api/notification_type/slug/notification-type-uniquent-2-medimoi")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.nameSlug).toBe("notification-type-2-medimoi");
+                expect(response.body.nameSlug).toBe("notification-type-uniquent-2-medimoi");
 
                 // Check the data in the database
                 const notificationType = await Models.NotificationType.findUnique({
                     where: {
-                        nameSlug: "notification-type-2-medimoi"
+                        nameSlug: "notification-type-uniquent-2-medimoi"
                     }
                 });
                 expect(notificationType).toBeNull();

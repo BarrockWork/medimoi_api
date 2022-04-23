@@ -9,14 +9,8 @@ const Models = require('./../../models');
 const R = require('ramda');
 
 // Delete all record before starting the tests
-beforeAll( async () =>{
-    await Models.NotificationType.deleteMany({
-        where: {
-            nameSlug: {
-                contains: 'uniquent'
-            }
-        }
-    });
+beforeAll(async () => {
+    await Models.DiseaseType.deleteMany({});
 })
 
 // Disconnect prisma after all of the tests
@@ -27,54 +21,58 @@ afterAll(async () => {
 // Initialize express server
 const appTest = createServerTest()
 
-// Initialise a list of notification_type object
+// Initialise a list of drug object
 const schemaObject = [
     {
-        name: 'Notification type uniqueNT 0'
+        name: 'Disease-type Test',
+        description: 'ceci est un test',
+
     },
     {
-        name: 'Notification type  uniqueNT 1 medimoi'
+        name: 'Disease-type Test Functional medimoi',
+        description: 'ceci est un test',
     },
     {
-        name: 'Notification type  uniqueNT 2 medimoi'
+        name: 'Disease-type Test Functional medimoi 2',
+        description: 'ceci est un test',
     },
 ]
 
 /*
- * Init the notification_type test group
+ * Init the contact_type test group
  */
-describe("Notification_type functional testing", () => {
+describe("Disease_type functional testing", () => {
 
-    test("POST - /api/notification_type/new", async () => {
+    test("POST - /api/disease_type/new", async () => {
         // Clone the schemaObject[0] in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
 
         await supertest(appTest)
-            .post("/api/notification_type/new")
+            .post("/api/disease_type/new")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("notification-type-uniquent-0")
+                expect(response.body.nameSlug).toBe("disease-type-test")
 
                 // Check the data in the database
-                const notificationType = await Models.NotificationType.findUnique({
+                const disease_type = await Models.DiseaseType.findUnique({
                     where: {
-                        nameSlug: "notification-type-uniquent-0"
+                        nameSlug: "disease-type-test"
                     }
                 });
-                expect(notificationType).toBeTruthy()
-                expect(notificationType.nameSlug).toBe("notification-type-uniquent-0")
+                expect(disease_type).toBeTruthy()
+                expect(disease_type.nameSlug).toBe("disease-type-test")
             })
     })
 
-    test("POST - /api/notification_type/news", async () => {
+    test("POST - /api/disease_type/news", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         let cloneSchemaObjects = {
             "entries": [R.clone(schemaObject[1]), R.clone(schemaObject[2])]
         };
         await supertest(appTest)
-            .post("/api/notification_type/news")
+            .post("/api/disease_type/news")
             .send(cloneSchemaObjects)
             .expect(200)
             .then(async (response) => {
@@ -82,32 +80,32 @@ describe("Notification_type functional testing", () => {
                 expect(response.body.count).toEqual(2);
 
                 // Check the data in the database
-                const notificationTypes = await Models.NotificationType.findMany({
+                const contact_types = await Models.DiseaseType.findMany({
                     where: {
                         nameSlug: {
                             contains: 'medimoi'
                         }
                     }
                 });
-                expect(notificationTypes).toHaveLength(2);
+                expect(contact_types).toHaveLength(2);
             })
     })
 
-    test("GET - /api/notification_type/slug/:nameSlug", async () => {
+    test("GET - /api/disease_type/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/notification_type/slug/notification-type-uniquent-0")
+            .get("/api/disease_type/disease-type-test")
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("notification-type-uniquent-0")
+                expect(response.body.nameSlug).toBe("disease-type-test")
             })
     })
 
-    test("GET - /api/notification_type/all", async () => {
+    test("GET - /api/disease_type/", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/notification_type/all")
+            .get("/api/disease_type/")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -115,45 +113,46 @@ describe("Notification_type functional testing", () => {
             })
     })
 
-    test("PUT - /api/notification_type/slug/:nameSlug", async () => {
+    test("PUT - /api/disease_type/:nameSlug/edit", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
-        cloneSchemaObject.name = "Notification type uniqueNT Edition"
+        cloneSchemaObject.name = "Disease-type Test Edition"
 
         await supertest(appTest)
-            .put("/api/notification_type/slug/notification-type-uniquent-0")
+            .put("/api/disease_type/disease-type-test/edit")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
                 // Check the response
-                expect(response.body.nameSlug).toBe("notification-type-uniquent-edition");
+                expect(response.body.nameSlug).toBe("disease-type-test-edition");
 
                 // Check the data in the database
-                const notificationType = await Models.NotificationType.findUnique({
+                const disease_type = await Models.DiseaseType.findUnique({
                     where: {
-                        nameSlug: "notification-type-uniquent-edition"
+                        nameSlug: "disease-type-test-edition"
                     }
                 });
-                expect(notificationType.nameSlug).toBe("notification-type-uniquent-edition");
+                expect(disease_type.nameSlug).toBe("disease-type-test-edition");
             })
     })
 
-    test("DELETE - /api/notification_type/slug/:nameSlug", async () => {
+    test("DELETE - /api/disease_type/:nameSlug/delete", async () => {
         await supertest(appTest)
-            .delete("/api/notification_type/slug/notification-type-uniquent-2-medimoi")
+            .delete("/api/disease_type/disease-type-test-functional-medimoi-2/delete")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.nameSlug).toBe("notification-type-uniquent-2-medimoi");
+                expect(response.body.nameSlug).toBe("disease-type-test-functional-medimoi-2");
 
                 // Check the data in the database
-                const notificationType = await Models.NotificationType.findUnique({
+                const disease_type = await Models.DiseaseType.findUnique({
                     where: {
-                        nameSlug: "notification-type-uniquent-2-medimoi"
+                        nameSlug: "disease-type-test-functional-medimoi-2"
                     }
                 });
-                expect(notificationType).toBeNull();
+                expect(disease_type).toBeNull();
             })
     })
+
 
 })

@@ -14,7 +14,6 @@ const testMaxLength = (schema, schemaObject, field, maxLength) => {
         fieldValue += i.toString();
       }
       cloneSchemaObject[field] = fieldValue;
-
       await Models[schema].create({
         data: cloneSchemaObject,
       });

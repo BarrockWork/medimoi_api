@@ -168,7 +168,7 @@ model TreatmentDrug {
 model DrugLevel {
   id          Int       @id @default(autoincrement())
   level       Int
-  description String
+  description String    @db.Text
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   isActive    Boolean   @default(true)

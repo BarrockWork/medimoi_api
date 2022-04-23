@@ -1,7 +1,12 @@
 // Import of the Prisma client
 const Models = require('../models');
-const { isEmpty } = require('ramda');
-const { checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb } = require('../utils/requestHandler');
+const {
+    checkRequiredFields,
+    createSlug,
+    extractFieldsToChange,
+    verifySlugInDb,
+    extractQueryParameters
+} = require('../utils/requestHandler');
 const { toLower } = require('ramda');
 
 const createTreatmentPeriodicity = async (req, res) => {
@@ -69,7 +74,6 @@ const createMany = async (req, res) => {
 }
 
 const getTreatmentPeriodicityById = async (req, res) => {
-    // console.log("getTreatmentPeriodicityById");
     const {id} = req.params;
     try {
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
@@ -98,7 +102,6 @@ const getTreatmentPeriodicityById = async (req, res) => {
 }
 
 const getTreatmentPeriodicityBySlug = async (req, res) => {
-    // console.log("getTreatmentPeriodicityBySlug");
     const {nameSlug} = req.params;
     try {
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
@@ -127,74 +130,49 @@ const getTreatmentPeriodicityBySlug = async (req, res) => {
 }
 
 const findAll = async (req, res) => {
-    // console.log("findAll");
     try {
-        const configClient = {
-            orderBy: {
-                nameSlug: "asc"
-            }
-        };
-
-        // If param isActive is defined
-        if(req.params.isActive) {
-            if (toLower(req.params.isActive) === "true") {
-                configClient.where = {
-                    isActive: true
-                }
-            }
-            if (toLower(req.params.isActive) === "false") {
-                configClient.where = {
-                    isActive: false
-                }
-            }
-        }        
-
+        const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
         const treatmemtPeriodicities = await Models.treatmentPeriodicity.findMany(configClient)
-
+        const totalCount = await Models.treatmentPeriodicity.count();
         await Models.$disconnect();
+
+        // Add to ResponseHeaders the totalcount
+        res.header('Access-Control-Expose-Headers', 'Content-Range');
+        res.header('content-range', totalCount);
         res.status(200).json(treatmemtPeriodicities);
     } catch (error) {
-        // console.log(error)
-        console.error(error, "findAll");
         res.status(400).json(error);
     }
 }
 
-// const getTreatmentPeriodicityByStatus = async (req, res) => {
-//     const {isActive} = req.body
-//     try {
-//         const treatmemtPeriodicities = await Models.treatmentPeriodicity.findMany({
-//             where:{
-//                 isActive
-//             },
-//             include:{
-//                 Treatments:{
-//                     select:{
-//                         id:true,
-//                         name:true,
-//                         isActive:true
-//                     }
-//                 }
-//             }
-//         })
-
-//         Models.$disconnect();
-        // console.log(treatmemtPeriodicities);
-//         res.status(200).json({
-//             success: true,
-//             treatmemtPeriodicities
-//         });
-//     } catch (error) {
-        // console.log(error);
-//         res.status(400).json({
-//             success: false,
-//             error
-//         });
-//     }
-// }
-
 // Update function
-const updateTreatmentPeriodicity = async (req, res) => {
+const updateTreatmentPeriodicityById = async (req, res) => {
+    try {
+        const onlyThoseFields = ['name', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+        // Check if the new slug exists
+        const configRequestDB = await verifySlugInDb(
+            Models,
+            "treatmentPeriodicity",
+            req.params.id,
+            createSlug(req.body.name),
+            fieldsFiltered
+        );
+
+        // Update the current entry
+        const treatmentPeriodicity = await Models.treatmentPeriodicity.update(configRequestDB);
+
+        await Models.$disconnect();
+        res.status(200).json(treatmentPeriodicity);
+    } catch (error) {
+        // console.error(error, "updateTreatmentPeriodicity");
+        res.status(400).json(error);
+    }
+}
+
+// Update function by slug
+const updateTreatmentPeriodicityBySlug = async (req, res) => {
     // console.log("updateTreatmentPeriodicity");
     try {
         const onlyThoseFields = ['name', 'isActive'];
@@ -221,7 +199,7 @@ const updateTreatmentPeriodicity = async (req, res) => {
 }
 
 // Delete function
-const deleteTreatmentPeriodicity = async (req, res) => {
+const deleteTreatmentPeriodicityById = async (req, res) => {
     // console.log("deleteTreatmentPeriodicity");
     const {id} = req.params;
 
@@ -271,7 +249,8 @@ module.exports = {
     getTreatmentPeriodicityById,
     getTreatmentPeriodicityBySlug,
     findAll,
-    updateTreatmentPeriodicity,
-    deleteTreatmentPeriodicity,
+    updateTreatmentPeriodicityById,
+    updateTreatmentPeriodicityBySlug,
+    deleteTreatmentPeriodicityById,
     deleteTreatmentPeriodicityBySlug
 }

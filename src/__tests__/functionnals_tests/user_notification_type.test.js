@@ -41,10 +41,9 @@ beforeAll(async () => {});
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
-  await Models.UserNotificationType.deleteMany({});
-  await Models.NotificationType.delete({
+  await Models.NotificationType.deleteMany({
     where: {
-      nameSlug: 'unt-func-test',
+      nameSlug: { contains: 'unt-func-test' },
     },
   });
   await Models.User.delete({
@@ -79,6 +78,7 @@ const NTCreation = (test) => {
     data: test,
   });
 };
+var ID = null;
 /*
  * Init the User Type test group
  */
@@ -95,7 +95,13 @@ describe('user_notification_type functional testing', () => {
     await supertest(appTest)
       .post('/api/user_notification_type/new/')
       .send(cloneSchemaObject)
-      .expect(200);
+      .expect(200)
+      .then(async (response) => {
+        console.log(response.body);
+        ID = response.body.id;
+      });
+
+    console.log(ID);
   });
 
   test('GET - /api/user_notification_type/', async () => {
@@ -104,7 +110,7 @@ describe('user_notification_type functional testing', () => {
       .get('/api/user_notification_type/')
       .expect(200)
       .then(async (response) => {
-        // console.log(response);
+        console.log(response.body);
         // Check the response
         expect(response.body.length).toBeGreaterThanOrEqual(1);
       });
@@ -123,29 +129,17 @@ describe('user_notification_type functional testing', () => {
       user_id: GetUserUNT.id,
     };
 
-    const user_notification_type = await Models.UserNotificationType.findMany(
-      {}
-    );
-    const id = user_notification_type[0].id;
-
     await supertest(appTest)
-      .put(`/api/user_notification_type/${id}/edit`)
+      .put(`/api/user_notification_type/${ID}/edit`)
       .send(newObject)
       .expect(200);
-    // .then(async (response) => {
-    //   // Check the response
-    //   expect(response.body.country).toBe('Madagascar');
   });
 
   test('DELETE - /api/user_notification_type/:email/delete', async () => {
-    const user_notification_type = await Models.UserNotificationType.findMany(
-      {}
-    );
-    const idUNT = user_notification_type[0].id;
-    // console.log(user_notification_type[0].id);
+    console.log(ID);
 
     await supertest(appTest)
-      .delete(`/api/user_notification_type/${idUNT}/delete`)
+      .delete(`/api/user_notification_type/${ID}/delete`)
       .expect(200);
   });
 });

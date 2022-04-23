@@ -9,9 +9,9 @@ const Models = require('./../../models');
 const R = require('ramda');
 
 // Delete all record before starting the tests
-beforeAll(async () => {
+/*beforeAll(async () => {
     await Models.DrugType.deleteMany({});
-})
+})*/
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
@@ -58,7 +58,7 @@ describe("Drug_type functional testing", () => {
                 // Check the data in the database
                 const Drug_type = await Models.DrugType.findUnique({
                     where: {
-                        nameSlug: "Drug-type-test"
+                        nameSlug: "drug-type-test"
                     }
                 });
                 expect(Drug_type).toBeTruthy()
@@ -118,7 +118,7 @@ describe("Drug_type functional testing", () => {
         cloneSchemaObject.name = "Drug-type Test Edition"
 
         await supertest(appTest)
-            .put("/api/drugTypes/drug_type-test/edit")
+            .put("/api/drugTypes/drug-type-test/edit")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {

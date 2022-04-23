@@ -7,10 +7,61 @@ const supertest = require('supertest');
 const createServerTest = require("./../server_test");
 const Models = require('./../../models');
 const R = require('ramda');
+const {createSlug} = require("../../utils/requestHandler");
+
+const initSchemaObjects = async () => {
+    // Insert a disease type
+    const diseaseType = await Models.DiseaseType.create({
+        data: {
+            name: 'disease-type Test',
+            nameSlug: createSlug('disease-type-test'),
+            description: 'ceci est un test',
+        }
+    })
+
+    // Initialize a list of contact_type object
+    schemaObject = [
+        {
+            name: 'disease test',
+            description: 'ceci est un test',
+            incubationPeriod: '5 days',
+            transmitting: 'orale',
+            disease_type_id: diseaseType.id,
+        },
+        {
+            name: 'disease Test Functional medimoi',
+            description: 'ceci est un test',
+            incubationPeriod: '10 days',
+            transmitting: 'orale',
+            disease_type_id: diseaseType.id,
+        },
+        {
+            name: 'disease Test Functional medimoi 2',
+            description: 'ceci est un test',
+            incubationPeriod: '9 days',
+            transmitting: 'nasale',
+            disease_type_id: diseaseType.id,
+        },
+    ]
+}
 
 // Delete all record before starting the tests
 beforeAll(async () => {
-    await Models.Disease.deleteMany({});
+    await Models.Disease.deleteMany({
+        where: {
+            name: {
+                contains: "disease-test"
+            }
+        }
+    });
+    await Models.DiseaseType.deleteMany({
+        where: {
+            nameSlug: {
+                contains: 'disease-type-test'
+            }
+        }
+    });
+    await initSchemaObjects();
 })
 
 // Disconnect prisma after all of the tests
@@ -20,35 +71,10 @@ afterAll(async () => {
 
 // Initialize express server
 const appTest = createServerTest()
-
-// Initialise a list of drug object
-const schemaObject = [
-    {
-        name: 'Disease Test',
-        description: 'ceci est un test',
-        incubationPeriod: '10 days',
-        transmitting: 'orale',
-        disease_type_id: 4
-    },
-    {
-        name: 'Disease Test Functional medimoi',
-        description: 'ceci est un test',
-        incubationPeriod: '10 days',
-        transmitting: 'orale',
-        disease_type_id: 4
-    },
-    {
-        name: 'Disease Test Functional medimoi 2',
-        description: 'ceci est un test',
-        incubationPeriod: '10 days',
-        transmitting: 'orale',
-        disease_type_id: 4
-    },
-]
-
 /*
  * Init the disease test group
  */
+
 describe("Disease functional testing", () => {
 
     test("POST - /api/diseases/new", async () => {
@@ -64,13 +90,13 @@ describe("Disease functional testing", () => {
                 expect(response.body.nameSlug).toBe("disease-test")
 
                 // Check the data in the database
-                const disease_type = await Models.Disease.findUnique({
+                const disease = await Models.Disease.findUnique({
                     where: {
                         nameSlug: "disease-test"
                     }
                 });
-                expect(disease_type).toBeTruthy()
-                expect(disease_type.nameSlug).toBe("disease-test")
+                expect(disease).toBeTruthy()
+                expect(disease.nameSlug).toBe("disease-test")
             })
     })
 
@@ -113,7 +139,7 @@ describe("Disease functional testing", () => {
     test("GET - /api/diseases/", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/disease_type/")
+            .get("/api/diseases/")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -146,16 +172,16 @@ describe("Disease functional testing", () => {
 
     test("DELETE - /api/diseases/:nameSlug/delete", async () => {
         await supertest(appTest)
-            .delete("/api/diseases/disease-test-functional-medimoi-2/delete")
+            .delete("/api/diseases/disease-test-functional-medimoi/delete")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.nameSlug).toBe("disease-test-functional-medimoi-2");
+                expect(response.body.nameSlug).toBe("disease-test-functional-medimoi");
 
                 // Check the data in the database
                 const disease = await Models.Disease.findUnique({
                     where: {
-                        nameSlug: "disease-test-functional-medimoi-2"
+                        nameSlug: "disease-test-functional-medimoi"
                     }
                 });
                 expect(disease).toBeNull();

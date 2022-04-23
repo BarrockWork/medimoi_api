@@ -9,9 +9,9 @@ const Models = require('./../../models');
 const R = require('ramda');
 
 // Delete all record before starting the tests
-beforeAll(async () => {
+/*beforeAll(async () => {
     await Models.DiseaseType.deleteMany({});
-})
+})*/
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {

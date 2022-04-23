@@ -9,9 +9,11 @@ const Models = require('./../../models');
 const R = require('ramda');
 
 // Delete all record before starting the tests
+/*
 beforeAll(async () => {
     await Models.DrugLevel.deleteMany({});
 })
+*/
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
@@ -93,7 +95,7 @@ describe("Drug_Level functional testing", () => {
     test("GET - /api/drugLevels/:id", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/drugLevels/4")
+            .get("/api/drugLevels/1")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -118,7 +120,7 @@ describe("Drug_Level functional testing", () => {
         cloneSchemaObject.description = "ceci est un ancien test"
 
         await supertest(appTest)
-            .put("/api/drugLevels/4/edit")
+            .put("/api/drugLevels/1/edit")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
@@ -128,7 +130,7 @@ describe("Drug_Level functional testing", () => {
                 // Check the data in the database
                 const Drug_level = await Models.DrugLevel.findUnique({
                     where: {
-                        id: 4,
+                        id: 1,
                     }
                 });
                 expect(Drug_level.description).toBe("ceci est un ancien test");
@@ -137,7 +139,7 @@ describe("Drug_Level functional testing", () => {
 
     test("DELETE - /api/drugLevels/:id/delete", async () => {
         await supertest(appTest)
-            .delete("/api/drugLevels/3/delete")
+            .delete("/api/drugLevels/2/delete")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
@@ -146,7 +148,7 @@ describe("Drug_Level functional testing", () => {
                 // Check the data in the database
                 const Drug_level = await Models.DrugLevel.findUnique({
                     where: {
-                        id: 3
+                        id: 2
                     }
                 });
                 expect(Drug_level).toBeNull();

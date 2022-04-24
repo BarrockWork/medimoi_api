@@ -84,7 +84,7 @@ const verifySlugInDb = async (
 
       // Check if is id or nameSlug in the request params
       const checkIsIdOrName = parseInt(currentSlugOrId);
-      if (R.is(Number, checkIsIdOrName)) {
+      if (!isNaN(checkIsIdOrName)) {
           const res = await Models[SchemaTarget].findUnique({
               where: {
                   id: checkIsIdOrName,

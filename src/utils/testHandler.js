@@ -62,18 +62,20 @@ const testUniquenessWithDependency = (
       // Clone the schemaObject in order to avoid to modify the original
       let cloneSchemaObject = { ...schemaObject };
       let cloneSchemaObject2 = { ...schemaObject2 };
+
       // Create a new entry
-      await Models[schema].create({
+      const ModelId = await Models[schema].create({
         data: cloneSchemaObject,
+      });
+      cloneSchemaObject2.user_type_id = ModelId.id;
+
+      // Duplicate the previous entry
+      await Models[dependencySchema].create({
+        data: cloneSchemaObject2,
       });
 
       // Duplicate the previous entry
       await Models[dependencySchema].create({
-        data: cloneSchemaObject,
-      });
-
-      // Duplicate the previous entry
-      await Models[schema].create({
         data: cloneSchemaObject2,
       });
     } catch (e) {

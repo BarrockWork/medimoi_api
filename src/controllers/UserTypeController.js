@@ -91,7 +91,6 @@ const updateOne = async (req, res) => {
     // Success Response
     res.status(200).json(User_type);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -99,7 +98,6 @@ const updateOne = async (req, res) => {
 // delete a user type
 const deleteOne = async (req, res) => {
   try {
-
     const configClient = {
       where: {
         nameSlug: req.params.nameSlug,

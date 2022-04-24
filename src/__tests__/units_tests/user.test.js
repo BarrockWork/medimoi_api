@@ -12,19 +12,29 @@ const {
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
+  await Models.User.deleteMany({
+    where: {
+      email: 'unitdoe@medimoi.com',
+    },
+  });
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: 'user-type-for-user-unit-test',
+    },
+  });
   await Models.$disconnect();
 });
 
 const userTypeDefault = {
-  name: 'User type',
-  nameSlug: createSlug('User type'),
+  name: 'User type for user unit test',
+  nameSlug: createSlug('User type for user unit test'),
 };
 // Initialize a user object
 const userDefault = {
   firstName: 'john',
   lastName: 'doe',
   age: 30,
-  email: 'jdoe@medimoi.com',
+  email: 'unitdoe@medimoi.com',
   password: 'password',
   cellphone: '0123456789',
   homephone: '0123456789',

@@ -70,7 +70,6 @@ const getOneById = async (req, res) => {
     // Success Response
     res.status(200).json(getById);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -107,8 +106,6 @@ const updateOne = async (req, res) => {
       'region',
       'country',
       'title',
-      'user_id',
-      'address_road_type_id',
     ];
     const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
     const id = transformIntValue(req.params.id);

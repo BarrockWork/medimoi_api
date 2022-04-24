@@ -30,7 +30,6 @@ const checkRequiredFields = (req, res, requiredFields, reqType = 'POST') => {
   }
 };
 
-
 /**
  * Extract from req.body the only fields selected
  * @param req Object Request
@@ -80,7 +79,7 @@ const verifySlugInDb = async (
   fieldsFiltered
 ) => {
   try {
-      let currentSlug = currentSlugOrId;
+    let currentSlug = currentSlugOrId;
 
       // Check if is id or nameSlug in the request params
       const checkIsIdOrName = parseInt(currentSlugOrId);
@@ -149,28 +148,29 @@ const verifySlugInDb = async (
  */
 const extractQueryParameters = (queryParams, targetParams) => {
     const configClient = {};
+
     targetParams.forEach(qP => {
         const parsingParam = JSON.parse(queryParams[qP]);
         switch (qP) {
             case 'sort':
-                configClient.orderBy = {
-                    id: R.toLower(parsingParam[1])
-                }
+                configClient.orderBy = {};
+                configClient.orderBy[parsingParam[0]] = R.toLower(parsingParam[1]);
                 break;
             case 'range':
                 configClient.skip = parsingParam[0];
                 configClient.take = parsingParam[1];
                 break;
             case 'filter':
-                //TODO
-                break;
-            default:
-                configClient.orderBy= {
-                    id: "asc"
+                const listFilter = Object.entries(parsingParam);
+                if(listFilter.length > 0) {
+                    configClient.where = {};
+                    for(const field of listFilter) {
+                        configClient.where[field[0]] = {equals: field[1]};
+                    }
                 }
+                break;
         }
     })
-
     return configClient;
 }
 
@@ -246,7 +246,7 @@ const selectAddressRoadType = () => {
 /**
  * Get notification_type infos
  */
- const selectNotificationType = () => {
+const selectNotificationType = () => {
   return {
     select: {
       id: true,
@@ -276,88 +276,88 @@ const selectCompany = () => {
  * Get Drug infos
  */
 const selectDrugInfos = () => {
-    return {
-        select:{
-            id:true,
-            name:true,
-            isActive:true,
-            description:true,
-            isPrescription:true
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      name: true,
+      isActive: true,
+      description: true,
+      isPrescription: true,
+    },
+  };
+};
 
 /**
  * Treatment drung infos
-*/
+ */
 const selectTreatmentDrugsInfos = () => {
-    return {
-        select:{
-            id:true,
-            comments:true,
-            drug_id:true,
-            treatment_id:true,
-            isActive:true
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      comments: true,
+      drug_id: true,
+      treatment_id: true,
+      isActive: true,
+    },
+  };
+};
 
 const selectTreatmentMediasInfos = () => {
-    return {
-        select:{
-            id:true,
-            name:true,
-            mimeType:true,
-            isActive:true,
-        }
-    }
-}
+  return {
+    select: {
+      id: true,
+      name: true,
+      mimeType: true,
+      isActive: true,
+    },
+  };
+};
 
-const selecttreatmentPeriodicityInfos = () =>{
-    return {
-        select:{
-            id:true,
-            name:true,
-            nameSlug:true,
-            isActive:true,
-        }
-    }
-}
+const selecttreatmentPeriodicityInfos = () => {
+  return {
+    select: {
+      id: true,
+      name: true,
+      nameSlug: true,
+      isActive: true,
+    },
+  };
+};
 
 const selectTreatmentGlobalInfos = () => {
-    return {
-        id:true,
-        name:true,
-        startedAt:true,
-        finishedAt:true,
-        TreatmentPeriodicity:selecttreatmentPeriodicityInfos(),
-        TreatmentMedias:selectTreatmentMediasInfos(),
-        TreatmentDrugs:selectTreatmentDrugsInfos(),
-        User:selectUserGlobalInfos(),
-        isActive:true,
-    }
-}
+  return {
+    id: true,
+    name: true,
+    startedAt: true,
+    finishedAt: true,
+    TreatmentPeriodicity: selecttreatmentPeriodicityInfos(),
+    TreatmentMedias: selectTreatmentMediasInfos(),
+    TreatmentDrugs: selectTreatmentDrugsInfos(),
+    User: selectUserGlobalInfos(),
+    isActive: true,
+  };
+};
 
 /**
  * TODO
  */
-const errorHandler = () => {
+const errorHandler = () => {};
 
-}
-
-module.exports =  {
-    checkRequiredFields,
-    createSlug,
-    extractFieldsToChange,
-    verifySlugInDb,
-    extractQueryParameters,
-    transformIntValue,
-    selectUserGlobalInfos,
-    selectContactType,
-    selectCompany,
-    selectDrugInfos,
-    selectTreatmentDrugsInfos,
-    selectTreatmentMediasInfos,
-    selecttreatmentPeriodicityInfos,
-    selectTreatmentGlobalInfos
-}
+module.exports = {
+  checkRequiredFields,
+  createSlug,
+  extractFieldsToChange,
+  verifySlugInDb,
+  extractQueryParameters,
+  transformIntValue,
+  selectAddressRoadType,
+  selectNotificationType,
+  selectUserGlobalInfos,
+  selectContactType,
+  selectCompany,
+  selectDrugInfos,
+  selectTreatmentDrugsInfos,
+  selectTreatmentMediasInfos,
+  selecttreatmentPeriodicityInfos,
+  selectTreatmentGlobalInfos,
+};

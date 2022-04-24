@@ -36,20 +36,6 @@ const {
  */
 
 /**
- * @apiDescription This is how we get all the users
- * @apiGroup User
- * @api {GET} /api/user Get all Users
- * @apiName getAllUsers
- *
- * @apiSampleRequest http://localhost:4000/api/users/
- *
- * @apiUse UserNotFoundError
- *
- * @apiVersion 0.1.0
- */
-router.get('/:isActive?', getAllUsers);
-
-/**
  * @apiDescription This is how we get a user by email
  * @apiGroup User
  * @api {GET} /api/users/:email Get user by Id
@@ -210,5 +196,19 @@ router.put('/:email/edit', updateUserByEmail);
  * @apiVersion 0.1.0
  */
 router.delete('/:email/delete', deleteUser);
+
+/**
+ * @apiDescription This is how we get all the users
+ * @apiGroup User
+ * @api {GET} /api/user/all Get all Users
+ * @apiName getAllUsers
+ *
+ * @apiSampleRequest http://localhost:4000/api/users/all
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:isActive?', getAllUsers);
 
 module.exports = router;

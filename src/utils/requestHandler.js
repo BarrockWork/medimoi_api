@@ -81,16 +81,16 @@ const verifySlugInDb = async (
   try {
     let currentSlug = currentSlugOrId;
 
-    // Check if is id or nameSlug in the request params
-    const checkIsIdOrName = parseInt(currentSlugOrId);
-    if (R.is(Number, checkIsIdOrName)) {
-      const res = await Models[SchemaTarget].findUnique({
-        where: {
-          id: checkIsIdOrName,
-        },
-      });
-      currentSlug = res.nameSlug;
-    }
+      // Check if is id or nameSlug in the request params
+      const checkIsIdOrName = parseInt(currentSlugOrId);
+      if (!isNaN(checkIsIdOrName)) {
+          const res = await Models[SchemaTarget].findUnique({
+              where: {
+                  id: checkIsIdOrName,
+              },
+          });
+          currentSlug = res.nameSlug;
+      }
 
     // Check slug in DB
     const findData = await Models[SchemaTarget].findUnique({

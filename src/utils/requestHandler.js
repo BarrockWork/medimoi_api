@@ -147,31 +147,32 @@ const verifySlugInDb = async (
  * @returns {{}}
  */
 const extractQueryParameters = (queryParams, targetParams) => {
-  const configClient = {};
-  targetParams.forEach((qP) => {
-    const parsingParam = JSON.parse(queryParams[qP]);
-    switch (qP) {
-      case 'sort':
-        configClient.orderBy = {
-          id: R.toLower(parsingParam[1]),
-        };
-        break;
-      case 'range':
-        configClient.skip = parsingParam[0];
-        configClient.take = parsingParam[1];
-        break;
-      case 'filter':
-        //TODO
-        break;
-      default:
-        configClient.orderBy = {
-          id: 'asc',
-        };
-    }
-  });
+    const configClient = {};
 
-  return configClient;
-};
+    targetParams.forEach(qP => {
+        const parsingParam = JSON.parse(queryParams[qP]);
+        switch (qP) {
+            case 'sort':
+                configClient.orderBy = {};
+                configClient.orderBy[parsingParam[0]] = R.toLower(parsingParam[1]);
+                break;
+            case 'range':
+                configClient.skip = parsingParam[0];
+                configClient.take = parsingParam[1];
+                break;
+            case 'filter':
+                const listFilter = Object.entries(parsingParam);
+                if(listFilter.length > 0) {
+                    configClient.where = {};
+                    for(const field of listFilter) {
+                        configClient.where[field[0]] = {equals: field[1]};
+                    }
+                }
+                break;
+        }
+    })
+    return configClient;
+}
 
 /**
  * Check and parse a STRING value to INT value

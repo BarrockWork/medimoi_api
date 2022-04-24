@@ -74,8 +74,8 @@ const createMany = async (req, res) => {
 }
 
 const getTreatmentPeriodicityById = async (req, res) => {
-    const {id} = req.params;
     try {
+        const {id} = req.params;
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
             where: {
                 id: parseInt(id)
@@ -102,8 +102,8 @@ const getTreatmentPeriodicityById = async (req, res) => {
 }
 
 const getTreatmentPeriodicityBySlug = async (req, res) => {
-    const {nameSlug} = req.params;
     try {
+        const {nameSlug} = req.params;
         const treatmentPeriodicity = await Models.treatmentPeriodicity.findUnique({
             where: {
                 nameSlug
@@ -138,7 +138,7 @@ const findAll = async (req, res) => {
 
         // Add to ResponseHeaders the totalcount
         res.header('Access-Control-Expose-Headers', 'Content-Range');
-        res.header('content-range', totalCount);
+        res.set('Content-Range', totalCount);
         res.status(200).json(treatmemtPeriodicities);
     } catch (error) {
         res.status(400).json(error);

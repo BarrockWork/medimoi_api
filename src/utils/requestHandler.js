@@ -149,13 +149,13 @@ const verifySlugInDb = async (
  */
 const extractQueryParameters = (queryParams, targetParams) => {
     const configClient = {};
+
     targetParams.forEach(qP => {
         const parsingParam = JSON.parse(queryParams[qP]);
         switch (qP) {
             case 'sort':
-                configClient.orderBy = {
-                    id: R.toLower(parsingParam[1])
-                }
+                configClient.orderBy = {};
+                configClient.orderBy[parsingParam[0]] = R.toLower(parsingParam[1]);
                 break;
             case 'range':
                 configClient.skip = parsingParam[0];
@@ -164,13 +164,8 @@ const extractQueryParameters = (queryParams, targetParams) => {
             case 'filter':
                 //TODO
                 break;
-            default:
-                configClient.orderBy= {
-                    id: "asc"
-                }
         }
     })
-
     return configClient;
 }
 

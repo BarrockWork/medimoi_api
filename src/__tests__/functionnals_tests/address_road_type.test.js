@@ -72,7 +72,7 @@ describe('address_road_type functional testing', () => {
   test('PUT - /api/address_road_type/:nameSlug/edit', async () => {
     // Clone the schemaObject in order to avoid to modify the original
     let cloneSchemaObject = R.clone(AddressRoadTypeSchemaObject);
-    cloneSchemaObject.name = 'address_road_type Edition';
+    cloneSchemaObject.name = 'address road type Edition';
 
     await supertest(appTest)
       .put('/api/address_road_type/address-road-type-test/edit')
@@ -80,30 +80,30 @@ describe('address_road_type functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.nameSlug).toBe('address_road_type-edition');
+        expect(response.body.nameSlug).toBe('address-road-type-edition');
 
         // Check the data in the database
         const address_road_type = await Models.AddressRoadType.findUnique({
           where: {
-            nameSlug: 'address_road_type-edition',
+            nameSlug: 'address-road-type-edition',
           },
         });
-        expect(address_road_type.nameSlug).toBe('address_road_type-edition');
+        expect(address_road_type.nameSlug).toBe('address-road-type-edition');
       });
   });
 
   test('DELETE - /api/address_road_type/:nameSlug/delete', async () => {
     await supertest(appTest)
-      .delete('/api/address_road_type/address_road_type-edition/delete')
+      .delete('/api/address_road_type/address-road-type-edition/delete')
       .expect(200)
       .then(async (response) => {
         // Check the response (prisma return the deleted object datas
-        expect(response.body.nameSlug).toBe('address_road_type-edition');
+        expect(response.body.nameSlug).toBe('address-road-type-edition');
 
         // Check the data in the database
         const address_road_type = await Models.AddressRoadType.findUnique({
           where: {
-            nameSlug: 'address_road_type-edition',
+            nameSlug: 'address-road-type-edition',
           },
         });
         expect(address_road_type).toBeNull();

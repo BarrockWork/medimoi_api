@@ -1,12 +1,12 @@
 const UserTypeSchemaObject = [
   {
-    name: 'User Type Test',
+    name: 'Functional test User Type Test',
   },
   {
-    name: 'User Type Test 2 medimoi',
+    name: 'Functional test User Type Test 2 medimoi',
   },
   {
-    name: 'User Type Test 3 medimoi',
+    name: 'Functional test User Type Test 3 medimoi',
   },
 ];
 

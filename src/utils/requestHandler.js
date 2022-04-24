@@ -79,18 +79,18 @@ const verifySlugInDb = async (
   fieldsFiltered
 ) => {
   try {
-      let currentSlug = currentSlugOrId;
+    let currentSlug = currentSlugOrId;
 
-      // Check if is id or nameSlug in the request params
-      const checkIsIdOrName = parseInt(currentSlugOrId);
-      if (R.is(Number, checkIsIdOrName)) {
-          const res = await Models[SchemaTarget].findUnique({
-              where: {
-                  id: checkIsIdOrName,
-              },
-          });
-          currentSlug = res.nameSlug;
-      }
+    // Check if is id or nameSlug in the request params
+    const checkIsIdOrName = parseInt(currentSlugOrId);
+    if (R.is(Number, checkIsIdOrName)) {
+      const res = await Models[SchemaTarget].findUnique({
+        where: {
+          id: checkIsIdOrName,
+        },
+      });
+      currentSlug = res.nameSlug;
+    }
 
     // Check slug in DB
     const findData = await Models[SchemaTarget].findUnique({
@@ -147,31 +147,31 @@ const verifySlugInDb = async (
  * @returns {{}}
  */
 const extractQueryParameters = (queryParams, targetParams) => {
-    const configClient = {};
-    targetParams.forEach(qP => {
-        const parsingParam = JSON.parse(queryParams[qP]);
-        switch (qP) {
-            case 'sort':
-                configClient.orderBy = {
-                    id: R.toLower(parsingParam[1])
-                }
-                break;
-            case 'range':
-                configClient.skip = parsingParam[0];
-                configClient.take = parsingParam[1];
-                break;
-            case 'filter':
-                //TODO
-                break;
-            default:
-                configClient.orderBy= {
-                    id: "asc"
-                }
-        }
-    })
+  const configClient = {};
+  targetParams.forEach((qP) => {
+    const parsingParam = JSON.parse(queryParams[qP]);
+    switch (qP) {
+      case 'sort':
+        configClient.orderBy = {
+          id: R.toLower(parsingParam[1]),
+        };
+        break;
+      case 'range':
+        configClient.skip = parsingParam[0];
+        configClient.take = parsingParam[1];
+        break;
+      case 'filter':
+        //TODO
+        break;
+      default:
+        configClient.orderBy = {
+          id: 'asc',
+        };
+    }
+  });
 
-    return configClient;
-}
+  return configClient;
+};
 
 /**
  * Check and parse a STRING value to INT value
@@ -342,19 +342,21 @@ const selectTreatmentGlobalInfos = () => {
  */
 const errorHandler = () => {};
 
-module.exports =  {
-    checkRequiredFields,
-    createSlug,
-    extractFieldsToChange,
-    verifySlugInDb,
-    extractQueryParameters,
-    transformIntValue,
-    selectUserGlobalInfos,
-    selectContactType,
-    selectCompany,
-    selectDrugInfos,
-    selectTreatmentDrugsInfos,
-    selectTreatmentMediasInfos,
-    selecttreatmentPeriodicityInfos,
-    selectTreatmentGlobalInfos
-}
+module.exports = {
+  checkRequiredFields,
+  createSlug,
+  extractFieldsToChange,
+  verifySlugInDb,
+  extractQueryParameters,
+  transformIntValue,
+  selectAddressRoadType,
+  selectNotificationType,
+  selectUserGlobalInfos,
+  selectContactType,
+  selectCompany,
+  selectDrugInfos,
+  selectTreatmentDrugsInfos,
+  selectTreatmentMediasInfos,
+  selecttreatmentPeriodicityInfos,
+  selectTreatmentGlobalInfos,
+};

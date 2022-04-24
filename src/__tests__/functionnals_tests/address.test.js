@@ -72,7 +72,7 @@ const ARTCreation = Models.AddressRoadType.create({
 const UserCreation = Models.User.create({
   data: createUser,
 });
-
+var addressId = null;
 /*
  * Init the User Type test group
  */
@@ -93,6 +93,7 @@ describe('Address functional testing', () => {
       .expect(200)
       .then(async (response) => {
         // Check the response
+        addressId = response.body.id;
         expect(response.body.country).toBe('France');
 
         // Check the data in the database
@@ -108,15 +109,9 @@ describe('Address functional testing', () => {
 
   test('GET - /api/address/:id', async () => {
     // get the actual Id of the address in case if we run many tests
-    const address = await Models.Address.findFirst({
-      where: {
-        country: 'France',
-      },
-    });
-    const id = address.id;
 
     await supertest(appTest)
-      .get(`/api/address/${id}`)
+      .get(`/api/address/${addressId}`)
       .expect(200)
       .then(async (response) => {
         // Check the response

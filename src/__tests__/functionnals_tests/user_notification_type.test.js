@@ -97,11 +97,8 @@ describe('user_notification_type functional testing', () => {
       .send(cloneSchemaObject)
       .expect(200)
       .then(async (response) => {
-        console.log(response.body);
         ID = response.body.id;
       });
-
-    console.log(ID);
   });
 
   test('GET - /api/user_notification_type/', async () => {
@@ -110,7 +107,6 @@ describe('user_notification_type functional testing', () => {
       .get('/api/user_notification_type/')
       .expect(200)
       .then(async (response) => {
-        console.log(response.body);
         // Check the response
         expect(response.body.length).toBeGreaterThanOrEqual(1);
       });
@@ -136,8 +132,6 @@ describe('user_notification_type functional testing', () => {
   });
 
   test('DELETE - /api/user_notification_type/:email/delete', async () => {
-    console.log(ID);
-
     await supertest(appTest)
       .delete(`/api/user_notification_type/${ID}/delete`)
       .expect(200);

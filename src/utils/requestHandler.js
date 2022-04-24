@@ -162,7 +162,13 @@ const extractQueryParameters = (queryParams, targetParams) => {
                 configClient.take = parsingParam[1];
                 break;
             case 'filter':
-                //TODO
+                const listFilter = Object.entries(parsingParam);
+                if(listFilter.length > 0) {
+                    configClient.where = {};
+                    for(const field of listFilter) {
+                        configClient.where[field[0]] = {equals: field[1]};
+                    }
+                }
                 break;
         }
     })

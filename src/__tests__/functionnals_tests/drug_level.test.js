@@ -45,12 +45,12 @@ const schemaObject = [
  */
 describe("Drug_Level functional testing", () => {
 
-    test("POST - /api/drugLevels/new", async () => {
+    test("POST - /api/drug_levels/new", async () => {
         // Clone the schemaObject[0] in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
 
         await supertest(appTest)
-            .post("/api/drugLevels/new")
+            .post("/api/drug_levels/new")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
@@ -67,13 +67,13 @@ describe("Drug_Level functional testing", () => {
             })
     })
 
-    test("POST - /api/drugLevels/news", async () => {
+    test("POST - /api/drug_levels/news", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         let cloneSchemaObjects = {
             "entries": [R.clone(schemaObject[1]), R.clone(schemaObject[2])]
         };
         await supertest(appTest)
-            .post("/api/drugLevels/news")
+            .post("/api/drug_levels/news")
             .send(cloneSchemaObjects)
             .expect(200)
             .then(async (response) => {
@@ -92,10 +92,10 @@ describe("Drug_Level functional testing", () => {
             })
     })
 
-    test("GET - /api/drugLevels/:id", async () => {
+    test("GET - /api/drug_levels/:id", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/drugLevels/1")
+            .get("/api/drug_levels/1")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -103,10 +103,10 @@ describe("Drug_Level functional testing", () => {
             })
     })
 
-    test("GET - /api/drugLevels/", async () => {
+    test("GET - /api/drug_levels/all", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/drugLevels/")
+            .get("/api/drug_levels/all")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -114,13 +114,13 @@ describe("Drug_Level functional testing", () => {
             })
     })
 
-    test("PUT - /api/drugLevels/:id/edit", async () => {
+    test("PUT - /api/drug_levels/:id", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
         cloneSchemaObject.description = "ceci est un ancien test"
 
         await supertest(appTest)
-            .put("/api/drugLevels/1/edit")
+            .put("/api/drug_levels/1")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
@@ -137,13 +137,13 @@ describe("Drug_Level functional testing", () => {
             })
     })
 
-    test("DELETE - /api/drugLevels/:id/delete", async () => {
+    test("DELETE - /api/drug_levels/:id", async () => {
         await supertest(appTest)
-            .delete("/api/drugLevels/2/delete")
+            .delete("/api/drug_levels/2")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.level).toBe(2);
+                expect(response.body.level).toBe(1);
 
                 // Check the data in the database
                 const Drug_level = await Models.DrugLevel.findUnique({

@@ -21,7 +21,6 @@ const {
  */
 
 
-
 /**
  * Define parameters for the request
  *
@@ -104,21 +103,6 @@ router.post("/new", createDisease);
  */
 router.post("/news", createManyDisease);
 
-/**
- * @apiDescription Get all Disease
- * @apiGroup Disease
- * @api {GET} /api/diseases Get all Disease
- * @apiName GetAllDisease
- *
- * @apiUse DiseaseNotFoundError
- *
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/diseases
- *
- * @apiVersion 0.1.0
- */
-router.get('/', findAll);
-
 
 /**
  * @apiDescription Get one disease by nameSlug
@@ -135,12 +119,27 @@ router.get('/', findAll);
  *
  * @apiVersion 0.1.0
  */
-router.get('/:nameSlug', findBySlug);
+router.get('/slug/:nameSlug', findBySlug);
+
+/**
+ * @apiDescription Get all Disease
+ * @apiGroup Disease
+ * @api {GET} /api/diseases Get all Disease
+ * @apiName GetAllDisease
+ *
+ * @apiUse DiseaseNotFoundError
+ *
+ * @apiExample {curl} Exemple uasage:
+ *      curl -i http://localhost:4000/api/diseases
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/all', findAll);
 
 /**
  * @apiDescription Update one Disease by nameSlug
  * @apiGroup Disease
- * @api {PUT} /api/diseases/:nameSlug/edit Update Disease
+ * @api {PUT} /api/diseases/slug/:nameSlug/ Update Disease
  * @apiName UpdateDiseaseBySlug
  *
  * @apiParam {String[2..50]} nameSlug NameSlug
@@ -169,23 +168,23 @@ router.get('/:nameSlug', findBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:nameSlug/edit', updateBySlug);
+router.put('/slug/:nameSlug', updateBySlug);
 
 /**
  * @apiDescription Delete one Disease by nameSlug
  * @apiGroup Disease
- * @api {DELETE} /api/diseases/:nameSlug/delete Delete Disease
+ * @api {DELETE} /api/diseases/:nameSlug Delete Disease
  * @apiName DeleteDisease
  *
  * @apiParam {String[2..50]} nameSlug NameSlug
  * @apiUse DiseaseNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/diseases/rhume/delete
+ *      curl -i http://localhost:4000/api/diseases/rhume
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:nameSlug/delete', deleteBySlug);
+router.delete('/slug/:nameSlug', deleteBySlug);
 
 
 module.exports = router;

@@ -13,8 +13,8 @@ const initSchemaObjects = async () => {
     // Insert a disease type
     const diseaseType = await Models.DiseaseType.create({
         data: {
-            name: 'disease-type Test',
-            nameSlug: createSlug('disease-type-test'),
+            name: 'disease-type Test Relation',
+            nameSlug: createSlug('disease-type-test relation'),
             description: 'ceci est un test',
         }
     })
@@ -57,7 +57,7 @@ beforeAll(async () => {
     await Models.DiseaseType.deleteMany({
         where: {
             nameSlug: {
-                contains: 'disease-type-test'
+                contains: 'disease-type-test-relation'
             }
         }
     });
@@ -125,10 +125,10 @@ describe("Disease functional testing", () => {
             })
     })
 
-    test("GET - /api/diseases/:nameSlug", async () => {
+    test("GET - /api/diseases/slug/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/diseases/disease-test")
+            .get("/api/diseases/slug/disease-test")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -136,10 +136,10 @@ describe("Disease functional testing", () => {
             })
     })
 
-    test("GET - /api/diseases/", async () => {
+    test("GET - /api/diseases/all", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/diseases/")
+            .get("/api/diseases/all")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -147,13 +147,13 @@ describe("Disease functional testing", () => {
             })
     })
 
-    test("PUT - /api/diseases/:nameSlug/edit", async () => {
+    test("PUT - /api/diseases/slug/:nameSlug", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
         cloneSchemaObject.name = "Disease Test Edition"
 
         await supertest(appTest)
-            .put("/api/diseases/disease-test/edit")
+            .put("/api/diseases/slug/disease-test")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
@@ -170,9 +170,9 @@ describe("Disease functional testing", () => {
             })
     })
 
-    test("DELETE - /api/diseases/:nameSlug/delete", async () => {
+    test("DELETE - /api/diseases/slug/:nameSlug", async () => {
         await supertest(appTest)
-            .delete("/api/diseases/disease-test-functional-medimoi/delete")
+            .delete("/api/diseases/slug/disease-test-functional-medimoi")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas

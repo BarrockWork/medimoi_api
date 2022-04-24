@@ -21,6 +21,7 @@ const createDrug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(drug);
     } catch (error) {
+        console.log(error);
         return res.status(400).json(req);
     }
 

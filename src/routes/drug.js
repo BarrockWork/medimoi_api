@@ -110,21 +110,7 @@ router.post('/news', createManyDrug)
 
 /**
  * @apiGroup Drug
- * @api {GET} /api/drugs Get all Drug
- * @apiName GetAllDrug
- *
- * @apiUse DrugNotFoundError
- *
- * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugs
- *
- * @apiVersion 0.1.0
- */
-router.get('/', getAllDrug);
-
-/**
- * @apiGroup Drug
- * @api {GET} /api/drugs/:nameSlug Get drug by slug
+ * @api {GET} /api/drugs/slug/:nameSlug Get drug by slug
  * @apiName GetDrugBySlug
  *
  * @apiUse DrugNotFoundError
@@ -135,12 +121,27 @@ router.get('/', getAllDrug);
  *
  * @apiVersion 0.1.0
  */
-router.get('/:nameSlug', findBySlug);
+router.get('/slug/:nameSlug', findBySlug);
 
 
 /**
  * @apiGroup Drug
- * @api {PUT} /api/drugs/:nameSlug/edit Update drug
+ * @api {GET} /api/drugs/all Get all Drug
+ * @apiName GetAllDrug
+ *
+ * @apiUse DrugNotFoundError
+ *
+ * @apiExample {curl} Exemple uasage:
+ *      curl -i http://localhost:4000/api/drugs/all
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/all', getAllDrug);
+
+
+/**
+ * @apiGroup Drug
+ * @api {PUT} /api/drugs/slug/:nameSlug Update drug
  * @apiName UpdatedrugBySlug
  *
  * @apiBody {String[2..50]} [name] drug name.
@@ -171,11 +172,11 @@ router.get('/:nameSlug', findBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:nameSlug/edit', updateBySlug);
+router.put('/slug/:nameSlug', updateBySlug);
 
 /**
  * @apiGroup Drug
- * @api {DELETE} /api/drugs/:nameSlug/delete Delete drug
+ * @api {DELETE} /api/drugs/slug/:nameSlug Delete drug
  * @apiName DeleteDrug
  *
  * @apiUse DrugNotFoundError
@@ -186,7 +187,7 @@ router.put('/:nameSlug/edit', updateBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:nameSlug/delete', deleteBySlug);
+router.delete('/slug/:nameSlug', deleteBySlug);
 
 
 module.exports = router;

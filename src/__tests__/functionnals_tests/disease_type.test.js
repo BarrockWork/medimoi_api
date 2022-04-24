@@ -91,10 +91,10 @@ describe("Disease_type functional testing", () => {
             })
     })
 
-    test("GET - /api/disease_type/:nameSlug", async () => {
+    test("GET - /api/disease_type/slug/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/disease_type/disease-type-test")
+            .get("/api/disease_type/slug/disease-type-test")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -102,10 +102,10 @@ describe("Disease_type functional testing", () => {
             })
     })
 
-    test("GET - /api/disease_type/", async () => {
+    test("GET - /api/disease_type/all", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/disease_type/")
+            .get("/api/disease_type/all")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -113,13 +113,13 @@ describe("Disease_type functional testing", () => {
             })
     })
 
-    test("PUT - /api/disease_type/:nameSlug/edit", async () => {
+    test("PUT - /api/disease_type/slug/:nameSlug", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
         cloneSchemaObject.name = "Disease-type Test Edition"
 
         await supertest(appTest)
-            .put("/api/disease_type/disease-type-test/edit")
+            .put("/api/disease_type/slug/disease-type-test")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
@@ -136,9 +136,9 @@ describe("Disease_type functional testing", () => {
             })
     })
 
-    test("DELETE - /api/disease_type/:nameSlug/delete", async () => {
+    test("DELETE - /api/disease_type/slug/:nameSlug", async () => {
         await supertest(appTest)
-            .delete("/api/disease_type/disease-type-test-functional-medimoi-2/delete")
+            .delete("/api/disease_type/slug/disease-type-test-functional-medimoi-2")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas

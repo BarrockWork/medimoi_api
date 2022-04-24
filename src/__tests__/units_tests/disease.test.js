@@ -4,7 +4,7 @@
  */
 
 const Models = require('./../../models');
-const { createSlug } = require('./../../utils/requestHandler')
+const {createSlug} = require('./../../utils/requestHandler')
 const {testMaxLength, testUniqueness} = require('./../../utils/testHandler')
 
 // Disconnect prisma after all of the tests
@@ -14,12 +14,12 @@ afterAll(async () => {
 
 // Initialise a Disease object
 const DiseaseDefault = {
-    name: 'Disease Test',
-    nameSlug: createSlug('Disease Test'),
-    description: 'ceci est une description',
-    incubationPeriod: 'ceci est une incubation',
+    name: 'Disease Unit Test',
+    nameSlug: createSlug('Disease Unit Test'),
+    description: 'ceci est une description unitaire',
+    incubationPeriod: 'ceci est une incubation unitaire',
     transmitting: 'transmission',
-    disease_type_id: 3,
+    disease_type_id: 1,
 }
 
 /*

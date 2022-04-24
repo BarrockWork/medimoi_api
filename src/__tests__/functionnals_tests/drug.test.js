@@ -152,10 +152,10 @@ describe("Drug functional testing", () => {
             })
     })
 
-    test("GET - /api/drugs/:nameSlug", async () => {
+    test("GET - /api/drugs/slug/:nameSlug", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/drugs/doliprane-500mg")
+            .get("/api/drugs/slug/doliprane-500mg")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -163,10 +163,10 @@ describe("Drug functional testing", () => {
             })
     })
 
-    test("GET - /api/drugs/", async () => {
+    test("GET - /api/drugs/all", async () => {
         // Clone the schemaObjects in order to avoid to modify the original
         await supertest(appTest)
-            .get("/api/drugs/")
+            .get("/api/drugs/all")
             .expect(200)
             .then(async (response) => {
                 // Check the response
@@ -174,13 +174,13 @@ describe("Drug functional testing", () => {
             })
     })
 
-    test("PUT - /api/drugs/:nameSlug/edit", async () => {
+    test("PUT - /api/drugs/slug/:nameSlug", async () => {
         // Clone the schemaObject in order to avoid to modify the original
         let cloneSchemaObject = R.clone(schemaObject[0]);
         cloneSchemaObject.isPrescription = false
 
         await supertest(appTest)
-            .put("/api/drugs/doliprane-500mg/edit")
+            .put("/api/drugs/slug/doliprane-500mg")
             .send(cloneSchemaObject)
             .expect(200)
             .then(async (response) => {
@@ -197,9 +197,9 @@ describe("Drug functional testing", () => {
             })
     })
 
-    test("DELETE - /api/drugs/:nameSlug/delete", async () => {
+    test("DELETE - /api/drugs/slug/:nameSlug", async () => {
         await supertest(appTest)
-            .delete("/api/drugs/doliprane-250mg/delete")
+            .delete("/api/drugs/slug/doliprane-250mg")
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas

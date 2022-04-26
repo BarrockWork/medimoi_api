@@ -74,7 +74,6 @@ const getAllUsers = async (req, res) => {
 };
 
 const findMany = async (req, res) => {
-  console.log('findMany')
   try {
     const configClient = extractQueryParameters(req.query, ['filterMany'])
     const users = await Models.User.findMany(configClient)

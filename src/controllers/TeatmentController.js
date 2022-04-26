@@ -1,7 +1,10 @@
 // Import of the Prisma client
 const { isEmpty } = require('ramda');
 const Models = require('../models');
-const { transformIntValue, checkRequiredFields, selectDrugInfos, selectTreatmentDrugsInfos, selectTreatmentMediasInfos, selecttreatmentPeriodicityInfos, selectTreatmentGlobalInfos } = require('../utils/requestHandler');
+const { transformIntValue, checkRequiredFields, selectDrugInfos, selectTreatmentDrugsInfos, selectTreatmentMediasInfos, selecttreatmentPeriodicityInfos, selectTreatmentGlobalInfos,
+    extractQueryParameters,
+    extractFieldsToChange
+} = require('../utils/requestHandler');
 
 const createOne = async (req, res) => {
     try {
@@ -64,6 +67,7 @@ const createMany = async (req, res) => {
 
 const getTreatmentById = async (req, res) => {
     try {
+        const {id} = req.params;
         const treatmemt = await Models.treatment.findUnique({
             where: {
                 id: transformIntValue(id)
@@ -83,31 +87,30 @@ const getTreatmentById = async (req, res) => {
     }
 }
 
+const findMany = async (req, res) => {
+    try {
+        const configClient = extractQueryParameters(req.query, ['filterMany'])
+        const treatmemts = await Models.treatment.findMany(configClient)
+        await Models.$disconnect();
+
+        res.status(200).json(treatmemts);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+}
+
+
+
 const getAllTreatments = async (req, res) => {
     try {
-        const configClient = {
-            orderBy: {
-                name: "asc"
-            }
-        };
-
-        // If param isActive is defined
-        if(req.params.isActive) {
-            if (toLower(req.params.isActive) === "true") {
-                configClient.where = {
-                    isActive: true
-                }
-            }
-            if (toLower(req.params.isActive) === "false") {
-                configClient.where = {
-                    isActive: false
-                }
-            }
-        }
-
+        const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
         const treatmemts = await Models.treatment.findMany(configClient)
-
+        const totalCount = await Models.treatment.count();
         Models.$disconnect();
+
+        // Add to ResponseHeaders the totalcount
+        res.header('Access-Control-Expose-Headers', 'Content-Range');
+        res.set('Content-Range', totalCount);
         res.status(200).json(treatmemts);
     } catch (error) {
         res.status(400).json(error);
@@ -116,11 +119,14 @@ const getAllTreatments = async (req, res) => {
 
 const updateTreatment = async (req, res) => {
     try {
+        const onlyThoseFields = ['name', 'startedAt', 'finishedAt', 'user_id', 'treatment_periodicity_id', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
         const treatment = await Models.treatment.update({
             where:{
                 id: transformIntValue(req.params.id)
             },
-            data:req.body
+            data:fieldsFiltered
         });
         await Models.$disconnect();
         res.status(200).json(treatment);
@@ -154,5 +160,6 @@ module.exports = {
     getTreatmentById,
     getAllTreatments,    
     updateTreatment,
-    deleteTreatment
+    deleteTreatment,
+    findMany
 }

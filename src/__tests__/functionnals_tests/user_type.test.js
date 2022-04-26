@@ -7,32 +7,25 @@ const supertest = require('supertest');
 const createServerTest = require('./../server_test');
 const Models = require('./../../models');
 const R = require('ramda');
+const { UserTypeSchemaObject } = require('./../objectSchema_test');
 
 // Delete all record before starting the tests
-beforeAll(async () => {
-  await Models.UserType.deleteMany({});
-});
+beforeAll(async () => {});
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
+  await Models.UserType.deleteMany({
+    where: {
+      nameSlug: {
+        contains: 'functional-test-user-type-test',
+      },
+    },
+  });
   await Models.$disconnect();
 });
 
 // Initialize express server
 const appTest = createServerTest();
-
-// Initialise a list of user_type object
-const schemaObject = [
-  {
-    name: 'User Type Test',
-  },
-  {
-    name: 'User Type Test 2 medimoi',
-  },
-  {
-    name: 'User Type Test 3 medimoi',
-  },
-];
 
 /*
  * Init the User Type test group
@@ -40,32 +33,36 @@ const schemaObject = [
 describe('user_type functional testing', () => {
   test('POST - /api/user_type/new', async () => {
     // Clone the schemaObject[0] in order to avoid to modify the original
-    let cloneSchemaObject = R.clone(schemaObject[0]);
-
+    let cloneSchemaObject = R.clone(UserTypeSchemaObject[0]);
+    console.log(cloneSchemaObject);
     await supertest(appTest)
       .post('/api/user_type/new/')
       .send(cloneSchemaObject)
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.nameSlug).toBe('user-type-test');
+        expect(response.body.nameSlug).toBe('functional-test-user-type-test');
 
         // Check the data in the database
         const user_type = await Models.UserType.findUnique({
           where: {
-            nameSlug: 'user-type-test',
+            nameSlug: 'functional-test-user-type-test',
           },
         });
         expect(user_type).toBeTruthy();
-        expect(user_type.nameSlug).toBe('user-type-test');
+        expect(user_type.nameSlug).toBe('functional-test-user-type-test');
       });
   });
 
   test('POST - /api/user_type/news', async () => {
     // Clone the schemaObjects in order to avoid to modify the original
     let cloneSchemaObjects = {
-      entries: [R.clone(schemaObject[1]), R.clone(schemaObject[2])],
+      entries: [
+        R.clone(UserTypeSchemaObject[1]),
+        R.clone(UserTypeSchemaObject[2]),
+      ],
     };
+
     await supertest(appTest)
       .post('/api/user_type/news')
       .send(cloneSchemaObjects)
@@ -89,11 +86,11 @@ describe('user_type functional testing', () => {
   test('GET - /api/user_type/:nameSlug', async () => {
     // Clone the schemaObjects in order to avoid to modify the original
     await supertest(appTest)
-      .get('/api/user_type/user-type-test')
+      .get('/api/user_type/functional-test-user-type-test')
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.nameSlug).toBe('user-type-test');
+        expect(response.body.nameSlug).toBe('functional-test-user-type-test');
       });
   });
 
@@ -110,39 +107,40 @@ describe('user_type functional testing', () => {
 
   test('PUT - /api/user_type/:nameSlug/edit', async () => {
     // Clone the schemaObject in order to avoid to modify the original
-    let cloneSchemaObject = R.clone(schemaObject[0]);
-    cloneSchemaObject.name = 'user_type Edition';
-
+    let cloneSchemaObject = R.clone(UserTypeSchemaObject[0]);
+    console.log(cloneSchemaObject);
+    cloneSchemaObject.name = 'functional test user type test 4';
+    console.log(cloneSchemaObject);
     await supertest(appTest)
-      .put('/api/user_type/user-type-test/edit')
+      .put('/api/user_type/functional-test-user-type-test/edit')
       .send(cloneSchemaObject)
       .expect(200)
       .then(async (response) => {
         // Check the response
-        expect(response.body.nameSlug).toBe('user_type-edition');
+        expect(response.body.nameSlug).toBe('functional-test-user-type-test-4');
 
         // Check the data in the database
         const user_type = await Models.UserType.findUnique({
           where: {
-            nameSlug: 'user_type-edition',
+            nameSlug: 'functional-test-user-type-test-4',
           },
         });
-        expect(user_type.nameSlug).toBe('user_type-edition');
+        expect(user_type.nameSlug).toBe('functional-test-user-type-test-4');
       });
   });
 
   test('DELETE - /api/user_type/:nameSlug/delete', async () => {
     await supertest(appTest)
-      .delete('/api/user_type/user-type-test-2-medimoi/delete')
+      .delete('/api/user_type/functional-test-user-type-test-4/delete')
       .expect(200)
       .then(async (response) => {
         // Check the response (prisma return the deleted object datas
-        expect(response.body.nameSlug).toBe('user-type-test-2-medimoi');
+        expect(response.body.nameSlug).toBe('functional-test-user-type-test-4');
 
         // Check the data in the database
         const user_type = await Models.UserType.findUnique({
           where: {
-            nameSlug: 'user-type-test-2-medimoi',
+            nameSlug: 'functional-test-user-type-test-4',
           },
         });
         expect(user_type).toBeNull();

@@ -8,6 +8,7 @@ const { testMaxLength } = require('./../../utils/testHandler');
 
 // Disconnect prisma after all of the tests
 afterAll(async () => {
+  await Models.Address.deleteMany({});
   await Models.$disconnect();
 });
 

@@ -144,6 +144,18 @@ const findAll = async (req, res) => {
     }
 }
 
+const findMany = async (req, res) => {
+    try {
+        const configClient = extractQueryParameters(req.query, ['filterMany'])
+        const treatmemtPeriodicities = await Models.treatmentPeriodicity.findMany(configClient)
+        await Models.$disconnect();
+
+        res.status(200).json(treatmemtPeriodicities);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+}
+
 // Update function
 const updateTreatmentPeriodicityById = async (req, res) => {
     try {
@@ -248,6 +260,7 @@ module.exports = {
     getTreatmentPeriodicityById,
     getTreatmentPeriodicityBySlug,
     findAll,
+    findMany,
     updateTreatmentPeriodicityById,
     updateTreatmentPeriodicityBySlug,
     deleteTreatmentPeriodicityById,

@@ -1,6 +1,7 @@
 const Models = require('./../models');
 const { checkRequiredFields } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
+const {extractQueryParameters} = require("../utils/requestHandler");
 
 // Create a single user
 const createOne = async (req, res) => {
@@ -44,41 +45,46 @@ const createOne = async (req, res) => {
 // Get all users
 const getAllUsers = async (req, res) => {
   try {
-    configClient = {
-      include: {
-        UserType: {
-          select: {
-            id: true,
-            name: true,
-          },
+    let configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
+
+    // Select some usertype fields to include
+    configClient.include = {
+      UserType: {
+        select: {
+          id: true,
+          name: true,
         },
       },
     };
 
-    // If param isActive is defined
-    if (req.params.isActive) {
-      if (toLower(req.params.isActive) === 'true') {
-        configClient.where = {
-          isActive: true,
-        };
-      }
-      if (toLower(req.params.isActive) === 'false') {
-        configClient.where = {
-          isActive: false,
-        };
-      }
-    }
-
     const allUsers = await Models.User.findMany(configClient);
+    const totalCount = await Models.User.count();
+
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
 
+    // Add to ResponseHeaders the totalcount
+    res.header('Access-Control-Expose-Headers', 'Content-Range');
+    res.set('Content-Range', totalCount);
     res.status(200).json(allUsers);
   } catch (error) {
     return res.status(400).json(error);
   }
 };
+
+const findMany = async (req, res) => {
+  console.log('findMany')
+  try {
+    const configClient = extractQueryParameters(req.query, ['filterMany'])
+    const users = await Models.User.findMany(configClient)
+    await Models.$disconnect();
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+}
 
 // Get a user by email
 const getUserByEmail = async (req, res) => {
@@ -195,4 +201,5 @@ module.exports = {
   getUserByEmail,
   updateUserByEmail,
   deleteUser,
+  findMany
 };

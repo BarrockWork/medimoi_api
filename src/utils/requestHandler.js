@@ -72,25 +72,25 @@ const createSlug = (textForSlug) => {
  * @returns {string}
  */
 const verifySlugInDb = async (
-  Models,
-  SchemaTarget,
-  currentSlugOrId,
-  newSlug,
-  fieldsFiltered
+    Models,
+    SchemaTarget,
+    currentSlugOrId,
+    newSlug,
+    fieldsFiltered
 ) => {
   try {
     let currentSlug = currentSlugOrId;
 
-      // Check if is id or nameSlug in the request params
-      const checkIsIdOrName = parseInt(currentSlugOrId);
-      if (!isNaN(checkIsIdOrName)) {
-          const res = await Models[SchemaTarget].findUnique({
-              where: {
-                  id: checkIsIdOrName,
-              },
-          });
-          currentSlug = res.nameSlug;
-      }
+    // Check if is id or nameSlug in the request params
+    const checkIsIdOrName = parseInt(currentSlugOrId);
+    if (!isNaN(checkIsIdOrName)) {
+      const res = await Models[SchemaTarget].findUnique({
+        where: {
+          id: checkIsIdOrName,
+        },
+      });
+      currentSlug = res.nameSlug;
+    }
 
     // Check slug in DB
     const findData = await Models[SchemaTarget].findUnique({
@@ -143,35 +143,44 @@ const verifySlugInDb = async (
 /**
  * Extract the parameters and return the configuration for prisma client
  * @param queryParams (Example: req.query or req.params)
- * @param targetParams (Example: ['sort', 'range', 'filter']
+ * @param targetParams (Example: ['sort', 'range', 'filter', filterMany]
  * @returns {{}}
  */
 const extractQueryParameters = (queryParams, targetParams) => {
-    const configClient = {};
+  const configClient = {};
 
-    targetParams.forEach(qP => {
-        const parsingParam = JSON.parse(queryParams[qP]);
-        switch (qP) {
-            case 'sort':
-                configClient.orderBy = {};
-                configClient.orderBy[parsingParam[0]] = R.toLower(parsingParam[1]);
-                break;
-            case 'range':
-                configClient.skip = parsingParam[0];
-                configClient.take = parsingParam[1];
-                break;
-            case 'filter':
-                const listFilter = Object.entries(parsingParam);
-                if(listFilter.length > 0) {
-                    configClient.where = {};
-                    for(const field of listFilter) {
-                        configClient.where[field[0]] = {equals: field[1]};
-                    }
-                }
-                break;
+  targetParams.forEach(qP => {
+    const parsingParam = JSON.parse(queryParams[qP]);
+    switch (qP) {
+      case 'sort':
+        configClient.orderBy = {};
+        configClient.orderBy[parsingParam[0]] = R.toLower(parsingParam[1]);
+        break;
+      case 'range':
+        configClient.skip = parsingParam[0];
+        configClient.take = parsingParam[1];
+        break;
+      case 'filter':
+        const listFilter = Object.entries(parsingParam);
+        if(listFilter.length > 0) {
+          configClient.where = {};
+          for(const field of listFilter) {
+            configClient.where[field[0]] = {equals: field[1]};
+          }
         }
-    })
-    return configClient;
+        break;
+      case 'filterMany':
+        const listFilterMany = Object.entries(parsingParam);
+        if(listFilterMany.length > 0) {
+            configClient.where = {};
+          for(const field of listFilterMany) {
+            configClient.where[field[0]] = { in: field[1]};
+          }
+        }
+        break;
+    }
+  })
+  return configClient;
 }
 
 /**

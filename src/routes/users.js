@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const {
   createOne,
   createMany,
@@ -7,6 +7,7 @@ const {
   getUserByEmail,
   updateUserByEmail,
   deleteUser,
+  findMany
 } = require('./../controllers/UserController');
 
 /**
@@ -34,18 +35,6 @@ const {
  *       "error": "UserNotFoundError"
  *     }
  */
-
-/**
- * @apiDescription This is how we get a user by email
- * @apiGroup User
- * @api {GET} /api/users/:email Get user by Id
- * @apiName getUserByEmail
- *
- * @apiUse UserNotFoundError
- *
- * @apiVersion 0.1.0
- */
-router.get('/:email', getUserByEmail);
 
 /**
  * @apiDescription This is how we create
@@ -134,6 +123,52 @@ router.post('/new', createOne);
 router.post('/news', createMany);
 
 /**
+ * @apiDescription Get many User
+ * @api {GET} /api/users/many Get many User
+ * @apiName GetManyUser
+ * @apiGroup users
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse TreatmentPeriodicityNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/users/many
+ * @apiVersion 0.1.0
+ */
+router.get("/many", findMany);
+
+/**
+ * @apiDescription This is how we get all the users
+ * @apiGroup User
+ * @api {GET} /api/users/all Get all Users
+ * @apiName getAllUsers
+ *
+ * @apiSampleRequest http://localhost:4000/api/users/all
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/all', getAllUsers);
+
+/**
+ * @apiDescription This is how we get a user by email
+ * @apiGroup User
+ * @api {GET} /api/users/:email Get user by Id
+ * @apiName getUserByEmail
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:email', getUserByEmail);
+
+/**
  * @apiDescription This is how we update a user by ID
  * @apiGroup User
  * @api {PUT} /api/user/:id/edit Update user
@@ -196,19 +231,5 @@ router.put('/:email/edit', updateUserByEmail);
  * @apiVersion 0.1.0
  */
 router.delete('/:email/delete', deleteUser);
-
-/**
- * @apiDescription This is how we get all the users
- * @apiGroup User
- * @api {GET} /api/user/all Get all Users
- * @apiName getAllUsers
- *
- * @apiSampleRequest http://localhost:4000/api/users/all
- *
- * @apiUse UserNotFoundError
- *
- * @apiVersion 0.1.0
- */
-router.get('/:isActive?', getAllUsers);
 
 module.exports = router;

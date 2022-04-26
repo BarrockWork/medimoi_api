@@ -7,7 +7,6 @@ const {
     verifySlugInDb,
     extractQueryParameters
 } = require('../utils/requestHandler');
-const { toLower } = require('ramda');
 
 const createTreatmentPeriodicity = async (req, res) => {
     // console.log("createTreatmentPeriodicity");
@@ -124,7 +123,7 @@ const getTreatmentPeriodicityBySlug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
-        console.error(error, "getTreatmentPeriodicityBySlug");
+        // console.error(error, "getTreatmentPeriodicityBySlug");
         res.status(400).json(error);
     }
 }
@@ -193,7 +192,7 @@ const updateTreatmentPeriodicityBySlug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
-        console.error(error, "updateTreatmentPeriodicity");
+        // console.error(error, "updateTreatmentPeriodicity");
         res.status(400).json(error);
     }
 }

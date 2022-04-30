@@ -1,8 +1,6 @@
 // Import of the Prisma client
 const Models = require('../models');
-const { isEmpty } = require('ramda');
-const { checkRequiredFields, transformIntValue, extractFieldsToChange } = require('../utils/requestHandler');
-const { composeP, toLower} = require('ramda');
+const { checkRequiredFields, transformIntValue, extractFieldsToChange, extractQueryParameters} = require('../utils/requestHandler');
 
 const createTreatmentDrug = async (req, res) => {
     try {
@@ -82,33 +80,29 @@ const getTreatmentDrugById = async (req, res) => {
 
 const findAll = async (req, res) => {
     try {
-
-        const configClient = {
-            orderBy:{
-                id:"asc"
-            }
-        };
-
-        // If param isActive is defined
-        if(req.params.isActive) {
-            if (toLower(req.params.isActive) === "true") {
-                configClient.where = {
-                    isActive: true
-                }
-            }
-            if (toLower(req.params.isActive) === "false") {
-                configClient.where = {
-                    isActive: false
-                }
-            }
-        }
-
+        const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
         const treatmentDrugs = await Models.treatmentDrug.findMany(configClient)
+        const totalCount = await Models.treatmentDrug.count();
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response        
         await Models.$disconnect();
 
+        // Add to ResponseHeaders the totalcount
+        res.header('Access-Control-Expose-Headers', 'Content-Range');
+        res.set('Content-Range', totalCount);
         // Success Response 
+        res.status(200).json(treatmentDrugs);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+}
+
+const findMany = async (req, res) => {
+    try {
+        const configClient = extractQueryParameters(req.query, ['filterMany'])
+        const treatmentDrugs = await Models.treatmentDrug.findMany(configClient)
+        await Models.$disconnect();
+
         res.status(200).json(treatmentDrugs);
     } catch (error) {
         res.status(400).json(error);
@@ -160,6 +154,7 @@ module.exports = {
     createMany,
     getTreatmentDrugById,
     findAll,
+    findMany,
     updateTreatmentDrug,
     deleteTreatmentDrug
 }

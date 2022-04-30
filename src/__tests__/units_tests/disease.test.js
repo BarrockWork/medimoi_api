@@ -19,7 +19,7 @@ const DiseaseDefault = {
     description: 'ceci est une description unitaire',
     incubationPeriod: 'ceci est une incubation unitaire',
     transmitting: 'transmission',
-    disease_type_id: 1,
+    disease_type_id: 2,
 }
 
 /*

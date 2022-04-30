@@ -27,7 +27,7 @@ const initSchemaObjects = async () => {
         },
     });
 
-    // Insert a druglevel
+    // Insert a medical_administration
     const medical_administration = await Models.medicalAdministration.create({
         data: {
             name: 'Medical Administration Test',

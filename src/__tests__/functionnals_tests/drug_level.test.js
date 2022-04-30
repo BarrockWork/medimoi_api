@@ -143,7 +143,7 @@ describe("Drug_Level functional testing", () => {
             .expect(200)
             .then(async (response) => {
                 // Check the response (prisma return the deleted object datas
-                expect(response.body.level).toBe(1);
+                expect(response.body.level).toBe(2);
 
                 // Check the data in the database
                 const Drug_level = await Models.DrugLevel.findUnique({

@@ -18,9 +18,9 @@ const drugDefault = {
     nameSlug: createSlug('Drug Unit Test'),
     description: 'ceci est une description unitaire',
     isPrescription: false,
-    drug_level_id: 1,
-    drug_type_id: 2,
-    medical_administration_id: 1,
+    drug_level_id: 3,
+    drug_type_id: 3,
+    medical_administration_id: 12,
 }
 
 /*

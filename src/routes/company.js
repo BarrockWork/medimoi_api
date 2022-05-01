@@ -2,13 +2,13 @@ let express = require('express');
 let router = express.Router();
 
 const {
-    createOne,
-    createMany,
-    findOneByNameSlug,
-    findAll,
-    updateOne,
-    deleteOne
-} = require('./../controllers/CompanyController')
+  createOne,
+  createMany,
+  findOneByNameSlug,
+  getAll,
+  updateOne,
+  deleteOne,
+} = require('./../controllers/CompanyController');
 
 /* DEFINES -------------------------------------------*/
 
@@ -112,7 +112,7 @@ router.post('/news', createMany);
  * @apiSampleRequest http://localhost:4000/api/company/slug/:nameSlug
  * @apiVersion 0.1.0
  */
-router.get('/slug/:nameSlug', findOneByNameSlug);
+router.get('/:nameSlug', findOneByNameSlug);
 
 /**
  * @apiDescription Get all Companies
@@ -132,7 +132,7 @@ router.get('/slug/:nameSlug', findOneByNameSlug);
  * @apiSampleRequest http://localhost:4000/api/company/all/:isActive?
  * @apiVersion 0.1.0
  */
-router.get('/all/:isActive?', findAll);
+router.get('/all', getAll);
 
 /**
  * @apiDescription Update a single Company
@@ -165,7 +165,7 @@ router.get('/all/:isActive?', findAll);
  * @apiSampleRequest http://localhost:4000/api/company/slug/:nameSlug
  * @apiVersion 0.1.0
  */
-router.put('/slug/:nameSlug', updateOne);
+router.put('/:nameSlug', updateOne);
 
 /**
  * @apiDescription Delete a single Company
@@ -183,7 +183,6 @@ router.put('/slug/:nameSlug', updateOne);
  * @apiSampleRequest http://localhost:4000/api/company/slug/:nameSlug
  * @apiVersion 0.1.0
  */
-router.delete('/slug/:nameSlug', deleteOne);
-
+router.delete('/:nameSlug', deleteOne);
 
 module.exports = router;

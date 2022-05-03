@@ -51,7 +51,7 @@ router.get('/all', findAll);
 /**
  * @apiDescription This is how we get all address road type
  * @apiGroup Address Road Type
- * @api {GET} /api/address_road_type/many Get all address_road_type
+ * @api {GET} /api/address_road_type/many Get Many address_road_type
  *
  * @apiUse AddressRoadTypeNotFoundError
  *
@@ -78,8 +78,8 @@ router.get('/:nameSlug', getOneBySlug);
 /**
  * @apiDescription This is how we get a address road type by id
  * @apiGroup Address Road Type
- * @api {GET} /api/address_road_type/:id Get address_road_type by nameSlug
- * @apiName getOneBySlug
+ * @api {GET} /api/address_road_type/:id Get address_road_type by Id
+ * @apiName getOneById
  *
  * @apiParam {String[2..50]} nameSlug address road type slug.
  *
@@ -147,8 +147,8 @@ router.put('/slug/:nameSlug', updateOne);
 /**
  * @apiDescription This is how we update an address road type by slug
  * @apiGroup Address Road Type
- * @api {PUT} /api/address_road_type/:id Update single address_road_type
- * @apiName updateOne
+ * @api {PUT} /api/address_road_type/:id Update single by ID
+ * @apiName updateOneById
  *
  * @apiParam {String[2..50]} nameSlug address road type slug.
 
@@ -204,13 +204,14 @@ router.delete('/slug/:nameSlug', deleteOne);
 /**
  * @apiDescription This is how we delete an address road type by name slug
  * @apiGroup Address Road Type
- * @api {DELETE} /api/address_road_type/:id Delete single address_road_type
- * @apiName deleteOne
+ * @api {DELETE} /api/address_road_type/:id Delete single address_road_type by ID
+ * @apiName deleteOneById
  *
  * @apiParam {Number} id Id
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     'Content-Type': 'application/json'
+ *   }
  *   }
  *
  * @apiParamExample {json} Request-Example

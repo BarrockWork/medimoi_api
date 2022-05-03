@@ -128,8 +128,8 @@ router.post('/news', createMany);
 /**
  * @apiDescription Get many User
  * @api {GET} /api/users/many Get many User
- * @apiName GetManyUser
- * @apiGroup users
+ * @apiName GetManyUsers
+ * @apiGroup User
  *
  * @apiParam {Boolean} [isActive=none]
  *
@@ -162,7 +162,7 @@ router.get('/all', getAllUsers);
 /**
  * @apiDescription This is how we get a user by email
  * @apiGroup User
- * @api {GET} /api/users/:email Get user by Id
+ * @api {GET} /api/users/:email Get user by Email
  * @apiName getUserByEmail
  *
  * @apiUse UserNotFoundError
@@ -176,7 +176,7 @@ router.get('/:email', getUserByEmail);
  * @apiDescription This is how we get a user by id
  * @apiGroup User
  * @api {GET} /api/users/:id Get user by Id
- * @apiName getUserByEmail
+ * @apiName getUserById
  *
  * @apiUse UserNotFoundError
  *
@@ -187,7 +187,7 @@ router.get('/:id', getUserById);
 /**
  * @apiDescription This is how we update a user by ID
  * @apiGroup User
- * @api {PUT} /api/user/:email Update user
+ * @api {PUT} /api/user/:email Update user by Email
  * @apiName updateUserByEmail
  *
  *
@@ -225,8 +225,8 @@ router.put('/:email', updateUserByEmail);
 /**
  * @apiDescription This is how we update a user by ID
  * @apiGroup User
- * @api {PUT} /api/user/:id Update user
- * @apiName updateUserByEmail
+ * @api {PUT} /api/user/:id Update user By Id
+ * @apiName updateUserById
  *
  *
  * @apiBody {String[2..50]} [firstName] user's firstName.
@@ -262,7 +262,7 @@ router.put('/:id', updateUserById);
 /**
  * @apiDescription This is how we delete a user by ID
  * @apiGroup User
- * @api {DELETE} /api/user/:email Delete a user
+ * @api {DELETE} /api/user/:email Delete a user by Email
  * @apiName deleteUser
  *
  * @apiBody {String[2..50]}  Email User email.
@@ -290,8 +290,8 @@ router.delete('/:email', deleteUser);
 /**
  * @apiDescription This is how we delete a user by ID
  * @apiGroup User
- * @api {DELETE} /api/user/:id   Delete a user
- * @apiName deleteUser
+ * @api {DELETE} /api/user/:id   Delete a user by ID
+ * @apiName deleteUserById
  *
  * @apiBody {String[2..50]}  Email User email.
  *

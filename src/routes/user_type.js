@@ -56,7 +56,7 @@ router.get('/all', findAll);
  * @apiDescription Get many user type
  * @apiGroup UserType
  * @api {GET} /api/user_type/many Get many user_type
- * @apiName getAllUsertType
+ * @apiName getManyUserType
  *
  * @apiUse UserTypeNotFoundError
  *
@@ -94,8 +94,8 @@ router.get('/:nameSlug', getOneBySlug);
 /**
  * @apiDescription Get a single user Type by name slug
  * @apiGroup UserType
- * @api {GET} /api/user_type/:nameSlug Get user_type by nameSlug
- * @apiName getOneBySlug
+ * @api {GET} /api/user_type/:nameSlug Get user_type by id
+ * @apiName getOneById
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -208,8 +208,8 @@ router.put('/:nameSlug/edit', updateOne);
 /**
  * @apiDescription Update a user by ID
  * @apiGroup UserType
- * @api {PUT} /api/user_type/:id Update user type
- * @apiName updateOne
+ * @api {PUT} /api/user_type/:id Update user type by ID
+ * @apiName updateOneById
  *
  * @apiBody {String[2..50]} name user type name.
  *
@@ -262,8 +262,8 @@ router.delete('/:nameSlug/delete', deleteOne);
 /**
  * @apiDescription Delete a user type by name slug
  * @apiGroup UserType
- * @api {DELETE} /api/user_type/:id Delete a user type
- * @apiName deleteOne
+ * @api {DELETE} /api/user_type/:id Delete a user type by ID
+ * @apiName deleteOneById
  *
  * @apiHeaderExample {json} Header-Example:
  *   {

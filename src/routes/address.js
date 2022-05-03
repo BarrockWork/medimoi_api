@@ -88,8 +88,8 @@ router.get('/all', getAll);
 /**
  * @apiDescription This is how we get many the Addresses
  * @apiGroup Address
- * @api {GET} /api/address/many Get all Address
- * @apiName getAll
+ * @api {GET} /api/address/many Get Many Address
+ * @apiName getMany
  *
  * @apiSampleRequest http://localhost:4000/api/address/many
  *
@@ -118,8 +118,8 @@ router.get('/:id', getOneById);
 /**
  * @apiDescription This is how we update a address by ID
  * @apiGroup Address
- * @api {PUT} /api/address/:id Update single address
- * @apiName updateOne
+ * @api {PUT} /api/address/:id Update single address by Id
+ * @apiName updateOneById
  *
  *
  * @apiUse AddressParams
@@ -156,8 +156,8 @@ router.put('/:id', updateOne);
 /**
  * @apiDescription This is how we delete an Address by ID
  * @apiGroup Address
- * @api {DELETE} /api/address/:id Delete an Address
- * @apiName deleteOne
+ * @api {DELETE} /api/address/:id Delete an Address by Id
+ * @apiName deleteOneById
  *
  * @apiHeaderExample {json} Header-Example:
  *   {

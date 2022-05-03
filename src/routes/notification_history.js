@@ -36,8 +36,8 @@ router.get('/all', getAll);
 /**
  * @apiDescription This is how we get all Notification history
  * @apiGroup Notification History
- * @api {GET} /api/notification_history/many Get all Notification history
- * @apiName getAll
+ * @api {GET} /api/notification_history/many Get Many Notification history
+ * @apiName getMany
  *
  * @apiUse NotificationHistoryNotFoundError
  *

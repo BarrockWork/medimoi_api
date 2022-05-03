@@ -35,8 +35,8 @@ router.get('/all', getAll);
 /**
  * @apiDescription  Get all user notification type
  * @apiGroup User Notification Type
- * @api {GET} /api/user_notification_type/many Get all user_notification_type
- * @apiName getAll
+ * @api {GET} /api/user_notification_type/many Get many user_notification_type
+ * @apiName getMany
  *
  * @apiUse UserNotificationTypeNotFoundError
  *
@@ -48,7 +48,7 @@ router.get('/many', findMany);
 /**
  * @apiDescription  Get a single user notification type by identifier
  * @apiGroup User Notification Type
- * @api {GET} /api/user_notification_type/:id Get single user_notification_type by nameSlug
+ * @api {GET} /api/user_notification_type/:id Get single user_notification_type by id
  * @apiName getOneById
  *
  * @apiHeaderExample {json} Header-Example:

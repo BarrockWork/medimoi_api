@@ -4,6 +4,7 @@ const {
   createSlug,
   extractFieldsToChange,
   verifySlugInDb,
+  extractQueryParameters,
 } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
 
@@ -89,11 +90,14 @@ const findOneByNameSlug = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const configClient = extractQueryParameters(req.query, [
-      'sort',
-      'range',
-      'filter',
-    ]);
+    let configClient = extractQueryParameters(req.query, []);
+
+    // configClient.include = {
+    //   orderBy: {
+    //     nameSlug: 'asc',
+    //   },
+    // };
+
     const companies = await Models.Company.findMany(configClient);
     const totalCount = await Models.Company.count();
 
@@ -106,6 +110,7 @@ const getAll = async (req, res) => {
     res.set('Content-Range', totalCount);
     res.status(200).json(companies);
   } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 };

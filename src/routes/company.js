@@ -34,7 +34,25 @@ const {
  */
 
 /* ROUTES --------------------------------------------*/
-
+/**
+ * @apiDescription Get all Companies
+ * @api {GET} /api/company/all/:isActive? Get all Company
+ * @apiName GetAllCompany
+ * @apiGroup Company
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse CompanyNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/company/all
+ * @apiVersion 0.1.0
+ */
+router.get('/all', getAll);
 /**
  * @apiDescription Insert single Company
  * @api {POST} /api/company/new Create single Company
@@ -114,26 +132,6 @@ router.post('/news', createMany);
  * @apiVersion 0.1.0
  */
 router.get('/:nameSlug', findOneByNameSlug);
-
-/**
- * @apiDescription Get all Companies
- * @api {GET} /api/company/all/:isActive? Get all Company
- * @apiName GetAllCompany
- * @apiGroup Company
- *
- * @apiParam {Boolean} [isActive=none]
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- *
- * @apiUse CompanyNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/company/all
- * @apiVersion 0.1.0
- */
-router.get('/all', getAll);
 
 /**
  * @apiDescription Get all Companies with some ressources

@@ -69,13 +69,30 @@ const createManyDrug = async (req, res) => {
     }
 }
 
-const getAllDrug = async (req, res) => {
+const findAll = async (req, res) => {
     try {
-        const drug = await Models.drug.findMany()
+        const configClient = extractFieldsToChange(req.query, ['sort', 'range', 'filter']);
+        const drugs = await Models.drug.findMany(configClient)
+        const totalCount = await Models.drug.count();
+        
         await Models.$disconnect();
-        res.status(200).json(drug)
+        res.header('Access-Control-Expose-Headers', 'Content-Range');
+        res.set('Content-Range', totalCount)
+        res.status(200).json(drugs);
     } catch (error) {
-        return res.status(400).json(req)
+        return res.status(400).json(error)
+    }
+}
+
+const findMany = async (req, res) => {
+    try{
+        const configClient = extractFieldsToChange(req.query, ['filterMany']);
+        const drugs = await Models.drug.findMany(configClient)
+        await Models.$disconnect();
+
+        res.status(200).json(drugs);
+    } catch (error) {
+        return res.status(400).json(error)
     }
 }
 
@@ -106,11 +123,60 @@ const updateBySlug = async (req, res) => {
     }
 }
 
+const updateById = async (req, res) => {
+    try {
+        // Selection of fields
+        const onlyThoseFields = ['name', 'description', 'isPrescription', 'isActive', 'drug_level_id', 'drug_type_id', 'medical_administration_id'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+        // // Update the current entry
+        // const drug = await Models.drug.update({
+        //     where: {
+        //         id: parseInt(req.params.id),
+        //     },
+        //     data: fieldsFiltered,
+        // })
+        const configRequestDB = await verifySlugInDb(Models,
+            "Drug",
+            req.params.id,
+            createSlug(req.body.name),
+            fieldsFiltered);
+
+        // Update the current entry
+        const drug = await Models.drug.update(configRequestDB);
+        await Models.$disconnect();
+
+        res.status(200).json(drug);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
 const findBySlug = async (req, res) => {
     try {
         const drug = await Models.drug.findUnique({
             where: {
                 nameSlug: req.params.nameSlug,
+            },
+        })
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        res.status(200).json(drug)
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+}
+
+// find by id
+const findById = async (req, res) => {
+    console.log(req.params.id)
+    try {
+        const drug = await Models.drug.findUnique({
+            where: {
+                id: parseInt(req.params.id),
             },
         })
 
@@ -142,11 +208,34 @@ const deleteBySlug = async (req, res) => {
     }
 }
 
+// delete by id
+const deleteById = async (req, res) => {
+    try {
+        const deleteDrug = await Models.drug.delete({
+            where: {
+                id: parseInt(req.params.id),
+            },
+        })
+
+        // The prisma client can run only 10 instances simultaneously,
+        // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        res.status(200).json(deleteDrug)
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+}
+
 module.exports = {
     createDrug,
     createManyDrug,
     deleteBySlug,
-    getAllDrug,
+    findAll,
+    findMany,
     findBySlug,
-    updateBySlug
+    updateBySlug,
+    findById,
+    deleteById,
+    updateById,
 }

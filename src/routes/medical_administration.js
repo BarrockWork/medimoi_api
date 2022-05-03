@@ -1,14 +1,18 @@
 var express = require('express');
 var router = express.Router();
 
-// en attendant le controller
+// import route functions from controller
 const { 
     createOne,
     createMany,
-    updateOne,
-    deleteOne,
+    updateOneByNameSlug,
+    updateOneById,
+    deleteOneByNameSlug,
+    deleteOneById,
     findAll,
-    findOne
+    findOne,
+    findMany,
+    findOneById
 } = require("../controllers/MedicalAdministrationController");
 
 /** DEFINES ------------------------------------------------- */
@@ -109,10 +113,29 @@ router.post("/news", createMany);
 */
 router.get("/slug/:nameSlug", findOne);
 
+/**
+ * @apiDescription Get many MedicalAdministration
+ * @api {GET} /api/medical_administrations/many Get many MedicalAdministration
+ * @apiName GetManyMedicalAdministration
+ * @apiGroup MedicalAdministration
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse MedicalAdministrationNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/medical_administrations/many
+ * @apiVersion 0.1.0
+ */
+router.get("/many", findMany);
 
 /**
  * @apiDescription Get all MedicalAdministration
- * @api {GET} /api/medical_administrations/all/:isActive? Get all MedicalAdministration
+ * @api {GET} /api/medical_administrations/all Get all MedicalAdministration
  * @apiName GetAllMedicalAdministration
  * @apiGroup MedicalAdministration
  *
@@ -125,11 +148,29 @@ router.get("/slug/:nameSlug", findOne);
  *
  * @apiUse MedicalAdministrationNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/medical_administrations/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/medical_administrations/all
  * @apiVersion 0.1.0
  */
-router.get("/all/:isActive?", findAll);
+router.get("/all", findAll);
 
+/**
+ * @apiDescription Get a MedicalAdministration by id
+ * @api {GET} /api/medical_administrations/:id Get Contact by id
+ * @apiName GetByIdMedicalAdministration
+ * @apiGroup MedicalAdministration
+ *
+ * @apiParam {Number} id Id
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse ContactNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/medical_administrations/:id
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', findOneById);
 
 /**
  * @apiDescription Update a single MedicalAdministration
@@ -156,7 +197,34 @@ router.get("/all/:isActive?", findAll);
  * @apiSampleRequest http://localhost:4000/api/medical_administrations/slug/:nameSlug
  * @apiVersion 0.1.0
  */
-router.put("/slug/:nameSlug", updateOne);
+router.put("/slug/:nameSlug", updateOneByNameSlug);
+
+/**
+ * @apiDescription Update MedicalAdministration by id
+ * @api {PUT} /api/medical_administrations/:id Update single MedicalAdministration
+ * @apiName UpdateByIdMedicalAdministration
+ * @apiGroup MedicalAdministration
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiBody {String[2..50]} [name="New name"] Name (50).
+ * @apiBody {Boolean} [isActive=true] Is active.
+ * @apiParam {Number} id Id
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     "name":       "New Name",
+ *     "isActive":   false
+ *  }
+ *
+ * @apiUse MedicalAdministrationNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/medical_administrations/:id
+ * @apiVersion 0.1.0
+ */
+router.put("/:id", updateOneById);
 
 /**
  * @apiDescription Delete a single MedicalAdministrations
@@ -174,6 +242,24 @@ router.put("/slug/:nameSlug", updateOne);
  * @apiSampleRequest http://localhost:4000/api/medical_administrations/slug/:nameSlug
  * @apiVersion 0.1.0
  */
- router.delete("/slug/:nameSlug", deleteOne);
+ router.delete("/slug/:nameSlug", deleteOneByNameSlug);
+
+/**
+ * @apiDescription Delete a MedicalAdministration by id
+ * @api {DELETE} /api/medical_administrations/:id Delete single MedicalAdministration
+ * @apiName DeleteByIdMedicalAdministration
+ * @apiGroup MedicalAdministration
+ * @apiParam {Number} id Id
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse MedicalAdministrationNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/medical_administrations/:id
+ * @apiVersion 0.1.0
+ */
+router.delete("/:id", deleteOneById);
 
 module.exports = router;

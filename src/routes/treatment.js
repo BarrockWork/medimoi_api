@@ -3,7 +3,13 @@ const router = express.Router();
 
 // import route functions from controller
 const {
-    createOne, createMany, getTreatmentById, getAllTreatments, getTreatmentByStatus, updateTreatment, deleteTreatment
+    createOne,
+    createMany,
+    getTreatmentById,
+    getAllTreatments,
+    updateTreatment,
+    deleteTreatment,
+    findMany
 } = require('../controllers/TeatmentController');
 
 /** DEFINES ------------------------------------------------- */
@@ -90,11 +96,31 @@ router.post("/new", createOne);
  * @apiSampleRequest http://localhost:4000/api/treatments/news
  * @apiVersion 0.1.0
  */
-router.post("/news", createMany); // create Many
+router.post("/news", createMany);
+
+/**
+ * @apiDescription Get many Treatment
+ * @api {GET} /api/treatments/many Get many Treatment
+ * @apiName GetManyTreatment
+ * @apiGroup Treatment
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse TreatmentNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/treatments/many
+ * @apiVersion 0.1.0
+ */
+router.get("/many", findMany);
 
 /**
  * @apiDescription Get all Treatments
- * @api {POST} /api/treatments/all/:isActive? Get All treatments
+ * @api {POST} /api/treatments/all Get All treatments
  * @apiName GetAllTreatment
  * @apiGroup Treatment
  * 
@@ -123,12 +149,10 @@ router.get("/all", getAllTreatments);
  *   }
  * 
  * 
- * @apiSampleRequest http://localhost:4000/api/treatments/3
+ * @apiSampleRequest http://localhost:4000/api/treatments/:id
  * @apiVersion 0.1.0
  */
 router.get("/:id", getTreatmentById);
-
-
 
 
 /**

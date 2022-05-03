@@ -4,10 +4,14 @@ var router = express.Router();
 const {
   createOne,
   createMany,
-  getAllUserType,
+  findAll,
   getOneBySlug,
+  getOneById,
   updateOne,
+  updateOneById,
   deleteOne,
+  deleteOneById,
+  findMany,
 } = require('./../controllers/UserTypeController');
 
 /**
@@ -31,14 +35,35 @@ const {
 /**
  * @apiDescription Get a user type
  * @apiGroup UserType
- * @api {GET} /api/user_type/ Get all user_type
+ * @api {GET} /api/user_type/all Get all user_type
  * @apiName getAllUsertType
  *
  * @apiUse UserTypeNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAllUserType);
+router.get('/all', findAll);
+
+
+/**
+ * Define parameters for the POST and PUT requests
+ *
+ * @apiDefine UserTypePOSTParam
+ * @apiBody {String[2..50]} name Name.
+ */
+
+/**
+ * @apiDescription Get many user type
+ * @apiGroup UserType
+ * @api {GET} /api/user_type/many Get many user_type
+ * @apiName getAllUsertType
+ *
+ * @apiUse UserTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_type/many
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
 
 /**
  * @apiDescription Get a single user Type by name slug
@@ -65,6 +90,32 @@ router.get('/', getAllUserType);
  * @apiVersion 0.1.0
  */
 router.get('/:nameSlug', getOneBySlug);
+
+/**
+ * @apiDescription Get a single user Type by name slug
+ * @apiGroup UserType
+ * @api {GET} /api/user_type/:nameSlug Get user_type by nameSlug
+ * @apiName getOneBySlug
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     nameSlug:           "test-slug"
+ *  }
+ *
+ * @apiParam {String[2..50]} nameSlug User type nameSlug
+ *
+ * @apiUse UserTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_type/:nameSlug
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', getOneById);
 
 /**
  * @apiDescription Insert a single user type
@@ -153,6 +204,35 @@ router.post('/news', createMany);
  */
 router.put('/:nameSlug/edit', updateOne);
 
+
+/**
+ * @apiDescription Update a user by ID
+ * @apiGroup UserType
+ * @api {PUT} /api/user_type/:id Update user type
+ * @apiName updateOne
+ *
+ * @apiBody {String[2..50]} name user type name.
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     name:       "update-new-type",
+ *  }
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_type/:id
+ *
+ * @apiUse UserTypeNotFoundError
+ *
+ * @apiParam {String[2..50]} nameSlug User type name slug
+ *
+ * @apiVersion 0.1.0
+ */
+router.put('/:id', updateOneById);
+
 /**
  * @apiDescription Delete a user type by name slug
  * @apiGroup UserType
@@ -177,5 +257,31 @@ router.put('/:nameSlug/edit', updateOne);
  * @apiVersion 0.1.0
  */
 router.delete('/:nameSlug/delete', deleteOne);
+
+
+/**
+ * @apiDescription Delete a user type by name slug
+ * @apiGroup UserType
+ * @api {DELETE} /api/user_type/:id Delete a user type
+ * @apiName deleteOne
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     email:       "jdoe@medimoi.com",
+ *  }
+ * @apiSampleRequest http://localhost:4000/api/user_type/:id
+ *
+ * @apiParam {String[2..50]} nameSlug User type name slug
+ *
+ * @apiUse UserTypeNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.delete('/:id', deleteOneById);
 
 module.exports = router;

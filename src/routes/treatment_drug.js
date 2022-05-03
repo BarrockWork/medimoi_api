@@ -2,7 +2,15 @@ const express = require('express');
 const router = express.Router();
 
 // import route functions from controller
-const { createTreatmentDrug, createMany, getTreatmentDrugById, findAll, updateTreatmentDrug, deleteTreatmentDrug } = require('../controllers/TreatmentDrugController');
+const {
+ createTreatmentDrug,
+ createMany,
+ getTreatmentDrugById,
+ findAll,
+ updateTreatmentDrug,
+ deleteTreatmentDrug,
+ findMany
+} = require('../controllers/TreatmentDrugController');
 
 /** DEFINES ------------------------------------------------- */
 
@@ -85,12 +93,30 @@ router.post("/new", createTreatmentDrug);
  */
  router.post("/news", createMany);
 
+/**
+ * @apiDescription Get many TreatmentDrug
+ * @api {GET} /api/treatment_drugs/many Get many TreatmentDrug
+ * @apiName GetManyTreatmentDrug
+ * @apiGroup TreatmentDrug
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse TreatmentDrugNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/treatment_drugs/many
+ * @apiVersion 0.1.0
+ */
+router.get("/many", findMany);
 
- 
  /**
  * @apiDescription Get All treatment drugs
  * @apiGroup TreatmentDrug
- * @api {GET} /api/treatment_drugs/all/:isActive? Get all treatment drug
+ * @api {GET} /api/treatment_drugs/all Get all treatment drug
  * @apiName GetAllTreatmentDrug
  * 
  * @apiHeaderExample {json} Header-Example:
@@ -98,11 +124,21 @@ router.post("/new", createTreatmentDrug);
  *     'Content-Type': 'application/json'
  *   }
  * 
- * @apiSampleRequest http://localhost:4000/api/treatment_drugs/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/treatment_drugs/all
  * @apiVersion 0.1.0
   */
- router.get("/all/:isActive?", findAll);
- 
+ router.get("/all", findAll);
+
+/**
+ * @apiDescription Get single treatment drug
+ * @api {GET} /api/treatment_drugs/:id Get treatment drug by Id
+ * @apiName GetTreatmentDrugById
+ * @apiGroup TreatmentDrug
+ *
+ *
+ * @apiVersion 0.1.0
+ */
+router.get("/:id", getTreatmentDrugById);
  
  /**
   * @apiGroup TreatmentDrug
@@ -122,7 +158,8 @@ router.post("/new", createTreatmentDrug);
   *     "comments":         "Some comment",
   *     "isActive":         false
   *  }
-  * 
+  *
+  * @apiSampleRequest http://localhost:4000/api/treatment_drugs/:id
   * @apiVersion 0.1.0
   */
  router.put("/:id", updateTreatmentDrug);
@@ -134,21 +171,10 @@ router.post("/new", createTreatmentDrug);
   * @api {DELETE} /api/treatment_drugs/:id Delete treatment drug
   * @apiName DeleteTreatmentDrug
   * 
-  * @apiSampleRequest http://localhost:4000/api/treatment_drugs/2
+  * @apiSampleRequest http://localhost:4000/api/treatment_drugs/:id
   * 
  * @apiVersion 0.1.0
   */
  router.delete("/:id", deleteTreatmentDrug);
- 
- /**
-  * @apiDescription Get single treatment drug
-  * @api {GET} /api/treatment_drugs/:id Get treatment drug by Id
-  * @apiName GetTreatmentDrugById
-  * @apiGroup TreatmentDrug
-  * 
-  * 
-  * @apiVersion 0.1.0
-  */
- router.get("/:id", getTreatmentDrugById);
 
  module.exports = router;

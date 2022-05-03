@@ -5,8 +5,11 @@ const {
   createMany,
   getAllUsers,
   getUserByEmail,
+  getUserById,
   updateUserByEmail,
+  updateUserById,
   deleteUser,
+  deleteUserById,
   findMany
 } = require('./../controllers/UserController');
 
@@ -168,10 +171,23 @@ router.get('/all', getAllUsers);
  */
 router.get('/:email', getUserByEmail);
 
+
+/**
+ * @apiDescription This is how we get a user by id
+ * @apiGroup User
+ * @api {GET} /api/users/:id Get user by Id
+ * @apiName getUserByEmail
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', getUserById);
+
 /**
  * @apiDescription This is how we update a user by ID
  * @apiGroup User
- * @api {PUT} /api/user/:id/edit Update user
+ * @api {PUT} /api/user/:email Update user
  * @apiName updateUserByEmail
  *
  *
@@ -195,7 +211,7 @@ router.get('/:email', getUserByEmail);
  *     firstName:       "brian",
  *  }
  *
- * @apiSampleRequest http://localhost:4000/api/users/:email/edit
+ * @apiSampleRequest http://localhost:4000/api/users/:email
  *
  * @apiUse UserNotFoundError
  *
@@ -203,12 +219,50 @@ router.get('/:email', getUserByEmail);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:email/edit', updateUserByEmail);
+router.put('/:email', updateUserByEmail);
+
+
+/**
+ * @apiDescription This is how we update a user by ID
+ * @apiGroup User
+ * @api {PUT} /api/user/:id Update user
+ * @apiName updateUserByEmail
+ *
+ *
+ * @apiBody {String[2..50]} [firstName] user's firstName.
+ * @apiBody {String[2..50]} [lastName] user's lastName.
+ * @apiBody {Int} [age] user's age.
+ * @apiBody {String[2..50]} [email] user's email
+ * @apiBody {String[2..255]} [password] user's  plain password.
+ * @apiBody {String[2..50]}  [cellphone] user's  cellphone.
+ * @apiBody {String[2..50]} [homephone] user's  homephone.
+ * @apiBody {String[2..50]} [workphone] user's workphone.
+ * @apiBody {String[2..50]} [isActive=true] User state
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     firstName:       "brian",
+ *  }
+ *
+ * @apiSampleRequest http://localhost:4000/api/users/:id
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiParam {String[2..50]} email User Email
+ *
+ * @apiVersion 0.1.0
+ */
+router.put('/:id', updateUserById);
 
 /**
  * @apiDescription This is how we delete a user by ID
  * @apiGroup User
- * @api {DELETE} /api/user/:id/delete Delete a user
+ * @api {DELETE} /api/user/:email Delete a user
  * @apiName deleteUser
  *
  * @apiBody {String[2..50]}  Email User email.
@@ -222,7 +276,7 @@ router.put('/:email/edit', updateUserByEmail);
  *  {
  *     email:       "jdoe@medimoi.com",
  *  }
- * @apiSampleRequest http://localhost:4000/api/users/:email/delete
+ * @apiSampleRequest http://localhost:4000/api/users/:email
  *
  * @apiParam {String[50]} email User Email
  *
@@ -230,6 +284,34 @@ router.put('/:email/edit', updateUserByEmail);
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:email/delete', deleteUser);
+router.delete('/:email', deleteUser);
+
+
+/**
+ * @apiDescription This is how we delete a user by ID
+ * @apiGroup User
+ * @api {DELETE} /api/user/:id   Delete a user
+ * @apiName deleteUser
+ *
+ * @apiBody {String[2..50]}  Email User email.
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     email:       "jdoe@medimoi.com",
+ *  }
+ * @apiSampleRequest http://localhost:4000/api/users/:id
+ *
+ * @apiParam {String[50]} email User Email
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.delete('/:id', deleteUserById);
 
 module.exports = router;

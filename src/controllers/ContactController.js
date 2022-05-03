@@ -135,7 +135,6 @@ const findByUserId = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  console.log('findAll');
   try {
     let configClient = extractQueryParameters(req.query, []);
 

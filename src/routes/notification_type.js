@@ -6,6 +6,7 @@ const {
   createMany,
   findOneByNameSlug,
   getAll,
+  getMany,
   updateOne,
   deleteOne,
 } = require('./../controllers/NotificationTypeController');

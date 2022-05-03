@@ -2,11 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 const {
-  createOne,
-  getAll,
-  getOneById,
-  updateOne,
-  deleteOne,
+    createOne,
+    getAll,
+    getOneById,
+    updateOne,
+    deleteOne,
+    findMany,
 } = require('./../controllers/AddressController');
 
 /**
@@ -72,16 +73,31 @@ router.post('/new', createOne);
 /**
  * @apiDescription This is how we get all the Addresses
  * @apiGroup Address
- * @api {GET} /api/address Get all Address
+ * @api {GET} /api/address/all Get all Address
  * @apiName getAll
  *
- * @apiSampleRequest http://localhost:4000/api/address/
+ * @apiSampleRequest http://localhost:4000/api/address/all
  *
  * @apiUse AddressNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAll);
+router.get('/all', getAll);
+
+
+/**
+ * @apiDescription This is how we get many the Addresses
+ * @apiGroup Address
+ * @api {GET} /api/address/many Get all Address
+ * @apiName getAll
+ *
+ * @apiSampleRequest http://localhost:4000/api/address/many
+ *
+ * @apiUse AddressNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
 
 /**
  * @apiDescription This is how we get a address by ID
@@ -102,7 +118,7 @@ router.get('/:id', getOneById);
 /**
  * @apiDescription This is how we update a address by ID
  * @apiGroup Address
- * @api {PUT} /api/address/:id/edit Update single address
+ * @api {PUT} /api/address/:id Update single address
  * @apiName updateOne
  *
  *
@@ -127,7 +143,7 @@ router.get('/:id', getOneById);
  *   "address_road_type_id": 2
  * }
  *
- * @apiSampleRequest http://localhost:4000/api/address/:id/edit
+ * @apiSampleRequest http://localhost:4000/api/address/:id
  *
  * @apiUse AddressNotFoundError
  *
@@ -135,12 +151,12 @@ router.get('/:id', getOneById);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:id/edit', updateOne);
+router.put('/:id', updateOne);
 
 /**
  * @apiDescription This is how we delete an Address by ID
  * @apiGroup Address
- * @api {DELETE} /api/address/:id/delete Delete an Address
+ * @api {DELETE} /api/address/:id Delete an Address
  * @apiName deleteOne
  *
  * @apiHeaderExample {json} Header-Example:
@@ -153,7 +169,7 @@ router.put('/:id/edit', updateOne);
  *     id:       1,
  *  }
  *
- * @apiSampleRequest http://localhost:4000/api/address/:id/delete
+ * @apiSampleRequest http://localhost:4000/api/address/:id
  *
  * @apiParam {Int} id Address ID
  *
@@ -161,6 +177,6 @@ router.put('/:id/edit', updateOne);
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:id/delete', deleteOne);
+router.delete('/:id', deleteOne);
 
 module.exports = router;

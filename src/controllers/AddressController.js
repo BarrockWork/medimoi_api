@@ -6,6 +6,7 @@ const {
   transformIntValue,
   extractFieldsToChange,
 } = require('./../utils/requestHandler');
+const {extractQueryParameters} = require("../utils/requestHandler");
 
 // create a user type
 const createOne = async (req, res) => {
@@ -73,6 +74,18 @@ const getOneById = async (req, res) => {
     return res.status(400).json(error);
   }
 };
+
+const findMany = async (req, res) => {
+  try {
+    const configClient = extractQueryParameters(req.query, ['filterMany'])
+    const Address = await Models.Address.findMany(configClient)
+    await Models.$disconnect();
+
+    res.status(200).json(Address);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+}
 
 // get all user type
 const getAll = async (req, res) => {
@@ -161,4 +174,5 @@ module.exports = {
   getOneById,
   updateOne,
   deleteOne,
+  findMany,
 };

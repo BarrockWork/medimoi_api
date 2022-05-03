@@ -98,7 +98,7 @@ router.post('/news', createMany);
 
 /**
  * @apiDescription Get a Company by the nameSlug
- * @api {GET} /api/company/slug/:nameSlug Get Company by nameSlug
+ * @api {GET} /api/company/:nameSlug Get Company by nameSlug
  * @apiName GetByNameSlugCompany
  * @apiGroup Company
  *
@@ -110,7 +110,7 @@ router.post('/news', createMany);
  *   }
  * @apiUse CompanyNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/company/slug/:nameSlug
+ * @apiSampleRequest http://localhost:4000/api/company/:nameSlug
  * @apiVersion 0.1.0
  */
 router.get('/:nameSlug', findOneByNameSlug);
@@ -130,16 +130,34 @@ router.get('/:nameSlug', findOneByNameSlug);
  *
  * @apiUse CompanyNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/company/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/company/all
  * @apiVersion 0.1.0
  */
 router.get('/all', getAll);
 
+/**
+ * @apiDescription Get all Companies with some ressources
+ * @api {GET} /api/company/many Get all Company
+ * @apiName GetAllCompany
+ * @apiGroup Company
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse CompanyNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/company/many
+ * @apiVersion 0.1.0
+ */
 router.get('/many', getMany);
 
 /**
  * @apiDescription Update a single Company
- * @api {PUT} /api/company/slug/:nameSLug Update single Company
+ * @api {PUT} /api/company/:nameSLug Update single Company
  * @apiName UpdateSingleCompany
  * @apiGroup Company
  *
@@ -165,14 +183,14 @@ router.get('/many', getMany);
  *
  * @apiUse CompanyNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/company/slug/:nameSlug
+ * @apiSampleRequest http://localhost:4000/api/company/:nameSlug
  * @apiVersion 0.1.0
  */
 router.put('/:nameSlug', updateOne);
 
 /**
  * @apiDescription Delete a single Company
- * @api {DELETE} /api/company/slug/:nameSLug Delete single Company
+ * @api {DELETE} /api/company/:nameSLug Delete single Company
  * @apiName DeleteSingleCompany
  * @apiGroup Company
  * @apiParam {String[2..50]} nameSlug Name slug
@@ -183,7 +201,7 @@ router.put('/:nameSlug', updateOne);
  *
  * @apiUse CompanyNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/company/slug/:nameSlug
+ * @apiSampleRequest http://localhost:4000/api/company/:nameSlug
  * @apiVersion 0.1.0
  */
 router.delete('/:nameSlug', deleteOne);

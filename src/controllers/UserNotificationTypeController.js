@@ -1,5 +1,6 @@
 const Models = require('./../models');
 const { checkRequiredFields } = require('./../utils/requestHandler');
+const {extractQueryParameters} = require("../utils/requestHandler");
 
 // create a user notification type
 const createOne = async (req, res) => {
@@ -70,6 +71,18 @@ const getAll = async (req, res) => {
   }
 };
 
+const findMany = async (req, res) => {
+  try {
+    const configClient = extractQueryParameters(req.query, ['filterMany'])
+    const UserNotification = await Models.UserNotificationType.findMany(configClient)
+    await Models.$disconnect();
+
+    res.status(200).json(UserNotification);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+}
+
 const updateOne = async (req, res) => {
   try {
     // Request Select
@@ -126,4 +139,5 @@ module.exports = {
   getOneById,
   updateOne,
   deleteOne,
+  findMany,
 };

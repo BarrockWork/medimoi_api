@@ -7,7 +7,8 @@ const {
   getOneById,
   updateOne,
   deleteOne,
-} = require('./../controllers/UserNotificationType');
+  findMany,
+} = require('../controllers/UserNotificationTypeController');
 /**
  * Define a global user notification type not found
  * @apiDefine UserNotificationTypeNotFoundError
@@ -22,14 +23,27 @@ const {
 /**
  * @apiDescription  Get all user notification type
  * @apiGroup User Notification Type
- * @api {GET} /api/user_notification_type/ Get all user_notification_type
+ * @api {GET} /api/user_notification_type/all Get all user_notification_type
  * @apiName getAll
  *
  * @apiUse UserNotificationTypeNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAll);
+router.get('/all', getAll);
+
+/**
+ * @apiDescription  Get all user notification type
+ * @apiGroup User Notification Type
+ * @api {GET} /api/user_notification_type/many Get all user_notification_type
+ * @apiName getAll
+ *
+ * @apiUse UserNotificationTypeNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
+
 
 /**
  * @apiDescription  Get a single user notification type by identifier
@@ -88,7 +102,7 @@ router.post('/new', createOne);
 /**
  * @apiDescription  Update a user notification type by ID
  * @apiGroup User Notification Type
- * @api {PUT} /api/user_notification_type/:id/edit Update single user_notification_type
+ * @api {PUT} /api/user_notification_type/:id Update single user_notification_type
  * @apiName updateOne
  *
  * @apiParam {id} id user notification type identifier
@@ -107,18 +121,18 @@ router.post('/new', createOne);
  *      "notification_type_id":1,
  *  }
  *
- * @apiSampleRequest http://localhost:4000/api/user_notification_type/:id/edit
+ * @apiSampleRequest http://localhost:4000/api/user_notification_type/:id
  *
  * @apiUse UserNotificationTypeNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.put('/:id/edit', updateOne);
+router.put('/:id', updateOne);
 
 /**
  * @apiDescription  Delete a user notification type by identifier
  * @apiGroup User Notification Type
- * @api {DELETE} /api/user_notification_type/:id/delete Delete a user_notification_type
+ * @api {DELETE} /api/user_notification_type/:id Delete a user_notification_type
  * @apiName deleteOne
  *
  * @apiParam {Int} id user notification type identifier
@@ -132,12 +146,12 @@ router.put('/:id/edit', updateOne);
  *  {
  *     email:       "jdoe@medimoi.com",
  *  }
- * @apiSampleRequest http://localhost:4000/api/user_notification_type/:id/delete
+ * @apiSampleRequest http://localhost:4000/api/user_notification_type/:id
  *
  * @apiUse UserNotificationTypeNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:id/delete', deleteOne);
+router.delete('/:id', deleteOne);
 
 module.exports = router;

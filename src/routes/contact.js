@@ -2,14 +2,15 @@ let express = require('express');
 let router = express.Router();
 
 const {
-    createOne,
-    createMany,
-    findOneById,
-    findAll,
-    findByUserId,
-    updateOne,
-    deleteOne
-} = require('./../controllers/ContactController')
+  createOne,
+  createMany,
+  findOneById,
+  getAll,
+  getMany,
+  findByUserId,
+  updateOne,
+  deleteOne,
+} = require('./../controllers/ContactController');
 
 /* DEFINES -------------------------------------------*/
 
@@ -123,7 +124,7 @@ router.post('/news', createMany);
  * @apiSampleRequest http://localhost:4000/api/contact/user/:id
  * @apiVersion 0.1.0
  */
-router.get('/user/:id', findByUserId);
+router.get('/:id', findByUserId);
 
 /**
  * @apiDescription Get all Companies
@@ -140,10 +141,30 @@ router.get('/user/:id', findByUserId);
  *
  * @apiUse ContactNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/contact/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/contact/all
  * @apiVersion 0.1.0
  */
-router.get('/all/:isActive?', findAll);
+router.get('/all', getAll);
+
+/**
+ * @apiDescription Get all Companies
+ * @api {GET} /api/contact/all/:isActive? Get all Contact
+ * @apiName GetAllContact
+ * @apiGroup Contact
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse ContactNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact/many
+ * @apiVersion 0.1.0
+ */
+router.get('/all', getMany);
 
 /**
  * @apiDescription Get a Contact by id
@@ -216,6 +237,5 @@ router.put('/:id', updateOne);
  * @apiVersion 0.1.0
  */
 router.delete('/:id', deleteOne);
-
 
 module.exports = router;

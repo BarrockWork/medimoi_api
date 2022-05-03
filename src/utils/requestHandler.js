@@ -149,37 +149,40 @@ const verifySlugInDb = async (
 const extractQueryParameters = (queryParams, targetParams) => {
   const configClient = {};
 
-  targetParams.forEach(qP => {
-    const parsingParam = JSON.parse(queryParams[qP]);
-    switch (qP) {
-      case 'sort':
-        configClient.orderBy = {};
-        configClient.orderBy[parsingParam[0]] = R.toLower(parsingParam[1]);
-        break;
-      case 'range':
-        configClient.skip = parsingParam[0];
-        configClient.take = parsingParam[1];
-        break;
-      case 'filter':
-        const listFilter = Object.entries(parsingParam);
-        if(listFilter.length > 0) {
-          configClient.where = {};
-          for(const field of listFilter) {
-            configClient.where[field[0]] = {equals: field[1]};
-          }
-        }
-        break;
-      case 'filterMany':
-        const listFilterMany = Object.entries(parsingParam);
-        if(listFilterMany.length > 0) {
+  if(Object.entries(queryParams).length > 0) {
+    targetParams.forEach(qP => {
+      const parsingParam = JSON.parse(queryParams[qP]);
+      switch (qP) {
+        case 'sort':
+          configClient.orderBy = {};
+          configClient.orderBy[parsingParam[0]] = R.toLower(parsingParam[1]);
+          break;
+        case 'range':
+          configClient.skip = parsingParam[0];
+          configClient.take = parsingParam[1];
+          break;
+        case 'filter':
+          const listFilter = Object.entries(parsingParam);
+          if(listFilter.length > 0) {
             configClient.where = {};
-          for(const field of listFilterMany) {
-            configClient.where[field[0]] = { in: field[1]};
+            for(const field of listFilter) {
+              configClient.where[field[0]] = {equals: field[1]};
+            }
           }
-        }
-        break;
-    }
-  })
+          break;
+        case 'filterMany':
+          const listFilterMany = Object.entries(parsingParam);
+          if(listFilterMany.length > 0) {
+            configClient.where = {};
+            for(const field of listFilterMany) {
+              configClient.where[field[0]] = { in: field[1]};
+            }
+          }
+          break;
+      }
+    })
+  }
+
   return configClient;
 }
 

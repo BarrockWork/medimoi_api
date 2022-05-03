@@ -6,6 +6,7 @@ const {
   createMany,
   findOneByNameSlug,
   getAll,
+  getMany,
   updateOne,
   deleteOne,
 } = require('./../controllers/CompanyController');
@@ -133,6 +134,8 @@ router.get('/:nameSlug', findOneByNameSlug);
  * @apiVersion 0.1.0
  */
 router.get('/all', getAll);
+
+router.get('/many', getMany);
 
 /**
  * @apiDescription Update a single Company

@@ -160,11 +160,24 @@ const deleteOne = async (req, res) => {
   }
 };
 
+const getMany = async (req, res) => {
+  try {
+    const configClient = extractQueryParameters(req.query, ['filterMany']);
+    const companies = await Models.Company.findMany(configClient);
+    await Models.$disconnect();
+
+    res.status(200).json(companies);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 module.exports = {
   createOne,
   createMany,
   findOneByNameSlug,
   getAll,
+  getMany,
   updateOne,
   deleteOne,
 };

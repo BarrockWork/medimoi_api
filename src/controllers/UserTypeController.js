@@ -139,12 +139,13 @@ const updateOneById = async (req, res) => {
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseField);
 
         // Check if the new slug exists
-        const configRequestDB = await Models.drug.update({
-            where: {
-                id: parseInt(req.params.id),
-            },
-            data: fieldsFiltered,
-        })
+        const configRequestDB = await verifySlugInDb(
+            Models,
+            "UserType",
+            req.params.id,
+            createSlug(req.body.name),
+            fieldsFiltered
+        );
 
         const User_type = await Models.UserType.update(configRequestDB);
 

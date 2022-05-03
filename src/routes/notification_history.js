@@ -7,7 +7,8 @@ const {
   getOneById,
   updateOne,
   deleteOne,
-} = require('./../controllers/NotificationHistory');
+  findMany,
+} = require('../controllers/NotificationHistoryController');
 
 /**
  * Define a global Notification history not found
@@ -23,14 +24,26 @@ const {
 /**
  * @apiDescription This is how we get all Notification history
  * @apiGroup Notification History
- * @api {GET} /api/notification_history/ Get all Notification history
+ * @api {GET} /api/notification_history/all Get all Notification history
  * @apiName getAll
  *
  * @apiUse NotificationHistoryNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAll);
+router.get('/all', getAll);
+
+/**
+ * @apiDescription This is how we get all Notification history
+ * @apiGroup Notification History
+ * @api {GET} /api/notification_history/many Get all Notification history
+ * @apiName getAll
+ *
+ * @apiUse NotificationHistoryNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
 
 /**
  * @apiDescription This is how we create notification history
@@ -87,7 +100,7 @@ router.get('/:id', getOneById);
 /**
  * @apiDescription This is how we update a notification history by identifier
  * @apiGroup Notification History
- * @api {PUT} /api/notification_history/:id/edit Update single notification_history
+ * @api {PUT} /api/notification_history/:id Update single notification_history
  * @apiName updateOne
  *
  * @apiParam {int} id notification history identifier
@@ -104,18 +117,18 @@ router.get('/:id', getOneById);
  *      "notification_history_id": 3
  *  }
  *
- * @apiSampleRequest http://localhost:4000/api/notification_history/:id/edit
+ * @apiSampleRequest http://localhost:4000/api/notification_history/:id
  *
  * @apiUse NotificationHistoryNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.put('/:id/edit', updateOne);
+router.put('/:id', updateOne);
 
 /**
  * @apiDescription This is how we delete a notification history by identifier
  * @apiGroup Notification History
- * @api {DELETE} /api/notification_history/:id/delete Delete a notification_history
+ * @api {DELETE} /api/notification_history/:id Delete a notification_history
  * @apiName deleteOne
  *
  * @apiParam {int} id notification history identifier
@@ -129,11 +142,11 @@ router.put('/:id/edit', updateOne);
  *  {
  *     id:       "1",
  *  }
- * @apiSampleRequest http://localhost:4000/api/notification_history/:id/delete
+ * @apiSampleRequest http://localhost:4000/api/notification_history/:id
  *
  * @apiUse NotificationHistoryNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:id/delete', deleteOne);
+router.delete('/:id', deleteOne);
 module.exports = router;

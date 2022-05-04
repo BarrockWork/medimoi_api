@@ -44,6 +44,28 @@ const {
  */
 router.get('/all', findAll);
 
+/**
+ * @apiDescription Get a single user Type by name slug
+ * @apiGroup UserType
+ * @api {GET} /api/user_type/:id Get user_type by id
+ * @apiName getOneById
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParam {Number} id UserType id
+ *
+ * @apiParam {String[2..50]} nameSlug User type nameSlug
+ *
+ * @apiUse UserTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_type/:id
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', getOneById);
 
 /**
  * Define parameters for the POST and PUT requests
@@ -90,32 +112,6 @@ router.get('/many', findMany);
  * @apiVersion 0.1.0
  */
 router.get('/:nameSlug', getOneBySlug);
-
-/**
- * @apiDescription Get a single user Type by name slug
- * @apiGroup UserType
- * @api {GET} /api/user_type/:nameSlug Get user_type by id
- * @apiName getOneById
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- *
- * @apiParamExample {json} Request-Example
- *  {
- *     nameSlug:           "test-slug"
- *  }
- *
- * @apiParam {String[2..50]} nameSlug User type nameSlug
- *
- * @apiUse UserTypeNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/user_type/:nameSlug
- *
- * @apiVersion 0.1.0
- */
-router.get('/:id', getOneById);
 
 /**
  * @apiDescription Insert a single user type

@@ -160,19 +160,6 @@ router.get("/many", findMany);
 router.get('/all', getAllUsers);
 
 /**
- * @apiDescription This is how we get a user by email
- * @apiGroup User
- * @api {GET} /api/users/:email Get user by Email
- * @apiName getUserByEmail
- *
- * @apiUse UserNotFoundError
- *
- * @apiVersion 0.1.0
- */
-router.get('/:email', getUserByEmail);
-
-
-/**
  * @apiDescription This is how we get a user by id
  * @apiGroup User
  * @api {GET} /api/users/:id Get user by Id
@@ -183,6 +170,18 @@ router.get('/:email', getUserByEmail);
  * @apiVersion 0.1.0
  */
 router.get('/:id', getUserById);
+
+/**
+ * @apiDescription This is how we get a user by email
+ * @apiGroup User
+ * @api {GET} /api/users/:email Get user by Email
+ * @apiName getUserByEmail
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:email', getUserByEmail);
 
 /**
  * @apiDescription This is how we update a user by ID
@@ -259,33 +258,6 @@ router.put('/:email', updateUserByEmail);
  */
 router.put('/:id', updateUserById);
 
-/**
- * @apiDescription This is how we delete a user by ID
- * @apiGroup User
- * @api {DELETE} /api/user/:email Delete a user by Email
- * @apiName deleteUser
- *
- * @apiBody {String[2..50]}  Email User email.
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- *
- * @apiParamExample {json} Request-Example
- *  {
- *     email:       "jdoe@medimoi.com",
- *  }
- * @apiSampleRequest http://localhost:4000/api/users/:email
- *
- * @apiParam {String[50]} email User Email
- *
- * @apiUse UserNotFoundError
- *
- * @apiVersion 0.1.0
- */
-router.delete('/:email', deleteUser);
-
 
 /**
  * @apiDescription This is how we delete a user by ID
@@ -313,5 +285,32 @@ router.delete('/:email', deleteUser);
  * @apiVersion 0.1.0
  */
 router.delete('/:id', deleteUserById);
+
+/**
+ * @apiDescription This is how we delete a user by ID
+ * @apiGroup User
+ * @api {DELETE} /api/user/:email Delete a user by Email
+ * @apiName deleteUser
+ *
+ * @apiBody {String[2..50]}  Email User email.
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     email:       "jdoe@medimoi.com",
+ *  }
+ * @apiSampleRequest http://localhost:4000/api/users/:email
+ *
+ * @apiParam {String[50]} email User Email
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.delete('/email/:email', deleteUser);
 
 module.exports = router;

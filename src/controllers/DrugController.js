@@ -21,7 +21,6 @@ const createDrug = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(drug);
     } catch (error) {
-        console.log(error);
         return res.status(400).json(req);
     }
 
@@ -172,7 +171,6 @@ const findBySlug = async (req, res) => {
 
 // find by id
 const findById = async (req, res) => {
-    console.log(req.params.id)
     try {
         const drug = await Models.drug.findUnique({
             where: {

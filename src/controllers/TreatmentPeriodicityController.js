@@ -9,7 +9,6 @@ const {
 } = require('../utils/requestHandler');
 
 const createTreatmentPeriodicity = async (req, res) => {
-    // console.log("createTreatmentPeriodicity");
     try {
 
         checkRequiredFields(req, res, ['name']);
@@ -26,7 +25,6 @@ const createTreatmentPeriodicity = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
-        // console.error(error, "createTreatmentPeriodicity");
         res.status(400).json({
             success: false,
             error
@@ -36,7 +34,6 @@ const createTreatmentPeriodicity = async (req, res) => {
 }
 
 const createMany = async (req, res) => {
-    // console.log("createMany");
     try {
         // Check the required fields
         checkRequiredFields(req, res,['entries']);
@@ -66,7 +63,6 @@ const createMany = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicities);
     } catch (error) {
-        // console.error(error, "createMany");
         res.status(400).json(error);
     }
 
@@ -95,7 +91,6 @@ const getTreatmentPeriodicityById = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(treatmentPeriodicity);
     } catch (error) {
-        // console.error(error, "getTreatmentPeriodicityById");
         res.status(400).json(error);
     }
 }

@@ -5,7 +5,7 @@ const {
     extractFieldsToChange,
     verifySlugInDb,
 } = require('./../utils/requestHandler');
-const {extractQueryParameters} = require("../utils/requestHandler");
+const {extractQueryParameters, transformIntValue} = require("../utils/requestHandler");
 
 // create a user type
 const createOne = async (req, res) => {
@@ -55,22 +55,18 @@ const getOneBySlug = async (req, res) => {
 // get user type by Id
 const getOneById = async (req, res) => {
     try {
-        const configClient = {
+        const {id} = req.params;
+        const User_type = await Models.UserType.findUnique({
             where: {
-                id: req.params.id,
+                id: parseInt(id)
             },
-        };
-
-        const getById = await Models.UserType.findUnique(configClient);
-
+        })
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
         await Models.$disconnect();
-
-        // Success Response
-        res.status(200).json(getById);
+        res.status(200).json(User_type)
     } catch (error) {
-        return res.status(400).json(error);
+        return res.status(400).json(error)
     }
 };
 
@@ -219,9 +215,10 @@ const createMany = async (req, res) => {
 // delete a user type by ID
 const deleteOneById = async (req, res) => {
     try {
+        const id = transformIntValue(req.params.id);
         const configClient = {
             where: {
-                id: req.params.id,
+                id: id
             },
         };
 

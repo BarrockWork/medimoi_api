@@ -113,7 +113,7 @@ const getUserById = async (req, res) => {
   try {
     const userById = await Models.User.findUnique({
       where: {
-        id: req.params.id,
+        id: parseInt(req.params.id),
       },
       // you can include relation and elements like that.
       include: {
@@ -153,7 +153,7 @@ const updateUserById = async (req, res) => {
   try {
     const updateUser = await Models.User.update({
       where: {
-        id: req.params.id,
+        id: parseInt(req.params.id),
       },
       data: req.body,
     });
@@ -188,10 +188,9 @@ const deleteUserById = async (req, res) => {
   try {
     const deleteUser = await Models.User.delete({
       where: {
-        id: req.params.id,
+        id: parseInt(req.params.id),
       },
     });
-
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();

@@ -112,7 +112,6 @@ const findMany = async (req, res) => {
 // Update function
 const updateTreatmentDrug = async (req, res) => {
     try {
-        // console.log(req.body)
         const onlyThoseFields = ['comments', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 

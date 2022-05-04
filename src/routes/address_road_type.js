@@ -35,6 +35,32 @@ const {
  */
 router.get('/all', findAll);
 
+/**
+ * @apiDescription This is how we get all address road type
+ * @apiGroup Address Road Type
+ * @api {GET} /api/address_road_type/many Get Many address_road_type
+ *
+ * @apiUse AddressRoadTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/address_road_type/many
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
+
+
+/**
+ * @apiDescription This is how we get a address road type by id
+ * @apiGroup Address Road Type
+ * @api {GET} /api/address_road_type/:id Get address_road_type by Id
+ * @apiName getOneById
+ *
+ * @apiParam {Number} id Address Road Type id
+ * @apiUse AddressRoadTypeNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', getOneById);
+
 
 
 /**
@@ -48,17 +74,6 @@ router.get('/all', findAll);
  *     }
  */
 
-/**
- * @apiDescription This is how we get all address road type
- * @apiGroup Address Road Type
- * @api {GET} /api/address_road_type/many Get Many address_road_type
- *
- * @apiUse AddressRoadTypeNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/address_road_type/many
- * @apiVersion 0.1.0
- */
-router.get('/many', findMany);
 
 /**
  * @apiDescription This is how we get a address road type by slug
@@ -74,20 +89,6 @@ router.get('/many', findMany);
  */
 router.get('/:nameSlug', getOneBySlug);
 
-
-/**
- * @apiDescription This is how we get a address road type by id
- * @apiGroup Address Road Type
- * @api {GET} /api/address_road_type/:id Get address_road_type by Id
- * @apiName getOneById
- *
- * @apiParam {String[2..50]} nameSlug address road type slug.
- *
- * @apiUse AddressRoadTypeNotFoundError
- *
- * @apiVersion 0.1.0
- */
-router.get('/:id', getOneById);
 
 /**
  * @apiDescription This is how we create address road type

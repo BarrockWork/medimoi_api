@@ -218,7 +218,7 @@ router.get('/:email', getUserByEmail);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:email', updateUserByEmail);
+router.put('/email/:email', updateUserByEmail);
 
 
 /**

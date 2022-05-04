@@ -45,6 +45,26 @@ const {
 router.get('/all', findAll);
 
 /**
+ * Define parameters for the POST and PUT requests
+ *
+ * @apiDefine UserTypePOSTParam
+ * @apiBody {String[2..50]} name Name.
+ */
+
+/**
+ * @apiDescription Get many user type
+ * @apiGroup UserType
+ * @api {GET} /api/user_type/many Get many user_type
+ * @apiName getManyUserType
+ *
+ * @apiUse UserTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_type/many
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
+
+/**
  * @apiDescription Get a single user Type by name slug
  * @apiGroup UserType
  * @api {GET} /api/user_type/:id Get user_type by id
@@ -67,25 +87,6 @@ router.get('/all', findAll);
  */
 router.get('/:id', getOneById);
 
-/**
- * Define parameters for the POST and PUT requests
- *
- * @apiDefine UserTypePOSTParam
- * @apiBody {String[2..50]} name Name.
- */
-
-/**
- * @apiDescription Get many user type
- * @apiGroup UserType
- * @api {GET} /api/user_type/many Get many user_type
- * @apiName getManyUserType
- *
- * @apiUse UserTypeNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/user_type/many
- * @apiVersion 0.1.0
- */
-router.get('/many', findMany);
 
 /**
  * @apiDescription Get a single user Type by name slug

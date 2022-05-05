@@ -1,97 +1,86 @@
-const fixtures = require('./fixtures/fixtures.js');
-const Model = require('../src/models');
+const Models = require('../src/models');
 
-async function main() {
+// importation des fixtures
+const medical_administrations = require('./fixtures/medical_administration');
+const user_types = require('./fixtures/user_type');
+const users = require('./fixtures/user');
 
-    for (let fixture of fixtures.userTypes) {
-        await Model.userType.create({
-            data: {
-                name: fixture.name,
-                nameSlug: fixture.nameSlug,
-                createdAt: fixture.createdAt,
-                updatedAt: fixture.updatedAt
-            }
-        });
+
+
+async function main(){
+    // console.log('Seeding...')
+    // lorsqu'on le fait depuis le fichier actuel
+    // const mediacal = await Models.medicalAdministration.create({
+    //     data: {
+    //         name: "Medical seeding",
+    //         nameSlug: "medical-seeding"
+    //     }
+    // })
+    // console.log(mediacal)
+
+
+    // lors de l'import des datas depuis un autre fichier avec un create many
+    // try {
+    //     await Models.medicalAdministration.createMany({
+    //         data: medical_administrations
+    //     })
+    // } catch (error) {
+    //     console.error(error)
+    // }
+
+    // Avec une boucle
+    // try {
+    //     medical_administrations.map( async (data) => {
+    //         await Models.medicalAdministration.create({
+    //             data
+    //         })
+    //         await Models.$disconnect();
+    //     })
+    // } catch (error) {
+    //     console.log(error)
+    // }
+
+    // creation des user types
+    try {
+        const user_type_saved = await Models.userType.create({
+            data: user_types[0],
+        })
+
+        try {
+            users.map( async (data) => {
+                await Models.user.create({
+                    data:{
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        age: data.age,
+                        email: data.email,
+                        password: data.password,
+                        role: data.role,
+                        cellphone: data.cellphone,
+                        homephone: data.homephone,
+                        workphone: data.workphone,
+                        user_type_id: user_type_saved.id
+                    }
+                });
+
+                await Models.$disconnect();
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    } catch (error) {
+        console.log(error)
     }
 
-  /*  for (let fixture of fixtures.diseaseTypes) {
-        await Models.diseaseType.create({
-            data: {
-                name: fixture.name,
-                nameSlug: fixture.nameSlug,
-                description: fixture.description,
-                createdAt: new Date(),
-                updatedAt: null,
-                isActive: fixture.isActive
-            }
-        });
-    }
 
-    for (let fixture of fixtures.drugTypes) {
-        await Models.drugType.create({
-            data: {
-                "name": fixture.name,
-                "nameSlug": fixture.nameSlug,
-                "description": fixture.description,
-                "createdAt": fixture.createdAt,
-                "updatedAt": fixture.updatedAt,
-                'isActive': fixture.isActive,
-            }
-        });
-    }
-
-    for (let fixture of fixtures.drugLevels) {
-        await Models.drugLevel.create({
-            data: {
-                "level": fixture.level,
-                "description": fixture.description,
-                "createdAt": fixture.createdAt,
-                "updatedAt": fixture.updatedAt,
-                'isActive': fixture.isActive,
-            }
-        });
-    }
-
-    for (let fixture of fixtures.diseases) {
-        await Models.diseaseType.create({
-            data: {
-                name: fixture.name,
-                nameSlug: fixture.nameSlug,
-                description: fixture.description,
-                createdAt: new Date(),
-                updatedAt: null,
-                isActive: fixture.isActive
-            }
-        });
-        await Models.disease.create({
-            data: {
-                name: fixture.name,
-                nameSlug: fixture.nameSlug,
-                description: fixture.description,
-                incubationPeriod: fixture.incubationPeriod,
-                transmitting: fixture.transmitting,
-                createdAt: new Date(),
-                updatedAt: null,
-                isActive: true,
-                disease_type_id: fixture.disease_type_id
-            }
-        });
-    }*/
-
-
-    /*  await Models.userTypes.createMany({
-          data: fixtures.userTypes
-      })
-
-      await Models.user.createMany({
-          data: fixtures.users
-      });*/
 }
 
+main()
+.catch((e)=>{
+    console.log(e)
+    process.exit(1)
+})
+.finally(async ()=>{
+    await Models.$disconnect();
+})
 
-main().catch(e => {
-    console.error(e);
-    process.exit(1);
-}).finally(async () => {
-    await Models.disconnect();
-});

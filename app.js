@@ -33,7 +33,7 @@ app.use('/api/company', routes.CompanyRouter);
 app.use('/api/contact', routes.ContactRouter);
 app.use('/api/contact_type', routes.ContactTypeRouter);
 app.use('/api/diseases', routes.diseaseRouter);
-app.use('/api/disease_type', routes.diseaseTypeRouter);
+app.use('/api/disease_types', routes.diseaseTypeRouter);
 app.use('/api/drugs', routes.drugRouter);
 app.use('/api/drug_levels', routes.drugLevelRouter);
 app.use('/api/drug_types', routes.drugTypeRouter);

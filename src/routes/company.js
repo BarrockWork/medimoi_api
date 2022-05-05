@@ -9,7 +9,9 @@ const {
   getMany,
   GetOneById,
   updateOne,
+  updateOneById,
   deleteOne,
+  deleteOneById,
 } = require('./../controllers/CompanyController');
 
 /* DEFINES -------------------------------------------*/
@@ -173,6 +175,8 @@ router.get('/:nameSlug', findOneByNameSlug);
  * @apiVersion 0.1.0
  */
 router.get('/many', getMany);
+router.delete('/:id', deleteOneById);
+router.put('/:id', updateOneById);
 
 /**
  * @apiDescription Update a single Company

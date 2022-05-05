@@ -5,6 +5,7 @@ const {
   extractFieldsToChange,
   verifySlugInDb,
   extractQueryParameters,
+  transformIntValue,
 } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
 
@@ -91,12 +92,7 @@ const findOneByNameSlug = async (req, res) => {
 const GetOneById = async (req, res) => {
   try {
     const { id } = req.params;
-    const company = await Models.Company.findUnique({
-      where: {
-        id: parseInt(id),
-      },
-    });
-
+    const company = awaparseInt;
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
@@ -169,6 +165,35 @@ const updateOne = async (req, res) => {
   }
 };
 
+const updateOneById = async (req, res) => {
+  try {
+    // Selection of fields
+    const onlyThoseFields = ['name', 'siret', 'tva', 'isActive'];
+    const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+    // Check if the Id I exists
+    const configRequestDB = await verifySlugInDb(
+      Models,
+      'Company',
+      req.params.id,
+      createSlug(req.body.name),
+      fieldsFiltered
+    );
+
+    // Update the current entry
+    const company = await Models.Company.update(configRequestDB);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(company);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 const deleteOne = async (req, res) => {
   try {
     const configClient = {
@@ -186,6 +211,29 @@ const deleteOne = async (req, res) => {
     // Success Response
     res.status(200).json(company);
   } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+const deleteOneById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const configClient = {
+      where: {
+        id: transformIntValue(id),
+      },
+    };
+
+    const company = await Models.Company.delete(configClient);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(company);
+  } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -210,5 +258,7 @@ module.exports = {
   getMany,
   GetOneById,
   updateOne,
+  updateOneById,
   deleteOne,
+  deleteOneById,
 };

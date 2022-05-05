@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {createDrugLevel, createManyDrugLevel, getAllDrugLevel, getById, deleteById, updateById} = require('../controllers/DrugLevelController');
+const {createDrugLevel, createManyDrugLevel, findAll, findMany, getById, deleteById, updateById} = require('../controllers/DrugLevelController');
 
 /**
  * Define a global Drug level not found
@@ -83,17 +83,31 @@ router.post("/news", createManyDrugLevel);
 
 /**
  * @apiGroup Drug_Level
- * @api {GET} /api/drug_levels Get all Drug Level
+ * @api {GET} /api/drug_levels/all Get all Drug Level
  * @apiName GetAllDrug
  *
  * @apiUse DrugLevelNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drug_levels
+ *      curl -i http://localhost:4000/api/drug_levels/all
  *
  * @apiVersion 0.1.0
  */
-router.get('/all', getAllDrugLevel);
+router.get('/all', findAll);
+
+/**
+ * @apiGroup Drug_Level
+ * @api {GET} /api/drug_levels/many Get Many Drug Level
+ * @apiName GetManyDrugLevel
+ *
+ * @apiUse DrugLevelNotFoundError
+ *
+ * @apiExample {curl} Exemple uasage:
+ *    curl -i http://localhost:4000/api/drug_levels/many
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
 
 /**
  * @apiGroup Drug_Level

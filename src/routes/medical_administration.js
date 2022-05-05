@@ -39,8 +39,8 @@ const {
 
 /**
  * @apiDescription Insert single MedicalAdministration
- * @api {POST} /api/medical_administrations/new Create new medical administration
- * @apiName CreateMedicalAdministration
+ * @api {POST} /api/medical_administrations/new Create single MedicalAdministration
+ * @apiName CreateSingleMedicalAdministration
  * @apiGroup MedicalAdministration
  * 
  * @apiUse MedicalAdministrationPOSTParam
@@ -62,8 +62,8 @@ router.post("/new", createOne);
 
 /**
  * @apiDescription Insert multiple MedicalAdministration
- * @api {POST} /api/medical_administrations/news Create new medical administration
- * @apiName CreateMenyMedicalAdministration
+ * @api {POST} /api/medical_administrations/news Create many MedicalAdministrations
+ * @apiName CreateManyMedicalAdministration
  * @apiGroup MedicalAdministration
  * 
  * @apiUse MedicalAdministrationPOSTParam
@@ -95,11 +95,11 @@ router.post("/news", createMany);
 
 /**
  * @apiDescription Get MedicalAdministration by nameSlug
- * @api {POST} /api/medical_administrations/slug/:nameSlug Get medical administration by nameSlug
+ * @api {POST} /api/medical_administrations/slug/:nameSlug Get MedicalAdministration by nameSlug
  * @apiName GetByNameSlugMedicalAdministration
  * @apiGroup MedicalAdministration
  * 
- * @apiParam {String[2..50]} nameSlug Name slug
+ * @apiParam {String[2..50]} nameSlug Required: Name slug
  * 
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -114,12 +114,12 @@ router.post("/news", createMany);
 router.get("/slug/:nameSlug", findOne);
 
 /**
- * @apiDescription Get many MedicalAdministration
- * @api {GET} /api/medical_administrations/many Get many MedicalAdministration
+ * @apiDescription Get MedicalAdministration filtered by ressources Ids
+ * @api {GET} /api/medical_administrations/many?filterMany={"id":[1]} Get MedicalAdministration filtered by ressources Ids
  * @apiName GetManyMedicalAdministration
  * @apiGroup MedicalAdministration
  *
- * @apiParam {Boolean} [isActive=none]
+ * @apiParam {Object} filterMany Required: Filter on a list of ids
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -128,18 +128,20 @@ router.get("/slug/:nameSlug", findOne);
  *
  * @apiUse MedicalAdministrationNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/medical_administrations/many
+ * @apiSampleRequest http://localhost:4000/api/medical_administrations/many?filterMany={"id":[1]}
  * @apiVersion 0.1.0
  */
 router.get("/many", findMany);
 
 /**
- * @apiDescription Get all MedicalAdministration
- * @api {GET} /api/medical_administrations/all Get all MedicalAdministration
- * @apiName GetAllMedicalAdministration
+ * @apiDescription Get a list of MedicalAdministration
+ * @api {GET} /api/medical_administrations/all?filter={}&range=[0,10]&sort=["id","ASC"] Get a list of MedicalAdministration
+ * @apiName GetListMedicalAdministration
  * @apiGroup MedicalAdministration
  *
- * @apiParam {Boolean} [isActive=none]
+ * @apiParam {Object} [filter] Filter on a criteria
+ * @apiParam {Object} [range] To retrieve only some entries
+ * @apiParam {Object} [sort] To sort the entries
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -148,14 +150,14 @@ router.get("/many", findMany);
  *
  * @apiUse MedicalAdministrationNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/medical_administrations/all
+ * @apiSampleRequest http://localhost:4000/api/medical_administrations/all?filter={}&range=[0,10]&sort=["id","ASC"]
  * @apiVersion 0.1.0
  */
 router.get("/all", findAll);
 
 /**
  * @apiDescription Get a MedicalAdministration by id
- * @api {GET} /api/medical_administrations/:id Get Contact by id
+ * @api {GET} /api/medical_administrations/:id Get MedicalAdministration by id
  * @apiName GetByIdMedicalAdministration
  * @apiGroup MedicalAdministration
  *
@@ -173,9 +175,9 @@ router.get("/all", findAll);
 router.get('/:id', findOneById);
 
 /**
- * @apiDescription Update a single MedicalAdministration
- * @api {PUT} /api/medical_administrations/slug/:nameSLug Update single MedicalAdministration
- * @apiName UpdateSingleMedicalAdministration
+ * @apiDescription Update a MedicalAdministration by nameSlug
+ * @api {PUT} /api/medical_administrations/slug/:nameSLug Update a MedicalAdministration by nameSlug
+ * @apiName UpdateByNameSlugMedicalAdministration
  * @apiGroup MedicalAdministration
  *
  * @apiHeaderExample {json} Header-Example:
@@ -200,8 +202,8 @@ router.get('/:id', findOneById);
 router.put("/slug/:nameSlug", updateOneByNameSlug);
 
 /**
- * @apiDescription Update MedicalAdministration by id
- * @api {PUT} /api/medical_administrations/:id Update single MedicalAdministration
+ * @apiDescription Update a MedicalAdministration by id
+ * @api {PUT} /api/medical_administrations/:id Update a MedicalAdministration by id
  * @apiName UpdateByIdMedicalAdministration
  * @apiGroup MedicalAdministration
  *
@@ -227,9 +229,9 @@ router.put("/slug/:nameSlug", updateOneByNameSlug);
 router.put("/:id", updateOneById);
 
 /**
- * @apiDescription Delete a single MedicalAdministrations
- * @api {DELETE} /api/medical_administrations/slug/:nameSLug Delete single medicalAdministration
- * @apiName DeleteSingleMedicalAdministrations
+ * @apiDescription Delete a MedicalAdministrations by NameSlug
+ * @api {DELETE} /api/medical_administrations/slug/:nameSLug Delete a medicalAdministration by NameSlug
+ * @apiName DeleteByNameSlugMedicalAdministrations
  * @apiGroup MedicalAdministration
  * @apiParam {String[2..50]} nameSlug Name slug
  * @apiHeaderExample {json} Header-Example:
@@ -246,7 +248,7 @@ router.put("/:id", updateOneById);
 
 /**
  * @apiDescription Delete a MedicalAdministration by id
- * @api {DELETE} /api/medical_administrations/:id Delete single MedicalAdministration
+ * @api {DELETE} /api/medical_administrations/:id Delete a MedicalAdministration by id
  * @apiName DeleteByIdMedicalAdministration
  * @apiGroup MedicalAdministration
  * @apiParam {Number} id Id

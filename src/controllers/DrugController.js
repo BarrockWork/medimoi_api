@@ -128,13 +128,6 @@ const updateById = async (req, res) => {
         const onlyThoseFields = ['name', 'description', 'isPrescription', 'isActive', 'drug_level_id', 'drug_type_id', 'medical_administration_id'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
-        // // Update the current entry
-        // const drug = await Models.drug.update({
-        //     where: {
-        //         id: parseInt(req.params.id),
-        //     },
-        //     data: fieldsFiltered,
-        // })
         const configRequestDB = await verifySlugInDb(Models,
             "Drug",
             req.params.id,

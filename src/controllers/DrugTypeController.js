@@ -59,14 +59,32 @@ const createManyDrugType = async (req, res) => {
     }
 }
 
-
-const getAllDrugType = async (req, res) => {
+//find all drugs types
+const findAll = async (req, res) => {
     try {
-        const DrugType = await Models.DrugType.findMany()
+        const configClient = extractFieldsToChange(req.query, ['sort', 'range', 'filter']);
+        const DrugTypes = await Models.DrugType.findMany(configClient);
+        const totalCount = await Models.DrugType.count();
+
         await Models.$disconnect();
-        res.status(200).json(DrugType)
+        res.header('Access-Control-Expose-Headers', 'Content-Range');
+        res.set('Content-Range', totalCount);
+        res.status(200).json(DrugTypes)
     } catch (error) {
-        return res.status(400).json(req)
+        return res.status(400).json(error)
+    }
+}
+
+// find many drugs types
+const findMany = async (req, res) => {
+    try {
+        const configClient = extractFieldsToChange(req.query, ['filterMany']);
+        const DrugTypes = await Models.DrugType.findMany(configClient);
+        await Models.$disconnect();
+
+        res.status(200).json(DrugTypes)
+    } catch (error) {
+        return res.status(400).json(error)
     }
 }
 
@@ -97,6 +115,25 @@ const updateBySlug = async (req, res) => {
     }
 }
 
+const updateById = async (req, res) => {
+    try {
+        const onlyThoseFields = ['name', 'description', 'isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+        const configClient = await verifySlugInDb(Models,
+            "DrugType",
+            req.params.id,
+            createSlug(req.body.name),
+            fieldsFiltered);
+        
+        const drugType = await Models.DrugType.update(configClient);
+        await Models.$disconnect();
+        res.status(200).json(drugType);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+}
+
 const findBySlug = async (req, res) => {
     try {
         const drug = await Models.DrugType.findUnique({
@@ -107,6 +144,22 @@ const findBySlug = async (req, res) => {
 
         // The prisma client can run only 10 instances simultaneously,
         // so it is better to stop the current instance before sending the response
+        await Models.$disconnect();
+
+        res.status(200).json(drug)
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+}
+
+// find by id 
+const findById = async (req, res) => {
+    try {
+        const drug = await Models.DrugType.findUnique({
+            where: {
+                id: parseInt(req.params.id)
+            },
+        })
         await Models.$disconnect();
 
         res.status(200).json(drug)
@@ -133,12 +186,32 @@ const deleteBySlug = async (req, res) => {
     }
 }
 
+// delete by id
+const deleteById = async (req, res) => {
+    try {
+        const deleteDrug = await Models.DrugType.delete({
+            where: {
+                id: parseInt(req.params.id)
+            },
+        });
+        
+        await Models.$disconnect();
+        res.status(200).json(deleteDrug)
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+}
+
 
 module.exports = {
     createDrugType,
     createManyDrugType,
-    getAllDrugType,
+    findAll,
+    findMany,
     updateBySlug,
     findBySlug,
     deleteBySlug,
+    updateById,
+    findById,
+    deleteById
 }

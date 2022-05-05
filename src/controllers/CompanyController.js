@@ -88,9 +88,34 @@ const findOneByNameSlug = async (req, res) => {
   }
 };
 
+const GetOneById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const company = await Models.Company.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(company);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+  }
+};
+
 const getAll = async (req, res) => {
   try {
-    let configClient = extractQueryParameters(req.query, []);
+    let configClient = extractQueryParameters(req.query, [
+      'sort',
+      'range',
+      'filter',
+    ]);
 
     // configClient.include = {
     //   orderBy: {
@@ -183,6 +208,7 @@ module.exports = {
   findOneByNameSlug,
   getAll,
   getMany,
+  GetOneById,
   updateOne,
   deleteOne,
 };

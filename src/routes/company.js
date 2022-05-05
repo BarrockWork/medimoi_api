@@ -7,6 +7,7 @@ const {
   findOneByNameSlug,
   getAll,
   getMany,
+  GetOneById,
   updateOne,
   deleteOne,
 } = require('./../controllers/CompanyController');
@@ -53,6 +54,7 @@ const {
  * @apiVersion 0.1.0
  */
 router.get('/all', getAll);
+
 /**
  * @apiDescription Insert single Company
  * @api {POST} /api/company/new Create single Company
@@ -113,6 +115,25 @@ router.post('/new', createOne);
  * @apiVersion 0.1.0
  */
 router.post('/news', createMany);
+
+/**
+ * @apiDescription Get a Company by the Id
+ * @api {GET} /api/company/:id Get Company by Id
+ * @apiName GetByNameSlugCompany
+ * @apiGroup Company
+ *
+ * @apiParam {int[2..50]} id id of the Company.
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse CompanyNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/company/:id
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', GetOneById);
 
 /**
  * @apiDescription Get a Company by the nameSlug

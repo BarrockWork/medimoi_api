@@ -1,6 +1,17 @@
 var express = require('express');
 var router = express.Router();
-const {createDrugType, createManyDrugType, deleteBySlug, getAllDrugType, findBySlug, updateBySlug} = require('../controllers/DrugTypeController');
+const {
+    createDrugType, 
+    createManyDrugType, 
+    deleteBySlug, 
+    findAll, 
+    findBySlug, 
+    updateBySlug, 
+    findMany,
+    findById,
+    deleteById,
+    updateById,
+} = require('../controllers/DrugTypeController');
 
 
 /**
@@ -27,9 +38,9 @@ const {createDrugType, createManyDrugType, deleteBySlug, getAllDrugType, findByS
 
 
 /**
- * @apiGroup Drug_Type
- * @api {POST} /api/drugTypes/new Create new Drug type
- * @apiName CreateDrug_Type
+ * @apiGroup DrugType
+ * @api {POST} /api/drug_types/new Create new Drug type
+ * @apiName CreateDrugType
  *
  * @apiUse DrugTypeParams
  *
@@ -50,9 +61,9 @@ router.post("/new", createDrugType);
 
 /**
  * @apiDescription Insert many level of drugs
- * @api {POST} /api/drugTypes/news Create many DrugsType
+ * @api {POST} /api/drug_types/news Create many DrugsType
  * @apiName CreateManyDrugsType
- * @apiGroup Drug_Type
+ * @apiGroup DrugType
  *
  *
  * @apiUse DrugTypeParams
@@ -78,44 +89,74 @@ router.post("/new", createDrugType);
  *          }
  *      ]
  *  }
- * @apiSampleRequest http://localhost:4000/api/drugTypes/news
+ * @apiSampleRequest http://localhost:4000/api/drug_types/news
  * @apiVersion 0.1.0
  */
 router.post("/news", createManyDrugType);
 
 /**
- * @apiGroup Drug_Type
- * @api {GET} /api/drugTypes Get all Drug Type
+ * @apiGroup DrugType
+ * @api {GET} /api/drug_types/all Get all Drug Type
  * @apiName GetAllDrug
  *
  * @apiUse DrugTypeNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugTypes
+ *      curl -i http://localhost:4000/api/drug_types/all
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAllDrugType);
+router.get('/all', findAll);
 
 
 /**
- * @apiGroup Drug_Type
- * @api {GET} /api/drugTypes/:nameSlug Get drug by slug
+ * @apiGroup DrugType
+ * @api {GET} /api/drug_types/many Get Many Drug Type
+ * @apiName GetManyDrugType
+ * 
+ * @apiUse DrugTypeNotFoundError
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *     curl -i http://localhost:4000/api/drug_types/many
+ * 
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
+
+
+/**
+ * @apiGroup DrugType
+ * @api {GET} /api/drug_types/slug/:nameSlug Get drug by slug
  * @apiName GetDrugBySlug
  *
  * @apiUse DrugTypeNotFoundError
  * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugTypes/test
+ *      curl -i http://localhost:4000/api/drug_types/test
  *
  * @apiVersion 0.1.0
  */
-router.get('/:nameSlug', findBySlug);
+router.get('/slug/:nameSlug', findBySlug);
 
 /**
- * @apiGroup Drug_Type
- * @api {PUT} /api/drugTypes/:nameSlug/edit Update drug
+ * @apiGroup DrugType
+ * @api {GET} /api/drug_types/:id Get drug by id
+ * @apiName GetDrugById
+ * 
+ * @apiUse DrugTypeNotFoundError
+ * @apiParam {String[2..50]} id Id
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *     curl -i http://localhost:4000/api/drug_types/1
+ * 
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', findById);
+
+/**
+ * @apiGroup DrugType
+ * @api {PUT} /api/drug_types/slug/:nameSlug Update drug
  * @apiName UpdateDrugTypeBySlug
  *
  *
@@ -141,23 +182,67 @@ router.get('/:nameSlug', findBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:nameSlug/edit', updateBySlug);
+router.put('/slug/:nameSlug', updateBySlug);
+
+/**
+ * @apiGroup DrugType
+ * @api {PUT} /api/drug_types/:id Update drug
+ * @apiName UpdateDrugTypeById
+ * 
+ * @apiUse DrugTypeNotFoundError
+ * @apiParam {String[2..50]} id Id
+ * 
+ * @apiBody {String[2..50]} [name] drug name.
+ * @apiBody {String[2..50]} [description] drug.
+ * @apiBody {Boolean} [isActive=false] Optional drug slug.
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ *  {
+ *   'Content-Type': 'application/json'
+ * }
+ * 
+ * @apiParamExample {json} Request-Example
+ * {
+ *   name: "lisopaine",
+ *   description: "gellulle gout menthe",
+ *   isActive: true,
+ * }
+ * 
+ * @apiVersion 0.1.0
+ */
+router.put('/:id', updateById);
 
 
 /**
- * @apiGroup Drug_Type
- * @api {DELETE} /api/drugTypes/:nameSlug/delete Delete drug
+ * @apiGroup DrugType
+ * @api {DELETE} /api/drug_types/:nameSlug Delete drug
  * @apiName DeleteDrugType
  *
  * @apiUse DrugTypeNotFoundError
  * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugTypes/comprime/delete
+ *      curl -i http://localhost:4000/api/drug_types/comprime
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:nameSlug/delete', deleteBySlug);
+router.delete('/slug/:nameSlug', deleteBySlug);
+
+
+/**
+ * @apiGroup DrugType
+ * @api {DELETE} /api/drug_types/:id Delete drug
+ * @apiName DeleteDrugType
+ * 
+ * @apiUse DrugTypeNotFoundError
+ * @apiParam {String[2..50]} id Id
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *     curl -i http://localhost:4000/api/drug_types/1
+ * 
+ * @apiVersion 0.1.0
+ */
+router.delete('/:id', deleteById);
 
 
 module.exports = router;

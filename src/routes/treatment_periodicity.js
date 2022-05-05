@@ -39,8 +39,8 @@ const {
 
 /**
  * @apiDescription Insert single TreatmentPeriodicity
- * @api {POST} /api/treatment_periodicities/new Create new Treatment periodicity
- * @apiName CreateTreatmentPeriodicity
+ * @api {POST} /api/treatment_periodicities/new Create single TreatmentPeriodicity
+ * @apiName CreateSingleTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
  * @apiUse TreatmentPeriodicityPOSTParam
@@ -62,8 +62,8 @@ router.post("/new", createTreatmentPeriodicity);
 
 /**
  * @apiDescription Insert multiple TreatmentPeriodicity
- * @api {POST} /api/treatment_periodicities/news Create news treatment periodicity
- * @apiName CreateMenyTreatmentPeriodicity
+ * @api {POST} /api/treatment_periodicities/news Create many TreatmentPeriodicities
+ * @apiName CreateManyTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
  * @apiUse TreatmentPeriodicityPOSTParam
@@ -95,11 +95,11 @@ router.post("/news", createMany);
 
 /**
  * @apiDescription Get TreatmentPeriodicity by nameSlug
- * @api {POST} /api/treatment_periodicities/slug/:nameSlug Get treatment periodicity by nameSlug
+ * @api {POST} /api/treatment_periodicities/slug/:nameSlug Get TreatmentPeriodicity by nameSlug
  * @apiName GetByNameSlugTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
- * @apiParam {String[2..50]} nameSlug Name slug
+ * @apiParam {String[2..50]} nameSlug Required: Name slug
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -114,12 +114,12 @@ router.post("/news", createMany);
 router.get("/slug/:nameSlug", getTreatmentPeriodicityBySlug);
 
 /**
- * @apiDescription Get many TreatmentPeriodicity
- * @api {GET} /api/treatment_periodicities/many Get many TreatmentPeriodicity
+ * @apiDescription Get TreatmentPeriodicity filtered by ressources Ids
+ * @api {GET} /api/treatment_periodicities/many?filterMany={"id":[1]} Get TreatmentPeriodicity filtered by ressources Ids
  * @apiName GetManyTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
- * @apiParam {Boolean} [isActive=none]
+ * @apiParam {Object} filterMany Required: Filter on a list of ids
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -128,18 +128,20 @@ router.get("/slug/:nameSlug", getTreatmentPeriodicityBySlug);
  *
  * @apiUse TreatmentPeriodicityNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/many
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/many?filterMany={"id":[1]}
  * @apiVersion 0.1.0
  */
 router.get("/many", findMany);
 
 /**
- * @apiDescription Get all TreatmentPeriodicity
- * @api {GET} /api/treatment_periodicities/all Get all TreatmentPeriodicity
- * @apiName GetAllTreatmentPeriodicity
+ * @apiDescription Get a list of TreatmentPeriodicity
+ * @api {GET} /api/treatment_periodicities/all?filter={}&range=[0,10]&sort=["id","ASC"] Get a list of TreatmentPeriodicity
+ * @apiName GetListTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
- * @apiParam {Boolean} [isActive=none]
+ * @apiParam {Object} [filter] Filter on a criteria
+ * @apiParam {Object} [range] To retrieve only some entries
+ * @apiParam {Object} [sort] To sort the entries
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
@@ -148,14 +150,14 @@ router.get("/many", findMany);
  *
  * @apiUse TreatmentPeriodicityNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/all
+ * @apiSampleRequest http://localhost:4000/api/treatment_periodicities/all?filter={}&range=[0,10]&sort=["id","ASC"]
  * @apiVersion 0.1.0
  */
 router.get("/all", findAll);
 
 /**
  * @apiDescription Get a TreatmentPeriodicity by id
- * @api {GET} /api/treatment_periodicities/:id Get Contact by id
+ * @api {GET} /api/treatment_periodicities/:id Get TreatmentPeriodicity by id
  * @apiName GetByIdTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
@@ -173,9 +175,9 @@ router.get("/all", findAll);
 router.get('/:id', getTreatmentPeriodicityById);
 
 /**
- * @apiDescription Update TreatmentPeriodicity by slug
- * @api {PUT} /api/treatment_periodicities/slug/:nameSLug Update single TreatmentPeriodicity
- * @apiName UpdateBySlugTreatmentPeriodicity
+ * @apiDescription Update TreatmentPeriodicity by nameSlug
+ * @api {PUT} /api/treatment_periodicities/slug/:nameSLug Update a TreatmentPeriodicity by nameSlug
+ * @apiName UpdateByNameSlugTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
  * @apiHeaderExample {json} Header-Example:
@@ -201,7 +203,7 @@ router.put("/slug/:nameSlug", updateTreatmentPeriodicityBySlug);
 
 /**
  * @apiDescription Update TreatmentPeriodicity by id
- * @api {PUT} /api/treatment_periodicities/:id Update single TreatmentPeriodicity
+ * @api {PUT} /api/treatment_periodicities/:id Update a TreatmentPeriodicity by id
  * @apiName UpdateByIdTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  *
@@ -228,9 +230,9 @@ router.put("/:id", updateTreatmentPeriodicityById);
 
 
 /**
- * @apiDescription Delete TreatmentPeriodicity by slug
- * @api {DELETE} /api/treatment_periodicities/slug/:nameSLug Delete single TreatmentPeriodicity
- * @apiName DeleteBySlugTreatmentPeriodicity
+ * @apiDescription Delete a TreatmentPeriodicity by NameSlug
+ * @api {DELETE} /api/treatment_periodicities/slug/:nameSLug Delete a TreatmentPeriodicity by NameSlug
+ * @apiName DeleteByNameSlugTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  * @apiParam {String[2..50]} nameSlug Name slug
  * @apiHeaderExample {json} Header-Example:
@@ -247,7 +249,7 @@ router.delete("/slug/:nameSlug", deleteTreatmentPeriodicityBySlug);
 
 /**
  * @apiDescription Delete a TreatmentPeriodicity by id
- * @api {DELETE} /api/treatment_periodicities/:id Delete single TreatmentPeriodicity
+ * @api {DELETE} /api/treatment_periodicities/:id Delete a TreatmentPeriodicity by id
  * @apiName DeleteByIdTreatmentPeriodicity
  * @apiGroup TreatmentPeriodicity
  * @apiParam {Number} id Id

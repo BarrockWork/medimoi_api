@@ -181,6 +181,12 @@ const extractQueryParameters = (queryParams, targetParams) => {
           break;
       }
     })
+  } else {
+    //Limit by default to 10 entries
+    configClient.orderBy = {
+      id: "desc"
+    }
+    configClient.take = 10;
   }
 
   return configClient;

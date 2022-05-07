@@ -154,7 +154,6 @@ const getAll = async (req, res) => {
     // Success Response
     res.status(200).json(contacts);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -170,7 +169,6 @@ const getMany = async (req, res) => {
 
     res.status(200).json(contacts);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };

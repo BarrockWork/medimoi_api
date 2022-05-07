@@ -5,6 +5,7 @@ const {
   transformIntValue,
   selectContactType,
   selectUserGlobalInfos,
+  extractQueryParameters,
 } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
 

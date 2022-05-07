@@ -4,8 +4,30 @@ const {
   createSlug,
   extractFieldsToChange,
   verifySlugInDb,
+  extractQueryParameters,
+  transformIntValue,
 } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
+
+const getOneById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const notificationType = await Models.NotificationType.findUnique({
+      where: {
+        id: transformIntValue(id),
+      },
+    });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(notificationType);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
 
 const createOne = async (req, res) => {
   try {
@@ -85,7 +107,11 @@ const findOneByNameSlug = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    let configClient = extractQueryParameters(req.query, []);
+    let configClient = extractQueryParameters(req.query, [
+      'sort',
+      'range',
+      'filter',
+    ]);
 
     const notificationsTypes = await Models.NotificationType.findMany(
       configClient
@@ -154,6 +180,28 @@ const updateOne = async (req, res) => {
   }
 };
 
+const deleteOneById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const configClient = {
+      where: {
+        id: transformIntValue(id),
+      },
+    };
+
+    const notificationType = await Models.NotificationType.delete(configClient);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(notificationType);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 const deleteOne = async (req, res) => {
   try {
     const configClient = {
@@ -181,6 +229,8 @@ module.exports = {
   findOneByNameSlug,
   getAll,
   getMany,
+  getOneById,
   updateOne,
+  deleteOneById,
   deleteOne,
 };

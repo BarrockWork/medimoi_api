@@ -7,7 +7,9 @@ const {
   findOneByNameSlug,
   getAll,
   getMany,
+  getOneById,
   updateOne,
+  deleteOneById,
   deleteOne,
 } = require('./../controllers/NotificationTypeController');
 
@@ -32,6 +34,30 @@ const {
  */
 
 /* ROUTES --------------------------------------------*/
+
+/**
+ * @apiDescription Get all Notification_types
+ * @api {GET} /api/notification_type/all Get all Notification_type
+ * @apiName GetAllNotificationType
+ * @apiGroup Notification_Type
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/all
+ * @apiVersion 0.1.0
+ */
+router.get('/all', getAll);
+
+router.delete('/:id', deleteOneById);
+
+router.get('/:id', getOneById);
 
 /**
  * @apiDescription Insert single Notification_type
@@ -104,26 +130,6 @@ router.post('/news', createMany);
  * @apiVersion 0.1.0
  */
 router.get('/:nameSlug', findOneByNameSlug);
-
-/**
- * @apiDescription Get all Notification_types
- * @api {GET} /api/notification_type/all Get all Notification_type
- * @apiName GetAllNotificationType
- * @apiGroup Notification_Type
- *
- * @apiParam {Boolean} [isActive=none]
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- *
- * @apiUse NotificationTypeNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/notification_type/all
- * @apiVersion 0.1.0
- */
-router.get('/all', getAll);
 
 /**
  * @apiDescription Get many Notification_types

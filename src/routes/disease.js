@@ -6,7 +6,11 @@ const {
     findAll,
     findBySlug,
     updateBySlug,
-    deleteBySlug
+    deleteBySlug,
+    deleteById,
+    updateById,
+    findMany,
+    findById,
 } = require('../controllers/DiseaseController');
 
 /**
@@ -113,17 +117,32 @@ router.post("/news", createManyDisease);
  * @apiUse DiseaseNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/diseases
+ *      curl -i http://localhost:4000/api/diseases/all
  *
  * @apiVersion 0.1.0
  */
-router.get('/', findAll);
+router.get('/all', findAll);
+
+/**
+ * @apiDescription Get many Disease
+ * @apiGroup Disease
+ * @api {GET} /api/diseases/many Get many Disease
+ * @apiName GetManyDisease
+ * 
+ * @apiUse DiseaseNotFoundError
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *     curl -i http://localhost:4000/api/diseases/many
+ * 
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
 
 
 /**
  * @apiDescription Get one disease by nameSlug
  * @apiGroup Disease
- * @api {GET} /api/diseases/:nameSlug/ Get Disease by Slug
+ * @api {GET} /api/diseases/slug/:nameSlug Get Disease by Slug
  * @apiName GetDiseaseBySlug
  *
  * @apiUse DiseaseNotFoundError
@@ -131,11 +150,28 @@ router.get('/', findAll);
  * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Example usage:
- *     curl -i http://localhost:4000/api/diseases/rhume/
+ *     curl -i http://localhost:4000/api/diseases/slug/rhume
  *
  * @apiVersion 0.1.0
  */
-router.get('/:nameSlug', findBySlug);
+router.get('/slug/:nameSlug', findBySlug);
+
+/**
+ * @apiDescription get one disease by id
+ * @apiGroup Disease
+ * @api {GET} /api/diseases/id/:id Get Disease by id
+ * @apiName GetDiseaseById
+ * 
+ * @apiUse DiseaseNotFoundError
+ * 
+ * @apiParam {Number} id id
+ * 
+ * @apiExample {curl} Example usage:
+ *    curl -i http://localhost:4000/api/diseases/id/1
+ * 
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', findById);
 
 /**
  * @apiDescription Update one Disease by nameSlug
@@ -169,7 +205,37 @@ router.get('/:nameSlug', findBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.put('/:nameSlug/edit', updateBySlug);
+router.put('/slug/:nameSlug', updateBySlug);
+
+/**
+ * @apiDescription Update one Disease by id
+ * @apiGroup Disease
+ * @api {PUT} /api/diseases/:id Update Disease
+ * @apiName UpdateDiseaseById
+ * @apiParam {Number} id Disease id
+ * @apiBody {String[2..50]}  [name] Disease name.
+ * @apiBody {String[2..50]} [description] disease.
+ * @apiBody {String[2..50]} [incubationPeriod] disease.
+ * @apiBody {String[2..50]} [transmitting] disease.
+ * @apiBody {Boolean} [isActive=false]
+ * @apiBody {Number} [disease_type_id]  Disease type  id.
+ * @apiHeaderExample {json} Header-Example:
+ *  {
+ *    'Content-Type': 'application/json'
+ *  }
+ * @apiParamExample {json} Request-Example
+ * {
+ *    name:       "new name",
+ *    description: "maladie inconnue",
+ *    incubationPeriod: "15 jours",
+ *    transmitting: "on ne sait pas",
+ *    isActive: false
+ *    disease_type_id: 1
+ * }
+ * 
+ * @apiVersion 0.1.0
+ */
+router.put('/:id', updateById);
 
 /**
  * @apiDescription Delete one Disease by nameSlug
@@ -185,7 +251,23 @@ router.put('/:nameSlug/edit', updateBySlug);
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:nameSlug/delete', deleteBySlug);
+router.delete('/slug/:nameSlug', deleteBySlug);
+
+/**
+ * @apiDescription Delete one Disease by id
+ * @apiGroup Disease
+ * @api {DELETE} /api/diseases/:id Delete Disease
+ * @apiName DeleteDisease
+ * 
+ * @apiParam {Number} id Disease id
+ * @apiUse DiseaseNotFoundError
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *     curl -i http://localhost:4000/api/diseases/1
+ * 
+ * @apiVersion 0.1.0
+ */
+router.delete('/:id', deleteById);
 
 
 module.exports = router;

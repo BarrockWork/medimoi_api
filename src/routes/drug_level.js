@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {createDrugLevel, createManyDrugLevel, getAllDrugLevel, getById, deleteById, updateById} = require('../controllers/DrugLevelController');
+const {createDrugLevel, createManyDrugLevel, findAll, findMany, getById, deleteById, updateById} = require('../controllers/DrugLevelController');
 
 /**
  * Define a global Drug level not found
@@ -26,7 +26,7 @@ const {createDrugLevel, createManyDrugLevel, getAllDrugLevel, getById, deleteByI
 
 /**
  * @apiGroup Drug_Level
- * @api {POST} /api/drugLevels/new Create new Drug level
+ * @api {POST} /api/drug_levels/new Create new Drug level
  * @apiName CreateDrug_Level
  *
  * @apiUse DrugLevelParams
@@ -48,7 +48,7 @@ router.post("/new", createDrugLevel);
 
 /**
  * @apiDescription Insert many level of drugs
- * @api {POST} /api/drugLevels/news Create many DrugsLevel
+ * @api {POST} /api/drug_levels/news Create many DrugsLevel
  * @apiName CreateManyDrugsLevel
  * @apiGroup Drug_Level
  *
@@ -75,7 +75,7 @@ router.post("/new", createDrugLevel);
  *          }
  *      ]
  *  }
- * @apiSampleRequest http://localhost:4000/api/drugLevels/news
+ * @apiSampleRequest http://localhost:4000/api/drug_levels/news
  * @apiVersion 0.1.0
  */
 router.post("/news", createManyDrugLevel);
@@ -83,28 +83,42 @@ router.post("/news", createManyDrugLevel);
 
 /**
  * @apiGroup Drug_Level
- * @api {GET} /api/drugLevels Get all Drug Level
+ * @api {GET} /api/drug_levels/all Get all Drug Level
  * @apiName GetAllDrug
  *
  * @apiUse DrugLevelNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugLevels
+ *      curl -i http://localhost:4000/api/drug_levels/all
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAllDrugLevel);
+router.get('/all', findAll);
 
 /**
  * @apiGroup Drug_Level
- * @api {GET} /api/drugLevels/:id Get Drug Level by id
+ * @api {GET} /api/drug_levels/many Get Many Drug Level
+ * @apiName GetManyDrugLevel
+ * 
+ * @apiUse DrugLevelNotFoundError
+ * 
+ * @apiExample {curl} Exemple uasage:
+ *    curl -i http://localhost:4000/api/drug_levels/many
+ * 
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
+
+/**
+ * @apiGroup Drug_Level
+ * @api {GET} /api/drug_levels/:id Get Drug Level by id
  * @apiName GetDrugById
  *
  * @apiUse DrugLevelNotFoundError
  * @apiParam {Int} id id
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugLevels/1
+ *      curl -i http://localhost:4000/api/drug_levels/1
  *
  * @apiVersion 0.1.0
  */
@@ -112,7 +126,7 @@ router.get('/:id', getById);
 
 /**
  * @apiGroup Drug_Level
- * @api {PUT} /api/drugLevels/:id/edit Update drug
+ * @api {PUT} /api/drug_levels/:id Update drug
  * @apiName UpdatedrugLevelById
  *
  * @apiBody {Int} [level] drug level.
@@ -135,11 +149,11 @@ router.get('/:id', getById);
  *  }
  *
  *  @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugLevels/doliprane/edit
+ *      curl -i http://localhost:4000/api/drug_levels/1
  *
  * @apiVersion 0.1.0
  */
-router.put('/:id/edit', updateById);
+router.put('/:id', updateById);
 
 
 /**
@@ -151,11 +165,11 @@ router.put('/:id/edit', updateById);
  * @apiParam {Int} id id
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugLevels/1/delete
+ *      curl -i http://localhost:4000/api/drug_levels/1
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:id/delete', deleteById);
+router.delete('/:id', deleteById);
 
 
 module.exports = router;

@@ -110,7 +110,6 @@ const getOneById = async (req, res) => {
 };
 
 const findByUserId = async (req, res) => {
-  console.log('findByUserId');
   try {
     // Check and transform the param is a number
     const id = transformIntValue(req.params.id);
@@ -136,7 +135,11 @@ const findByUserId = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    let configClient = extractQueryParameters(req.query, []);
+    let configClient = extractQueryParameters(req.query, [
+      'sort',
+      'range',
+      'filter',
+    ]);
 
     const contacts = await Models.Contact.findMany(configClient);
     const totalCount = await Models.Contact.count(configClient);
@@ -167,6 +170,7 @@ const getMany = async (req, res) => {
 
     res.status(200).json(contacts);
   } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 };

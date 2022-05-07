@@ -83,8 +83,7 @@ const createMany = async (req, res) => {
   }
 };
 
-const findOneById = async (req, res) => {
-  console.log('findOneById');
+const getOneById = async (req, res) => {
   try {
     // Check and transform the param is a number
     const id = transformIntValue(req.params.id);
@@ -239,7 +238,7 @@ const deleteOne = async (req, res) => {
 module.exports = {
   createOne,
   createMany,
-  findOneById,
+  getOneById,
   getAll,
   getMany,
   findByUserId,

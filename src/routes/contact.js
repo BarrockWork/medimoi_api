@@ -4,10 +4,10 @@ let router = express.Router();
 const {
   createOne,
   createMany,
-  findOneById,
+  getOneById,
   getAll,
   getMany,
-  findByUserId,
+  // findByUserId,
   updateOne,
   deleteOne,
 } = require('./../controllers/ContactController');
@@ -107,24 +107,24 @@ router.post('/new', createOne);
  */
 router.post('/news', createMany);
 
-/**
- * @apiDescription Get Contacts by User id
- * @api {GET} /api/contact/user/:id Get Contacts by User id
- * @apiName GetByUserIdContact
- * @apiGroup Contact
- *
- * @apiParam {Number} id Id
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- * @apiUse ContactNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/contact/user/:id
- * @apiVersion 0.1.0
- */
-router.get('/:id', findByUserId);
+// /**
+//  * @apiDescription Get Contacts by User id
+//  * @api {GET} /api/contact/user/:id Get Contacts by User id
+//  * @apiName GetByUserIdContact
+//  * @apiGroup Contact
+//  *
+//  * @apiParam {Number} id Id
+//  *
+//  * @apiHeaderExample {json} Header-Example:
+//  *   {
+//  *     'Content-Type': 'application/json'
+//  *   }
+//  * @apiUse ContactNotFoundError
+//  *
+//  * @apiSampleRequest http://localhost:4000/api/contact/user/:id
+//  * @apiVersion 0.1.0
+//  */
+// router.get('/:id', findByUserId);
 
 /**
  * @apiDescription Get all Companies
@@ -183,7 +183,7 @@ router.get('/all', getMany);
  * @apiSampleRequest http://localhost:4000/api/contact/:id
  * @apiVersion 0.1.0
  */
-router.get('/:id', findOneById);
+router.get('/:id', getOneById);
 
 /**
  * @apiDescription Update a single Contact

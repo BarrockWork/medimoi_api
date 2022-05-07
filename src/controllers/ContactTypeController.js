@@ -5,6 +5,7 @@ const {
   extractFieldsToChange,
   extractQueryParameters,
   verifySlugInDb,
+  transformIntValue,
 } = require('./../utils/requestHandler');
 
 const createOne = async (req, res) => {
@@ -83,9 +84,33 @@ const findOneByNameSlug = async (req, res) => {
   }
 };
 
+const getOneById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const contactType = await Models.ContactType.findUnique({
+      where: {
+        id: transformIntValue(id),
+      },
+    });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(contactType);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 const getAll = async (req, res) => {
   try {
-    let configClient = extractQueryParameters(req.query, []);
+    let configClient = extractQueryParameters(req.query, [
+      'sort',
+      'range',
+      'filter',
+    ]);
 
     const contactTypes = await Models.ContactType.findMany(configClient);
     const totalCount = await Models.ContactType.count(configClient);
@@ -108,7 +133,6 @@ const getMany = async (req, res) => {
   try {
     const configClient = extractQueryParameters(req.query, ['filterMany']);
     const contactTypes = await Models.ContactType.findMany(configClient);
-
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
@@ -149,6 +173,28 @@ const updateOne = async (req, res) => {
   }
 };
 
+const deleteOneById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const configClient = {
+      where: {
+        id: transformIntValue(id),
+      },
+    };
+
+    const contactType = await Models.ContactType.delete(configClient);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(contactType);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 const deleteOne = async (req, res) => {
   try {
     const configClient = {
@@ -176,6 +222,8 @@ module.exports = {
   findOneByNameSlug,
   getAll,
   getMany,
+  getOneById,
   updateOne,
   deleteOne,
+  deleteOneById,
 };

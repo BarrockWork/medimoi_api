@@ -40,26 +40,6 @@ const {
 /* ROUTES --------------------------------------------*/
 
 /**
- * @apiDescription Get all Companies
- * @api {GET} /api/contact/all/:isActive? Get all Contact
- * @apiName GetAllContact
- * @apiGroup Contact
- *
- * @apiParam {Boolean} [isActive=none]
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- *
- * @apiUse ContactNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/contact/all
- * @apiVersion 0.1.0
- */
-router.get('/all', getAll);
-
-/**
  * @apiDescription Insert single Contact
  * @api {POST} /api/contact/new Create single Contact
  * @apiName CreateContact
@@ -127,6 +107,26 @@ router.post('/new', createOne);
  * @apiVersion 0.1.0
  */
 router.post('/news', createMany);
+
+/**
+ * @apiDescription Get all Companies
+ * @api {GET} /api/contact/all/:isActive? Get all Contact
+ * @apiName GetAllContact
+ * @apiGroup Contact
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse ContactNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact/all
+ * @apiVersion 0.1.0
+ */
+router.get('/all', getAll);
 
 // /**
 //  * @apiDescription Get Contacts by User id

@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const {checkRequiredFields, transformIntValue, extractFieldsToChange} = require('./../utils/requestHandler')
+const {checkRequiredFields, transformIntValue, extractFieldsToChange, extractQueryParameters} = require('./../utils/requestHandler')
 
 const createDrugLevel = async (req, res) => {
     try {
@@ -60,7 +60,7 @@ const createManyDrugLevel = async (req, res) => {
 
 const findAll = async (req, res) => {
     try {
-        const configClient = extractFieldsToChange(req.query, ['sort', 'range', 'filter']);
+        const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter']);
         const drugLevel = await Models.DrugLevel.findMany(configClient);
         const totalCount = await Models.DrugLevel.count();
 
@@ -75,7 +75,7 @@ const findAll = async (req, res) => {
 
 const findMany = async (req, res) => {
     try{
-        const configClient = extractFieldsToChange(req.query, ['filtermany']);
+        const configClient = extractQueryParameters(req.query, ['filtermany']);
         const drugLevel = await Models.DrugLevel.findMany(configClient);
         await Models.$disconnect();
 

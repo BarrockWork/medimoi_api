@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb} = require('./../utils/requestHandler')
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, transformIntValue, extractQueryParameters} = require('./../utils/requestHandler')
 
 
 const createDiseaseType = async (req, res) => {
@@ -59,12 +59,28 @@ const createManyDiseaseType = async (req, res) => {
 }
 
 
-const getAllDiseaseType = async (req, res) => {
+const findAll = async (req, res) => {
     try {
-        const diseaseType = await Models.diseaseType.findMany()
+        const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter']);
+        const diseaseTypes = await Models.diseaseType.findMany(configClient);
+        const totalCount = await Models.diseaseType.count();
+
+        await Models.$disconnect();
+        res.header('Access-Control-Expose-Headers', 'Content-Range');
+        res.header('Content-Range', totalCount);
+        res.status(200).json(diseaseTypes)
+    } catch (error) {
+        return res.status(400).json(req)
+    }
+}
+
+const findMany = async (req, res) => {
+    try {
+        const configClient = extractQueryParameters(req.query, ['filterMany']);
+        const diseaseTypes = await Models.diseaseType.findMany(configClient);
         await Models.$disconnect();
 
-        res.status(200).json(diseaseType)
+        res.status(200).json(diseaseTypes)
     } catch (error) {
         return res.status(400).json(req)
     }
@@ -77,6 +93,21 @@ const findBySlug = async (req, res) => {
                 nameSlug: req.params.nameSlug,
             },
         })
+        await Models.$disconnect();
+        res.status(200).json(diseaseType)
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+}
+
+const findById = async (req, res) => {
+    try {
+        const diseaseType = await Models.diseaseType.findUnique({
+            where: {
+                id: transformIntValue(req.params.id),
+            }
+        });
+
         await Models.$disconnect();
         res.status(200).json(diseaseType)
     } catch (error) {
@@ -111,6 +142,29 @@ const updateBySlug = async (req, res) => {
     }
 }
 
+const updateById = async (req, res) => {
+    try {
+        // Selection of fields
+        const onlyThoseFields = ['name', 'description','isActive'];
+        const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+        // Check if the new slug exists
+        const configRequestDB = await verifySlugInDb(Models,
+            "DiseaseType",
+            req.params.id,
+            createSlug(req.body.name),
+            fieldsFiltered);
+
+        // Update the current entry
+        const diseaseType = await Models.diseaseType.update(configRequestDB);
+
+        await Models.$disconnect();
+        res.status(200).json(diseaseType);
+    } catch (error) {
+        return res.status(400).json(error);
+    }
+}
+
 const deleteBySlug = async (req, res) => {
     try {
         const deleteDiseaseType = await Models.diseaseType.delete({
@@ -126,11 +180,30 @@ const deleteBySlug = async (req, res) => {
     }
 }
 
+const deleteById = async (req, res) => {
+    try {
+        const deleteDiseaseType = await Models.diseaseType.delete({
+            where: {
+                id: transformIntValue(req.params.id),
+            },
+        })
+
+        await Models.$disconnect();
+        res.status(200).json(deleteDiseaseType)
+    } catch (error) {
+        return res.status(400).json(error)
+    }
+}
+
 module.exports = {
     createDiseaseType,
     createManyDiseaseType,
-    getAllDiseaseType,
+    findAll,
     findBySlug,
     updateBySlug,
-    deleteBySlug
+    deleteBySlug,
+    findById,
+    updateById,
+    deleteById,
+    findMany
 }

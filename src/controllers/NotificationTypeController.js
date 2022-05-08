@@ -148,6 +148,37 @@ const getMany = async (req, res) => {
     return res.status(400).json(error);
   }
 };
+const updateOneById = async (req, res) => {
+  try {
+    // Selection of fields
+    const onlyThoseFields = ['name', 'isActive'];
+    const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+    // Check if the new slug exists
+    const configRequestDB = await verifySlugInDb(
+      Models,
+      'NotificationType',
+      req.params.id,
+      createSlug(req.body.name),
+      fieldsFiltered
+    );
+
+    // Update the current entry
+    const notificationType = await Models.NotificationType.update(
+      configRequestDB
+    );
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(notificationType);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+  }
+};
 
 const updateOne = async (req, res) => {
   try {
@@ -230,6 +261,7 @@ module.exports = {
   getAll,
   getMany,
   getOneById,
+  updateOneById,
   updateOne,
   deleteOneById,
   deleteOne,

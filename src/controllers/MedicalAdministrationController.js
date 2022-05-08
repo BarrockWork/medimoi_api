@@ -150,7 +150,7 @@ const updateOneByNameSlug = async (req, res) => {
             Models,
             "medicalAdministration",
             req.params.nameSlug,
-            createSlug(req.body.name),
+            req.body.name,
             fieldsFiltered
         );
 
@@ -179,7 +179,7 @@ const updateOneById = async (req, res) => {
             Models,
             "medicalAdministration",
             req.params.id,
-            createSlug(req.body.name),
+            req.body.name,
             fieldsFiltered
         );
 

@@ -219,6 +219,12 @@ const transformIntValue = (value) => {
   return result;
 };
 
+// transform a string to a boolean
+const transformBooleanValue = (value) => {
+  const result = value === 'true' ? true : false;
+  return result;
+}
+
 /**
  * Get user infos
  */
@@ -392,4 +398,5 @@ module.exports = {
   selectTreatmentMediasInfos,
   selecttreatmentPeriodicityInfos,
   selectTreatmentGlobalInfos,
+  transformBooleanValue,
 };

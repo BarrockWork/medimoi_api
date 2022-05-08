@@ -16,7 +16,7 @@ const createDrugLevel = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(drugLevel);
     } catch (error) {
-        return res.status(400).json(req);
+        return res.status(400).json(error);
     }
 }
 
@@ -75,7 +75,7 @@ const findAll = async (req, res) => {
 
 const findMany = async (req, res) => {
     try{
-        const configClient = extractQueryParameters(req.query, ['filtermany']);
+        const configClient = extractQueryParameters(req.query, ['filterMany']);
         const drugLevel = await Models.DrugLevel.findMany(configClient);
         await Models.$disconnect();
 
@@ -87,7 +87,7 @@ const findMany = async (req, res) => {
 
 const getById = async (req, res) => {
     try {
-        const drugLevel = await Models.DrugLevel.findMany({
+        const drugLevel = await Models.DrugLevel.findUnique({
             where: {
                 id: transformIntValue(req.params.id),
             },
@@ -97,22 +97,19 @@ const getById = async (req, res) => {
 
         res.status(200).json(drugLevel);
     } catch (error) {
-        return res.status(400).json(req)
+        return res.status(400).json(error)
     }
 }
 
 const updateById = async (req, res) => {
     try {
-        // Check and transform the param is a number
-        const id = transformIntValue(req.params.id);
-
         // Selection of fields
         const onlyThoseFields = ['level', 'description', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
         // Check if the new slug exists
         const configRequestDB = {
             where: {
-                id: id
+                id: transformIntValue(req.params.id),
             },
             data: fieldsFiltered
         };

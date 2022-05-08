@@ -19,7 +19,8 @@ const createDisease = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(disease);
     } catch (error) {
-        return res.status(400).json(req);
+        console.log(error);
+        return res.status(400).json(error);
     }
 }
 

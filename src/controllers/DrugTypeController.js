@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, extractQueryParameters} = require("../utils/requestHandler");
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, extractQueryParameters, transformIntValue} = require("../utils/requestHandler");
 
 const createDrugType = async (req, res) => {
     try {
@@ -17,7 +17,8 @@ const createDrugType = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(DrugType);
     } catch (error) {
-        return res.status(400).json(req);
+        console.log(error);
+        return res.status(400).json(error);
     }
 }
 
@@ -191,13 +192,14 @@ const deleteById = async (req, res) => {
     try {
         const deleteDrug = await Models.DrugType.delete({
             where: {
-                id: parseInt(req.params.id)
+                id: transformIntValue(req.params.id)
             },
         });
         
         await Models.$disconnect();
         res.status(200).json(deleteDrug)
     } catch (error) {
+        console.log(error);
         return res.status(400).json(error)
     }
 }

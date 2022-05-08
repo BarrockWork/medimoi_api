@@ -7,7 +7,6 @@ const {
   extractQueryParameters,
   transformIntValue,
 } = require('./../utils/requestHandler');
-const { toLower } = require('ramda');
 
 const createOne = async (req, res) => {
   try {
@@ -66,6 +65,7 @@ const createMany = async (req, res) => {
     // Success Response
     res.status(200).json(companies);
   } catch (error) {
+    console.log(error);
     res.status(400).json(error);
   }
 };
@@ -92,7 +92,11 @@ const findOneByNameSlug = async (req, res) => {
 const GetOneById = async (req, res) => {
   try {
     const { id } = req.params;
-    const company = awaparseInt;
+    const company = await Models.Company.findUnique({
+      where: {
+        id: transformIntValue(id),
+      },
+    });
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
@@ -100,7 +104,6 @@ const GetOneById = async (req, res) => {
     // Success Response
     res.status(200).json(company);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -112,12 +115,6 @@ const getAll = async (req, res) => {
       'range',
       'filter',
     ]);
-
-    // configClient.include = {
-    //   orderBy: {
-    //     nameSlug: 'asc',
-    //   },
-    // };
 
     const companies = await Models.Company.findMany(configClient);
     const totalCount = await Models.Company.count();
@@ -131,7 +128,6 @@ const getAll = async (req, res) => {
     res.set('Content-Range', totalCount);
     res.status(200).json(companies);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -142,12 +138,16 @@ const updateOne = async (req, res) => {
     const onlyThoseFields = ['name', 'siret', 'tva', 'isActive'];
     const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
+    const newSlug = req.body.name
+      ? createSlug(req.body.name)
+      : req.params.nameSlug;
+
     // Check if the new slug exists
     const configRequestDB = await verifySlugInDb(
       Models,
       'Company',
       req.params.nameSlug,
-      createSlug(req.body.name),
+      newSlug,
       fieldsFiltered
     );
 
@@ -161,6 +161,7 @@ const updateOne = async (req, res) => {
     // Success Response
     res.status(200).json(company);
   } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -233,7 +234,6 @@ const deleteOneById = async (req, res) => {
     // Success Response
     res.status(200).json(company);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };

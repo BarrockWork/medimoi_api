@@ -57,6 +57,26 @@ const {
 router.get('/all', getAll);
 
 /**
+ * @apiDescription Get many Notification_types
+ * @api {GET} /api/notification_type/many Get many Notification_type
+ * @apiName GetAllNotificationTypeByMany
+ * @apiGroup Notification_Type
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse NotificationTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/notification_type/many
+ * @apiVersion 0.1.0
+ */
+router.get('/many', getMany);
+
+/**
  * @apiDescription Delete a single Notification_type by Id
  * @api {DELETE} /api/notification_type/:id Delete single Notification_type by Id
  * @apiName DeleteSingleNotificationType
@@ -142,26 +162,6 @@ router.post('/news', createMany);
  * @apiVersion 0.1.0
  */
 router.get('/slug/:nameSlug', findOneByNameSlug);
-
-/**
- * @apiDescription Get many Notification_types
- * @api {GET} /api/notification_type/many Get many Notification_type
- * @apiName GetAllNotificationType
- * @apiGroup Notification_Type
- *
- * @apiParam {Boolean} [isActive=none]
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- *
- * @apiUse NotificationTypeNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/notification_type/many
- * @apiVersion 0.1.0
- */
-router.get('/many', getMany);
 
 /**
  * @apiDescription Update a single Notification_type by Id

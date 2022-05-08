@@ -38,10 +38,6 @@ const {
 
 /* ROUTES --------------------------------------------*/
 
-const test = (req, res) => {
-  res.send('sq fdonctionn');
-};
-
 /**
  * @apiDescription Insert single Company
  * @api {POST} /api/company/new Create single Company

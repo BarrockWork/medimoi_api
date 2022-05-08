@@ -159,7 +159,7 @@ const updateOneById = async (req, res) => {
       Models,
       'NotificationType',
       req.params.id,
-      createSlug(req.body.name),
+      req.body.name,
       fieldsFiltered
     );
 
@@ -191,7 +191,7 @@ const updateOne = async (req, res) => {
       Models,
       'NotificationType',
       req.params.nameSlug,
-      createSlug(req.body.name),
+      req.body.name,
       fieldsFiltered
     );
 

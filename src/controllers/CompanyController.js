@@ -138,16 +138,12 @@ const updateOne = async (req, res) => {
     const onlyThoseFields = ['name', 'siret', 'tva', 'isActive'];
     const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
 
-    const newSlug = req.body.name
-      ? createSlug(req.body.name)
-      : req.params.nameSlug;
-
     // Check if the new slug exists
     const configRequestDB = await verifySlugInDb(
       Models,
       'Company',
       req.params.nameSlug,
-      newSlug,
+      req.body.name,
       fieldsFiltered
     );
 
@@ -177,7 +173,7 @@ const updateOneById = async (req, res) => {
       Models,
       'Company',
       req.params.id,
-      createSlug(req.body.name),
+      req.body.name,
       fieldsFiltered
     );
 

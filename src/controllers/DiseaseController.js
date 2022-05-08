@@ -1,5 +1,5 @@
 const Models = require('./../models');
-const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, transformIntValue} = require('./../utils/requestHandler')
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, transformIntValue, extractQueryParameters} = require('./../utils/requestHandler')
 
 const createDisease = async (req, res) => {
     try {
@@ -66,7 +66,7 @@ const createManyDisease = async (req, res) => {
 
 const findAll = async (req, res) => {
     try {
-        const configClient = extractFieldsToChange(req.query, ['sort', 'range', 'filter']);
+        const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter']);
         const diseases = await Models.disease.findMany(configClient);
         const totalCount = await Models.disease.count();
 
@@ -81,7 +81,7 @@ const findAll = async (req, res) => {
 
 const findMany = async (req, res) => {
     try {
-        const configClient = extractFieldsToChange(req.query, ['filterMany']);
+        const configClient = extractQueryParameters(req.query, ['filterMany']);
         const diseases = await Models.disease.findMany(configClient);
         await Models.$disconnect();
 

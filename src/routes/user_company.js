@@ -154,7 +154,7 @@ router.get('/user/:id', findByUserId);
  *
  * @apiUse UserCompanyNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/user_company/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/user_company/all
  * @apiVersion 0.1.0
  */
 router.get('/all', findAll);

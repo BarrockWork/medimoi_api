@@ -65,11 +65,13 @@ const createMany = async (req, res) => {
   }
 };
 
-const findOneByNameSlug = async (req, res) => {
+const getOneById = async (req, res) => {
   try {
+    console.log(req.params);
+    const { id } = req.params;
     const contactType = await Models.ContactType.findUnique({
       where: {
-        nameSlug: req.params.nameSlug,
+        id: transformIntValue(id),
       },
     });
 
@@ -80,16 +82,16 @@ const findOneByNameSlug = async (req, res) => {
     // Success Response
     res.status(200).json(contactType);
   } catch (error) {
+    console.log(error);
     return res.status(400).json(error);
   }
 };
 
-const getOneById = async (req, res) => {
+const findOneByNameSlug = async (req, res) => {
   try {
-    const { id } = req.params;
     const contactType = await Models.ContactType.findUnique({
       where: {
-        id: transformIntValue(id),
+        nameSlug: req.params.nameSlug,
       },
     });
 
@@ -138,6 +140,35 @@ const getMany = async (req, res) => {
     await Models.$disconnect();
 
     res.status(200).json(contactTypes);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+const updateOneById = async (req, res) => {
+  try {
+    // Selection of fields
+    const onlyThoseFields = ['name', 'isActive'];
+    const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+    // Check if the Id I exists
+    const configRequestDB = await verifySlugInDb(
+      Models,
+      'ContactType',
+      req.params.id,
+      createSlug(req.body.name),
+      fieldsFiltered
+    );
+
+    // Update the current entry
+    const company = await Models.ContactType.update(configRequestDB);
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Success Response
+    res.status(200).json(company);
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -220,6 +251,7 @@ module.exports = {
   createOne,
   createMany,
   findOneByNameSlug,
+  updateOneById,
   getAll,
   getMany,
   getOneById,

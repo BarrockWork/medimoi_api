@@ -67,7 +67,7 @@ const createSlug = (textForSlug) => {
  * @param Models Prisma Client
  * @param SchemaTarget Schema
  * @param currentSlugOrId
- * @param newSlug String
+ * @param nameParam String | undefined
  * @param fieldsFiltered Array String
  * @returns {string}
  */
@@ -75,10 +75,11 @@ const verifySlugInDb = async (
     Models,
     SchemaTarget,
     currentSlugOrId,
-    newSlug,
+    nameParam,
     fieldsFiltered
 ) => {
   try {
+    // Init the currentSlug
     let currentSlug = currentSlugOrId;
 
     // Check if is id or nameSlug in the request params
@@ -91,6 +92,19 @@ const verifySlugInDb = async (
       });
       currentSlug = res.nameSlug;
     }
+
+    // Check if nameParam is undefined or not
+    if(!nameParam) {
+      return {
+        where: {
+          nameSlug: currentSlug,
+        },
+        data: fieldsFiltered,
+      };
+    }
+
+    // Init the new nameSlug
+    let newSlug = createSlug(nameParam);
 
     // Check slug in DB
     const findData = await Models[SchemaTarget].findUnique({
@@ -204,6 +218,12 @@ const transformIntValue = (value) => {
   }
   return result;
 };
+
+// transform a string to a boolean
+const transformBooleanValue = (value) => {
+  const result = value === 'true' ? true : false;
+  return result;
+}
 
 /**
  * Get user infos
@@ -378,4 +398,5 @@ module.exports = {
   selectTreatmentMediasInfos,
   selecttreatmentPeriodicityInfos,
   selectTreatmentGlobalInfos,
+  transformBooleanValue,
 };

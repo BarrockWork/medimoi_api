@@ -2,14 +2,15 @@ let express = require('express');
 let router = express.Router();
 
 const {
-    createOne,
-    createMany,
-    findOneById,
-    findAll,
-    findByUserId,
-    updateOne,
-    deleteOne
-} = require('./../controllers/UserCompanyController')
+  createOne,
+  createMany,
+  findOneById,
+  findAll,
+  findMany,
+  findByUserId,
+  updateOne,
+  deleteOne,
+} = require('./../controllers/UserCompanyController');
 
 /* DEFINES -------------------------------------------*/
 
@@ -33,7 +34,6 @@ const {
  */
 
 /* ROUTES --------------------------------------------*/
-
 /**
  * @apiDescription Insert single UserCompany
  * @api {POST} /api/user_company/new Create single UserCompany
@@ -56,6 +56,35 @@ const {
  * @apiVersion 0.1.0
  */
 router.post('/new', createOne);
+
+/**
+ * @apiDescription Update a single UserCompany
+ * @api {PUT} /api/user_company/:id Update single UserCompany
+ * @apiName UpdateSingleUserCompany
+ * @apiGroup UserCompany
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiBody {Number} [company_id=1] Company id.
+ * @apiBody {Boolean} [isActive=true] Is active.
+ *
+ * @apiParam {Number} id Id
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     "company_id": 3,
+ *     "isActive":   false
+ *  }
+ *
+ * @apiUse UserCompanyNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_company/:id
+ * @apiVersion 0.1.0
+ */
+router.put('/:id', updateOne);
 
 /**
  * @apiDescription Insert many UserCompany
@@ -125,10 +154,30 @@ router.get('/user/:id', findByUserId);
  *
  * @apiUse UserCompanyNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/user_company/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/user_company/all
  * @apiVersion 0.1.0
  */
-router.get('/all/:isActive?', findAll);
+router.get('/all', findAll);
+
+/**
+ * @apiDescription Get all UserCompanies
+ * @api {GET} /api/user_company/many Get many UserCompany
+ * @apiName GetManyUserCompany
+ * @apiGroup UserCompany
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse UserCompanyNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/user_company/many
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
 
 /**
  * @apiDescription Get a UserCompany by id
@@ -150,35 +199,6 @@ router.get('/all/:isActive?', findAll);
 router.get('/:id', findOneById);
 
 /**
- * @apiDescription Update a single UserCompany
- * @api {PUT} /api/user_company/:id Update single UserCompany
- * @apiName UpdateSingleUserCompany
- * @apiGroup UserCompany
- *
- * @apiHeaderExample {json} Header-Example:
- *   {
- *     'Content-Type': 'application/json'
- *   }
- *
- * @apiBody {Number} [company_id=1] Company id.
- * @apiBody {Boolean} [isActive=true] Is active.
- *
- * @apiParam {Number} id Id
- *
- * @apiParamExample {json} Request-Example
- *  {
- *     "company_id": 3,
- *     "isActive":   false
- *  }
- *
- * @apiUse UserCompanyNotFoundError
- *
- * @apiSampleRequest http://localhost:4000/api/user_company/:id
- * @apiVersion 0.1.0
- */
-router.put('/:id', updateOne);
-
-/**
  * @apiDescription Delete a single UserCompany
  * @api {DELETE} /api/user_company/:id Delete single UserCompany
  * @apiName DeleteSingleUserCompany
@@ -195,6 +215,5 @@ router.put('/:id', updateOne);
  * @apiVersion 0.1.0
  */
 router.delete('/:id', deleteOne);
-
 
 module.exports = router;

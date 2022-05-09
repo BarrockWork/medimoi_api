@@ -162,7 +162,7 @@ const updateTreatmentPeriodicityById = async (req, res) => {
             Models,
             "treatmentPeriodicity",
             req.params.id,
-            createSlug(req.body.name),
+            req.body.name,
             fieldsFiltered
         );
 
@@ -189,7 +189,7 @@ const updateTreatmentPeriodicityBySlug = async (req, res) => {
             Models,
             "treatmentPeriodicity",
             req.params.nameSlug,
-            createSlug(req.body.name),
+            req.body.name,
             fieldsFiltered
         );
         // console.log(req.body);

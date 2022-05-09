@@ -1,8 +1,9 @@
 const Models = require('./../models');
-const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, extractQueryParameters} = require('./../utils/requestHandler')
+const {checkRequiredFields, createSlug, extractFieldsToChange, verifySlugInDb, extractQueryParameters, transformIntValue, transformBooleanValue} = require('./../utils/requestHandler')
 
 const createDrug = async (req, res) => {
     try {
+        // console.log(req.body)
         // Check the required fields
         checkRequiredFields(req, res, ['name', 'description', 'isPrescription', 'drug_level_id', 'drug_type_id', 'medical_administration_id']);
 
@@ -11,17 +12,18 @@ const createDrug = async (req, res) => {
                 name: req.body.name,
                 nameSlug: createSlug(req.body.name),
                 description: req.body.description,
-                isPrescription: req.body.isPrescription,
-                drug_level_id: req.body.drug_level_id,
-                drug_type_id: req.body.drug_type_id,
-                medical_administration_id: req.body.medical_administration_id,
+                isPrescription: transformBooleanValue(req.body.isPrescription),
+                drug_level_id: transformIntValue(req.body.drug_level_id),
+                drug_type_id: transformIntValue(req.body.drug_type_id),
+                medical_administration_id: transformIntValue(req.body.medical_administration_id),
             }
         });
 
         await Models.$disconnect();
         res.status(200).json(drug);
     } catch (error) {
-        return res.status(400).json(req);
+        console.log(error)
+        return res.status(400).json(error);
     }
 
 }

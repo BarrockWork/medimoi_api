@@ -2,13 +2,17 @@ let express = require('express');
 let router = express.Router();
 
 const {
-    createOne,
-    createMany,
-    findOneByNameSlug,
-    findAll,
-    updateOne,
-    deleteOne
-} = require('./../controllers/ContactTypeController')
+  createOne,
+  createMany,
+  findOneByNameSlug,
+  getAll,
+  getMany,
+  getOneById,
+  updateOne,
+  deleteOne,
+  deleteOneById,
+  updateOneById,
+} = require('./../controllers/ContactTypeController');
 
 /* DEFINES -------------------------------------------*/
 
@@ -31,6 +35,65 @@ const {
  */
 
 /* ROUTES --------------------------------------------*/
+
+/**
+ * @apiDescription Get all Contact_types
+ * @api {GET} /api/contact_type/all Get all Contact_type
+ * @apiName GetAllContact_type
+ * @apiGroup ContactType
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse ContactTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact_type/all
+ * @apiVersion 0.1.0
+ */
+router.get('/all', getAll);
+
+/**
+ * @apiDescription Get all Contact_types
+ * @api {GET} /api/contact_type/many Get many Contact_type
+ * @apiName GetManyContact_type
+ * @apiGroup ContactType
+ *
+ * @apiParam {Boolean} [isActive=none]
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiUse ContactTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact_type/many
+ * @apiVersion 0.1.0
+ */
+router.get('/many', getMany);
+
+/**
+ * @apiDescription Get a Contact_type by the ID
+ * @api {GET} /api/contact_type/:id Get Contact_type by ID
+ * @apiName GetByNameSlugContact_typeById
+ * @apiGroup ContactType
+ *
+ * @apiParam {Number} id Contact type ID
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ * @apiUse ContactTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact_type/:id
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', getOneById);
 
 /**
  * @apiDescription Insert single Contact_type
@@ -76,7 +139,7 @@ router.post('/new', createOne);
  *              "name": "Type 2"
  *          },
  *          {
- *              "name": "Type 3",
+ *              "name": "Type 3"
  *          }
  *      ]
  *  }
@@ -86,9 +149,36 @@ router.post('/new', createOne);
 router.post('/news', createMany);
 
 /**
+ * @apiDescription Update a single Contact_type by Id
+ * @api {PUT} /api/contact_type/:id Update single Contact_type by ID
+ * @apiName UpdateSingleContact_typeById
+ * @apiGroup ContactType
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiBody {String[2..50]} [name="New name"] Name (50).
+ * @apiBody {Boolean} [isActive=true] Is active.
+ * @apiParam {Int} id ContactType ID
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     "name":       "New Name",
+ *     "isActive":   false
+ *  }
+ *
+ * @apiUse ContactTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/contact_type/:id
+ * @apiVersion 0.1.0
+ */
+router.put('/:id', updateOneById);
+
+/**
  * @apiDescription Get a Contact_type by the nameSlug
- * @api {GET} /api/contact_type/slug/:nameSlug Get Contact_type by nameSlug
- * @apiName GetByNameSlugContact_type
+ * @api {GET} /api/contact_type/:nameSlug Get Contact_type by nameSlug
+ * @apiName GetByNameSlugContact_typeByNameSlug
  * @apiGroup ContactType
  *
  * @apiParam {String[2..50]} nameSlug Name slug
@@ -103,15 +193,12 @@ router.post('/news', createMany);
  * @apiVersion 0.1.0
  */
 router.get('/slug/:nameSlug', findOneByNameSlug);
-
 /**
- * @apiDescription Get all Contact_types
- * @api {GET} /api/contact_type/all/:isActive? Get all Contact_type
- * @apiName GetAllContact_type
+ * @apiDescription Delete a single Contact_type
+ * @api {DELETE} /api/contact_type/:id Delete single Contact_type by ID
+ * @apiName DeleteSingleContact_typeById
  * @apiGroup ContactType
- *
- * @apiParam {Boolean} [isActive=none]
- *
+ * @apiParam {Id} id Contact type ID
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     'Content-Type': 'application/json'
@@ -119,15 +206,15 @@ router.get('/slug/:nameSlug', findOneByNameSlug);
  *
  * @apiUse ContactTypeNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/contact_type/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/contact_type/:id
  * @apiVersion 0.1.0
  */
-router.get('/all/:isActive?', findAll);
+router.delete('/:id', deleteOneById);
 
 /**
- * @apiDescription Update a single Contact_type
- * @api {PUT} /api/contact_type/slug/:nameSLug Update single Contact_type
- * @apiName UpdateSingleContact_type
+ * @apiDescription Update a single Contact_type by NameSlug
+ * @api {PUT} /api/contact_type/:nameSLug Update single Contact_type by nameSlug
+ * @apiName UpdateSingleContact_typeByNameSlug
  * @apiGroup ContactType
  *
  * @apiHeaderExample {json} Header-Example:
@@ -146,15 +233,15 @@ router.get('/all/:isActive?', findAll);
  *
  * @apiUse ContactTypeNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/contact_type/slug/:nameSlug
+ * @apiSampleRequest http://localhost:4000/api/contact_type/:nameSlug
  * @apiVersion 0.1.0
  */
 router.put('/slug/:nameSlug', updateOne);
 
 /**
  * @apiDescription Delete a single Contact_type
- * @api {DELETE} /api/contact_type/slug/:nameSLug Delete single Contact_type
- * @apiName DeleteSingleContact_type
+ * @api {DELETE} /api/contact_type/:nameSLug Delete single Contact_type by nameSlug
+ * @apiName DeleteSingleContact_typeByNameSlug
  * @apiGroup ContactType
  * @apiParam {String[2..50]} nameSlug Name slug
  * @apiHeaderExample {json} Header-Example:
@@ -168,6 +255,5 @@ router.put('/slug/:nameSlug', updateOne);
  * @apiVersion 0.1.0
  */
 router.delete('/slug/:nameSlug', deleteOne);
-
 
 module.exports = router;

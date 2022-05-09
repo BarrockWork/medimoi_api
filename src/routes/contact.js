@@ -1,15 +1,17 @@
 let express = require('express');
+const res = require('express/lib/response');
 let router = express.Router();
 
 const {
-    createOne,
-    createMany,
-    findOneById,
-    findAll,
-    findByUserId,
-    updateOne,
-    deleteOne
-} = require('./../controllers/ContactController')
+  createOne,
+  createMany,
+  getOneById,
+  getAll,
+  getMany,
+  // findByUserId,
+  updateOne,
+  deleteOne,
+} = require('./../controllers/ContactController');
 
 /* DEFINES -------------------------------------------*/
 
@@ -107,23 +109,43 @@ router.post('/new', createOne);
 router.post('/news', createMany);
 
 /**
- * @apiDescription Get Contacts by User id
- * @api {GET} /api/contact/user/:id Get Contacts by User id
- * @apiName GetByUserIdContact
+ * @apiDescription Get all Companies
+ * @api {GET} /api/contact/all/:isActive? Get all Contact
+ * @apiName GetAllContact
  * @apiGroup Contact
  *
- * @apiParam {Number} id Id
+ * @apiParam {Boolean} [isActive=none]
  *
  * @apiHeaderExample {json} Header-Example:
  *   {
  *     'Content-Type': 'application/json'
  *   }
+ *
  * @apiUse ContactNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/contact/user/:id
+ * @apiSampleRequest http://localhost:4000/api/contact/all
  * @apiVersion 0.1.0
  */
-router.get('/user/:id', findByUserId);
+router.get('/all', getAll);
+
+// /**
+//  * @apiDescription Get Contacts by User id
+//  * @api {GET} /api/contact/user/:id Get Contacts by User id
+//  * @apiName GetByUserIdContact
+//  * @apiGroup Contact
+//  *
+//  * @apiParam {Number} id Id
+//  *
+//  * @apiHeaderExample {json} Header-Example:
+//  *   {
+//  *     'Content-Type': 'application/json'
+//  *   }
+//  * @apiUse ContactNotFoundError
+//  *
+//  * @apiSampleRequest http://localhost:4000/api/contact/user/:id
+//  * @apiVersion 0.1.0
+//  */
+// router.get('/:id', findByUserId);
 
 /**
  * @apiDescription Get all Companies
@@ -140,10 +162,10 @@ router.get('/user/:id', findByUserId);
  *
  * @apiUse ContactNotFoundError
  *
- * @apiSampleRequest http://localhost:4000/api/contact/all/:isActive?
+ * @apiSampleRequest http://localhost:4000/api/contact/many
  * @apiVersion 0.1.0
  */
-router.get('/all/:isActive?', findAll);
+router.get('/many', getMany);
 
 /**
  * @apiDescription Get a Contact by id
@@ -162,7 +184,7 @@ router.get('/all/:isActive?', findAll);
  * @apiSampleRequest http://localhost:4000/api/contact/:id
  * @apiVersion 0.1.0
  */
-router.get('/:id', findOneById);
+router.get('/:id', getOneById);
 
 /**
  * @apiDescription Update a single Contact
@@ -216,6 +238,5 @@ router.put('/:id', updateOne);
  * @apiVersion 0.1.0
  */
 router.delete('/:id', deleteOne);
-
 
 module.exports = router;

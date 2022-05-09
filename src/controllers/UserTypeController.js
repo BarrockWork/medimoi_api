@@ -215,13 +215,11 @@ const createMany = async (req, res) => {
 // delete a user type by ID
 const deleteOneById = async (req, res) => {
     try {
-        const id = transformIntValue(req.params.id);
         const configClient = {
             where: {
-                id: id
+                id: transformIntValue(req.params.id)
             },
         };
-
         const UserType = await Models.UserType.delete(configClient);
 
         // The prisma client can run only 10 instances simultaneously,
@@ -231,6 +229,7 @@ const deleteOneById = async (req, res) => {
         // Success Response
         res.status(200).json(UserType);
     } catch (error) {
+        console.log(error);
         return res.status(400).json(error);
     }
 };

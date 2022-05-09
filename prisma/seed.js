@@ -106,11 +106,7 @@ async function main() {
         const address_road_type_saved = await Models.addressRoadType.create({
             data: addressRoadTypes[0],
         })
-        const getUser = await Models.User.findUnique({
-            where: {
-                id: 1,
-            }
-        });
+        const getUser = await Models.User.findFirst();
         try {
             address.map(async (data) => {
                 await Models.address.create({
@@ -327,7 +323,7 @@ async function main() {
 
     // creation treatment_drug
     try {
-        const getTreatment = await Models.treatment.findFirst();
+        const getTreatment = await Models.treatment.find;
         const getDrug = await Models.drug.findFirst();
 
         treatmentDrugs.map(async (data) => {

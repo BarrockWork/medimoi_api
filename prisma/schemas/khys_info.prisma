@@ -1,0 +1,32 @@
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model KhysInfo {
+    id              Int         @id @default(autoincrement())
+    name            String      @db.VarChar(50)
+    nameSlug        String      @db.VarChar(50)
+    phoneNumber     String      @db.VarChar(50)
+    email           String      @db.VarChar(50) @unique
+    // AddressRoadType relation ----------------------------
+    address_road_type_id    Int
+    AddressRoadType         AddressRoadType   @relation(fields: [address_road_type_id], references: [id])
+    numberRoad      Int
+    streetName      String      @db.VarChar(50)
+    zipcode         String      @db.VarChar(10)
+    city            String      @db.VarChar(50)
+    region          String      @db.VarChar(50)
+    country         String      @db.VarChar(50)
+    siret           String      @db.VarChar(50)
+    tva             String      @db.VarChar(50)
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime?   @updatedAt
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model AddressRoadType {
+    id  Int @id
+    Addresses    Address[]
+}

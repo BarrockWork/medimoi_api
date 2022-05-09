@@ -232,12 +232,13 @@ model NotificationHistory {
 }
 
 model AddressRoadType {
-  id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(50)
-  nameSlug  String    @unique @db.VarChar(50)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  Addresses Address[] @relation(name: "AddressToAddressRoadType")
+  id        Int         @id @default(autoincrement())
+  name      String      @db.VarChar(50)
+  nameSlug  String      @unique @db.VarChar(50)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @updatedAt
+  Addresses Address[]   @relation(name: "AddressToAddressRoadType")
+  KhysInfo  KhysInfo[]  @relation(name: "KhysInfoToAddressRoadType")
 }
 
 model DiseaseType {
@@ -263,4 +264,24 @@ model Disease {
   createdAt        DateTime    @default(now())
   updatedAt        DateTime?   @updatedAt
   isActive         Boolean     @default(true)
+}
+
+model KhysInfo {
+  id                    Int               @id @default(autoincrement())
+  name                  String            @db.VarChar(50)
+  nameSlug              String            @db.VarChar(50)
+  phoneNumber           String            @db.VarChar(50)
+  email                 String            @db.VarChar(50) @unique
+  address_road_type_id  Int
+  AddressRoadType       AddressRoadType   @relation(name: "KhysInfoToAddressRoadType", fields: [address_road_type_id], references: [id])
+  numberRoad            Int
+  streetName            String            @db.VarChar(50)
+  zipcode               String            @db.VarChar(10)
+  city                  String            @db.VarChar(50)
+  region                String            @db.VarChar(50)
+  country               String            @db.VarChar(50)
+  siret                 String            @db.VarChar(50)
+  tva                   String            @db.VarChar(50)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime?         @updatedAt
 }

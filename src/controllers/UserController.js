@@ -1,7 +1,7 @@
 const Models = require('./../models');
 const { checkRequiredFields } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
-const {extractQueryParameters} = require("../utils/requestHandler");
+const {extractQueryParameters, extractFieldsToChange} = require("../utils/requestHandler");
 
 // Create a single user
 const createOne = async (req, res) => {
@@ -151,11 +151,14 @@ const updateUserByEmail = async (req, res) => {
 // Update a user by id
 const updateUserById = async (req, res) => {
   try {
+    const onlyThoseFields = ['firstName', 'lastName', 'age', 'user_type_id', 'email','cellphone', 'homephone', 'role', 'workphone' ,'isActive'];
+    const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
     const updateUser = await Models.User.update({
       where: {
         id: parseInt(req.params.id),
       },
-      data: req.body,
+      data: fieldsFiltered,
     });
     console.log(updateUser);
     res.status(200).json(updateUser);

@@ -111,13 +111,17 @@ router.post("/news", createManyDisease);
 /**
  * @apiDescription Get all Disease
  * @apiGroup Disease
- * @api {GET} /api/diseases Get all Disease
+ * @api {GET} /api/diseases/all?filter={}&range=[0,10]&sort=["id","ASC"] Get a list of diseases
  * @apiName GetAllDisease
+ * 
+ * @apiParam {Object} [filter] Filter on a criteria
+ * @apiParam {Object} [range] To retrieve only some entries
+ * @apiParam {Object} [sort] To sort the entries
  *
  * @apiUse DiseaseNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/diseases/all
+ *      curl -i http://localhost:4000/api/diseases/all?filter={}&range=[0,10]&sort=["id","ASC"]
  *
  * @apiVersion 0.1.0
  */
@@ -126,13 +130,15 @@ router.get('/all', findAll);
 /**
  * @apiDescription Get many Disease
  * @apiGroup Disease
- * @api {GET} /api/diseases/many Get many Disease
+ * @api {GET} /api/diseases/many?filterMany={"id":[1]} Get many Disease filtered by resource ids
  * @apiName GetManyDisease
+ * 
+ * @apiParam {Object} filterMany Required: Filter on a list of ids
  * 
  * @apiUse DiseaseNotFoundError
  * 
  * @apiExample {curl} Exemple uasage:
- *     curl -i http://localhost:4000/api/diseases/many
+ *     curl -i http://localhost:4000/api/diseases/many?filterMany={"id":[1]}
  * 
  * @apiVersion 0.1.0
  */
@@ -176,7 +182,7 @@ router.get('/:id', findById);
 /**
  * @apiDescription Update one Disease by nameSlug
  * @apiGroup Disease
- * @api {PUT} /api/diseases/:nameSlug/edit Update Disease
+ * @api {PUT} /api/diseases/slug/:nameSlug/ Update Disease
  * @apiName UpdateDiseaseBySlug
  *
  * @apiParam {String[2..50]} nameSlug NameSlug
@@ -240,14 +246,14 @@ router.put('/:id', updateById);
 /**
  * @apiDescription Delete one Disease by nameSlug
  * @apiGroup Disease
- * @api {DELETE} /api/diseases/:nameSlug/delete Delete Disease
+ * @api {DELETE} /api/diseases/slug/:nameSlug Delete Disease
  * @apiName DeleteDisease
  *
  * @apiParam {String[2..50]} nameSlug NameSlug
  * @apiUse DiseaseNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/diseases/rhume/delete
+ *      curl -i http://localhost:4000/api/diseases/slug/rhume
  *
  * @apiVersion 0.1.0
  */

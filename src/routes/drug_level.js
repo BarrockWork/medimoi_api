@@ -83,13 +83,18 @@ router.post("/news", createManyDrugLevel);
 
 /**
  * @apiGroup Drug_Level
- * @api {GET} /api/drug_levels/all Get all Drug Level
+ * @api {GET} /api/drug_levels/all?filter={}&range=[0,10]&sort=["id","ASC"] Get all Drug Level 
  * @apiName GetAllDrug
+ * @apiDescription Get all Drug Level filtered by filter and sorted by sort
  *
  * @apiUse DrugLevelNotFoundError
+ * 
+ * @apiParam {Object} [filter] Filter on a criteria
+ * @apiParam {Object} [range] To retrieve only some entries
+ * @apiParam {Object} [sort] To sort the entries
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drug_levels/all
+ *      curl -i http://localhost:4000/api/drug_levels/all?filter={}&range=[0,10]&sort=["id","ASC"]
  *
  * @apiVersion 0.1.0
  */
@@ -97,13 +102,16 @@ router.get('/all', findAll);
 
 /**
  * @apiGroup Drug_Level
- * @api {GET} /api/drug_levels/many Get Many Drug Level
+ * @api {GET} /api/drug_levels/many?filterMany={"id":[1]} Get Many Drug Level
  * @apiName GetManyDrugLevel
+ * @apiDescription Get Many Drug Level filtered by filterMany
  * 
  * @apiUse DrugLevelNotFoundError
  * 
+ * @apiParam {Object} filterMany Required: Filter on a list of ids
+ * 
  * @apiExample {curl} Exemple uasage:
- *    curl -i http://localhost:4000/api/drug_levels/many
+ *    curl -i http://localhost:4000/api/drug_levels/many?filterMany={"id":[1]}
  * 
  * @apiVersion 0.1.0
  */

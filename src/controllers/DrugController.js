@@ -166,7 +166,6 @@ const findBySlug = async (req, res) => {
 
 // find by id
 const findById = async (req, res) => {
-    console.log(req.params.id)
     try {
         const drug = await Models.drug.findUnique({
             where: {

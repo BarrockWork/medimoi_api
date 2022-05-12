@@ -14,9 +14,9 @@ afterAll(async () => {
 
 // Initialise a Drug object
 const drugTypeDefault = {
-    name: 'Drug_Type Test',
-    nameSlug: createSlug('Drug_Type Test'),
-    description: 'ceci est une description',
+    name: 'Drug_Type Unitaire Test',
+    nameSlug: createSlug('Drug_Type Unitaire Test'),
+    description: 'ceci est une description de test',
 }
 
 /*

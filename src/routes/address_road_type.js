@@ -3,10 +3,14 @@ var router = express.Router();
 
 const {
   createOne,
-  getAll,
+  findAll,
+  getOneById,
   getOneBySlug,
   updateOne,
+  updateOneById,
   deleteOne,
+  deleteOneById,
+  findMany,
 } = require('./../controllers/AddressRoadTypeController');
 
 /**
@@ -23,13 +27,53 @@ const {
 /**
  * @apiDescription This is how we get all address road type
  * @apiGroup Address Road Type
- * @api {GET} /api/address_road_type/ Get all address_road_type
+ * @api {GET} /api/address_road_type/all Get all address_road_type
  *
  * @apiUse AddressRoadTypeNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.get('/', getAll);
+router.get('/all', findAll);
+
+/**
+ * @apiDescription This is how we get all address road type
+ * @apiGroup Address Road Type
+ * @api {GET} /api/address_road_type/many Get Many address_road_type
+ *
+ * @apiUse AddressRoadTypeNotFoundError
+ *
+ * @apiSampleRequest http://localhost:4000/api/address_road_type/many
+ * @apiVersion 0.1.0
+ */
+router.get('/many', findMany);
+
+
+/**
+ * @apiDescription This is how we get a address road type by id
+ * @apiGroup Address Road Type
+ * @api {GET} /api/address_road_type/:id Get address_road_type by Id
+ * @apiName getOneById
+ *
+ * @apiParam {Number} id Address Road Type id
+ * @apiUse AddressRoadTypeNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/:id', getOneById);
+
+
+
+/**
+ * Define a global Notification history not found
+ * @apiDefine AddressRoadTypeNotFoundError
+ * @apiError AddressRoadTypeNotFoundError Notification history was not found.
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "AddressRoadTypeNotFoundError"
+ *     }
+ */
+
 
 /**
  * @apiDescription This is how we get a address road type by slug
@@ -44,6 +88,7 @@ router.get('/', getAll);
  * @apiVersion 0.1.0
  */
 router.get('/:nameSlug', getOneBySlug);
+
 
 /**
  * @apiDescription This is how we create address road type
@@ -74,7 +119,7 @@ router.post('/new', createOne);
 /**
  * @apiDescription This is how we update an address road type by slug
  * @apiGroup Address Road Type
- * @api {PUT} /api/address_road_type/:nameSlug/edit Update single address_road_type
+ * @api {PUT} /api/address_road_type/slug/:nameSlug Update single address_road_type
  * @apiName updateOne
  * 
  * @apiParam {String[2..50]} nameSlug address road type slug.
@@ -91,18 +136,48 @@ router.post('/new', createOne);
  *     name:       "update-new-type",
  *  }
  *
- * @apiSampleRequest http://localhost:4000/api/address_road_type/:nameSlug/edit
+ * @apiSampleRequest http://localhost:4000/api/address_road_type/slug/:nameSlug
  *
  * @apiUse AddressRoadTypeNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.put('/:nameSlug/edit', updateOne);
+router.put('/slug/:nameSlug', updateOne);
+
+
+/**
+ * @apiDescription This is how we update an address road type by slug
+ * @apiGroup Address Road Type
+ * @api {PUT} /api/address_road_type/:id Update single by ID
+ * @apiName updateOneById
+ *
+ * @apiParam {String[2..50]} nameSlug address road type slug.
+
+ * @apiBody {String[2..50]} name address road typename.
+ *
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     name:       "update-new-type",
+ *  }
+ *
+ * @apiSampleRequest http://localhost:4000/api/address_road_type/:id
+ *
+ * @apiUse AddressRoadTypeNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.put('/:id', updateOneById);
+
 
 /**
  * @apiDescription This is how we delete an address road type by name slug
  * @apiGroup Address Road Type
- * @api {DELETE} /api/address_road_type/:nameSlug/delete Delete single address_road_type
+ * @api {DELETE} /api/address_road_type/slug/:nameSlug Delete single address_road_type
  * @apiName deleteOne
  *
  * @apiParam {String[2..50]} nameSlug address road type slug.
@@ -117,12 +192,39 @@ router.put('/:nameSlug/edit', updateOne);
  *     name_slug:       "test-slug",
  *  }
  *
- * @apiSampleRequest http://localhost:4000/api/address_road_type/:nameSlug/delete
+ * @apiSampleRequest http://localhost:4000/api/address_road_type/slug/:nameSlug
  *
  *
  * @apiUse AddressRoadTypeNotFoundError
  *
  * @apiVersion 0.1.0
  */
-router.delete('/:nameSlug/delete', deleteOne);
+router.delete('/slug/:nameSlug', deleteOne);
+
+
+/**
+ * @apiDescription This is how we delete an address road type by name slug
+ * @apiGroup Address Road Type
+ * @api {DELETE} /api/address_road_type/:id Delete single address_road_type by ID
+ * @apiName deleteOneById
+ *
+ * @apiParam {Number} id Id
+ * @apiHeaderExample {json} Header-Example:
+ *   {
+ *     'Content-Type': 'application/json'
+ *   }
+ *   }
+ *
+ * @apiParamExample {json} Request-Example
+ *  {
+ *     name_slug:       "test-slug",
+ *  }
+ *
+ * @apiSampleRequest http://localhost:4000/api/address_road_type/:id
+ *
+ * @apiUse AddressRoadTypeNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.delete('/:id', deleteOneById);
 module.exports = router;

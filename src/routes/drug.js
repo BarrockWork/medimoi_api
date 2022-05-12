@@ -168,13 +168,13 @@ router.get('/slug/:nameSlug', findBySlug);
  * @apiGroup Drug
  * @api {GET} /api/drugs/:id Get drug by id
  * @apiName GetDrugById
- * 
+ *
  * @apiUse DrugNotFoundError
  * @apiParam {Number} id Drug id
- * 
+ *
  * @apiExample {curl} Exemple uasage:
  *     curl -i http://localhost:4000/api/drugs/1
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.get('/:id', findById);
@@ -220,7 +220,7 @@ router.put('/slug/:nameSlug', updateBySlug);
  * @apiGroup Drug
  * @api {PUT} /api/drugs/:id Update drug
  * @apiName UpdateDrugById
- * 
+ *
  * @apiBody {String[2..50]} [name] drug name.
  * @apiBody {String[2..50]} [description] drug.
  * @apiBody {Boolean} [isPrescription=false] Optional prescription.
@@ -228,14 +228,14 @@ router.put('/slug/:nameSlug', updateBySlug);
  * @apiBody {Number} [drug_level_id]  Drug level  id
  * @apiBody {Number} [drug_type_id]  Drug type  id
  * @apiBody {Number} [medical_administration_id]  Medical administration  id
- * 
+ *
  * @apiParam {Number} id Drug id
- * 
+ *
  * @apiHeaderExample {json} Header-Example:
  *  {
  *   'Content-Type': 'application/json'
  *  }
- * 
+ *
  * @apiParamExample {json} Request-Example
  * {
  *   name: "lisopaine",
@@ -246,7 +246,7 @@ router.put('/slug/:nameSlug', updateBySlug);
  *   drug_type_id: 1,
  *   medical_administration_id: 1
  * }
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.put('/:id', updateById);
@@ -271,13 +271,13 @@ router.delete('/slug/:nameSlug', deleteBySlug);
  * @apiGroup Drug
  * @api {DELETE} /api/drugs/:id/ Delete drug by id
  * @apiName DeleteDrug
- * 
+ *
  * @apiUse DrugNotFoundError
  * @apiParam {Number} id Drug id
- * 
+ *
  * @apiExample {curl} Exemple uasage:
  *     curl -i http://localhost:4000/api/drugs/1
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.delete('/:id', deleteById);

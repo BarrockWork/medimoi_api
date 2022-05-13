@@ -28,6 +28,7 @@ const createOne = async (req, res) => {
       data: {
         name: req.body.name,
         nameSlug: createSlug(req.body.name),
+        email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         numberRoad: req.body.numberRoad,
         streetName: req.body.streetName,
@@ -42,8 +43,6 @@ const createOne = async (req, res) => {
       },
     });
 
-    console.log(newInfo);
-
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
@@ -51,7 +50,6 @@ const createOne = async (req, res) => {
     // Success Response
     res.status(200).json(newInfo);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -74,7 +72,6 @@ const getOneById = async (req, res) => {
     // Success Response
     res.status(200).json(getById);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -91,7 +88,6 @@ const getAll = async (req, res) => {
     // Success Response
     res.status(200).json(KhysInfo);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -131,7 +127,6 @@ const updateOne = async (req, res) => {
     // Success Response
     res.status(200).json(KhysInfo);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };
@@ -157,7 +152,6 @@ const deleteOne = async (req, res) => {
     // Success Response
     res.status(200).json(KhysInfo);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };

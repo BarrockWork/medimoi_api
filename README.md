@@ -24,6 +24,8 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 * [Slugify](https://www.npmjs.com/package/slugify)
 * [Jest](https://jestjs.io/fr/docs/getting-started)
 * [Supertest](https://github.com/visionmedia/supertest)
+* [Multer](https://github.com/expressjs/multer)
+* [Uuid](https://github.com/uuidjs/uuid)
 ## Pour initialiser le projet
 
 ### 1/ Configurer les variables d'environnements

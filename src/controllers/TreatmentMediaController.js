@@ -2,15 +2,20 @@
 // Import of the Prisma client
 const Models = require('../models');
 const {checkRequiredFields, extractFieldsToChange, transformIntValue} = require('../utils/requestHandler');
+const uploader = require('./../../config/uploader');
 
 const createTreatmentMedia = async (req, res) => {
-
-    // Check the required fields
-    checkRequiredFields(req, res, [
-        "name",
-        "mimeType",
-        "treatment_id"
-    ]);
+    console.log(req);
+    const reqFiles = [];
+    const url = req.protocol + '://' + req.get('host')
+    for (let i = 0; i < req.files.length; i++) {
+        reqFiles.push(url + '/public/' + req.files[i].filename)
+    }    // Check the required fields
+    // checkRequiredFields(req, res, [
+    //     "name",
+    //     "mimeType",
+    //     "treatment_id"
+    // ]);
 
     // get values to add 
     const{name, mimeType, treatment_id} = req.body;

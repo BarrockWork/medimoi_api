@@ -38,8 +38,11 @@ model TreatmentMedia {
   id           Int       @id @default(autoincrement())
   treatment_id Int
   Treatment    Treatment @relation(name: "TreatmentToTreatmentMedia", fields: [treatment_id], references: [id])
-  name         String    @db.VarChar(255)
-  mimeType     String    @db.VarChar(50)
+  originalName String    @db.VarChar(255)
+  fileName     String    @db.VarChar(255) @unique
+  fileSize     Int       @db.Integer
+  filePath     String    @db.Text
+  mimeType     String    @db.VarChar(255)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @updatedAt
   isActive     Boolean   @default(true)

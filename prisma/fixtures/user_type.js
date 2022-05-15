@@ -1,7 +1,11 @@
 const user_types = [
     {
-        name: "user type 1",
-        nameSlug: "user-type-1",
+        name: "Professionnelle",
+        nameSlug: "professionnelle",
+    },
+    {
+        name: "Particulier",
+        nameSlug: "particulier",
     }
 ];
 

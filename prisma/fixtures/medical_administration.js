@@ -1,15 +1,39 @@
 const medical_administration = [
     {
-        name: "nom medical 1",
-        nameSlug: "slug medical 1"
+        name: "Orale",
+        nameSlug: "Orale"
     },
     {
-        name: "nom medical 2",
-        nameSlug: "slug medical 2"
+        name: "Locale",
+        nameSlug: "Locale"
     },
     {
-        name: "nom medical 3",
-        nameSlug: "slug medical 3"
+        name: "Nasale",
+        nameSlug: "Nasale"
+    },
+    {
+        name: "oculaire",
+        nameSlug: "oculaire"
+    },
+    {
+        name: "auriculaire",
+        nameSlug: "auriculaire"
+    },
+    {
+        name: "Rectale",
+        nameSlug: "Rectale"
+    },
+    {
+        name: "Vaginale",
+        nameSlug: "Vaginale"
+    },
+    {
+        name: "Injectable",
+        nameSlug: "Injectable"
+    },
+    {
+        name: "Inhalée",
+        nameSlug: "Inhalée"
     }
 ]
 

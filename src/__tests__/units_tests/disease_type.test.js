@@ -15,8 +15,8 @@ afterAll(async () => {
 
 // Initialise a DiseaseType object
 const DiseaseTypeDefault = {
-    name: 'DiseaseType Test',
-    nameSlug: createSlug('DiseaseType Test'),
+    name: 'DiseaseType Unitaire Test',
+    nameSlug: createSlug('DiseaseType Unitaire Test'),
     description: 'ceci est une description',
 }
 

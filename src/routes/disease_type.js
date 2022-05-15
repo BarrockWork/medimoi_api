@@ -94,13 +94,17 @@ router.post("/news", createManyDiseaseType);
 
 /**
  * @apiGroup Disease_type
- * @api {GET} /api/disease_types/all Get all DiseaseType
+ * @api {GET} /api/disease_types/all?filter={}&range=[0, 10]&sort=["id","ASC"] Get all DiseaseType filtered by ids
  * @apiName GetAllDiseaseType
+ *
+ * @apiParam {Object} [filter] Filter on a criteria
+ * @apiParam {Object} [range] To retrieve only some entries
+ * @apiParam {Object} [sort] To sort the entries
  *
  * @apiUse DiseaseTypeNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/disease_types/all
+ *      curl -i http://localhost:4000/api/disease_types/all?filter={}&range=[0, 10]&sort=["id","ASC"]
  *
  * @apiVersion 0.1.0
  */
@@ -108,15 +112,15 @@ router.get('/all', findAll);
 
 /**
  * @apiGroup Disease_type
- * @api {GET} /api/disease_types/many Get many DiseaseType
+ * @api {GET} /api/disease_types/many?filterMany={"id":[1]} Get all DiseaseType filtered by ressources Ids
  * @apiName GetManyDiseaseType
  * @apiDescription Get many disease type
- * @apiParam {Object} filterMany
+ * @apiParam {Object} filterMany Required. Filter on a set of resources Ids.
  * 
  * @apiUse DiseaseTypeNotFoundError
- * 
+ *
  * @apiExample {curl} Exemple uasage:
- *     curl -i http://localhost:4000/api/disease_types/many?filterMany={"name":"diabète"}
+ *     curl -i http://localhost:4000/api/disease_types/many?filterMany={"id":[1]}
  * 
  * @apiVersion 0.1.0
  */
@@ -147,7 +151,7 @@ router.get('/slug/:nameSlug', findBySlug);
  * @apiUse DiseaseTypeNotFoundError
  * @apiExample {curl} Example usage:
  *      curl -i http://localhost:4000/api/disease_types/1
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.get('/:id', findById);
@@ -188,7 +192,7 @@ router.put('/slug/:nameSlug', updateBySlug);
  * @apiUse DiseaseTypeNotFoundError
  * @apiExample {curl} Example usage:
  *     curl -i http://localhost:4000/api/disease_types/1
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.put('/:id', updateById);
@@ -219,7 +223,7 @@ router.delete('/slug/:nameSlug', deleteBySlug);
  * @apiUse DiseaseTypeNotFoundError
  * @apiExample {curl} Example usage:
  *    curl -i http://localhost:4000/api/disease_types/1
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.delete('/:id', deleteById);

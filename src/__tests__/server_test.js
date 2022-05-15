@@ -21,8 +21,8 @@ const createServerTest = () => {
   app.use('/api/diseases', routes.diseaseRouter);
   app.use('/api/disease_type', routes.diseaseTypeRouter);
   app.use('/api/drugs', routes.drugRouter);
-  app.use('/api/drugLevels', routes.drugLevelRouter);
-  app.use('/api/drugTypes', routes.drugTypeRouter);
+  app.use('/api/drug_levels', routes.drugLevelRouter);
+  app.use('/api/drug_types', routes.drugTypeRouter);
   app.use('/api/medical_administrations', routes.medicalAdministrationRouter);
   app.use('/api/notification_type', routes.NotificationTypeRouter);
   app.use('/api/notification_history', routes.NotificationHistory);

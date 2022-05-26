@@ -269,7 +269,7 @@ model Disease {
 model KhysInfo {
   id                    Int               @id @default(autoincrement())
   name                  String            @db.VarChar(50)
-  nameSlug              String            @db.VarChar(50)
+  nameSlug              String            @db.VarChar(50) @unique
   phoneNumber           String            @db.VarChar(50)
   email                 String            @db.VarChar(50) @unique
   address_road_type_id  Int

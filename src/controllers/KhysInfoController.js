@@ -6,6 +6,7 @@ const {
   createSlug,
   extractQueryParameters,
   transformIntToString,
+  verifySlugInDb,
 } = require('./../utils/requestHandler');
 
 // Create data for KhysInfo
@@ -122,12 +123,13 @@ const updateOne = async (req, res) => {
     const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
     const id = transformIntValue(req.params.id);
 
-    const configClient = {
-      where: {
-        id: id,
-      },
-      data: fieldsFiltered,
-    };
+    const configClient = await verifySlugInDb(
+      Models,
+      'KhysInfo',
+      id,
+      createSlug(req.body.name),
+      fieldsFiltered
+    );
 
     const KhysInfo = await Models.KhysInfo.update(configClient);
 

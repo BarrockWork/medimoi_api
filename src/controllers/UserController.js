@@ -1,7 +1,7 @@
 const Models = require('./../models');
 const { checkRequiredFields } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
-const {extractQueryParameters} = require("../utils/requestHandler");
+const {extractQueryParameters, extractFieldsToChange} = require("../utils/requestHandler");
 
 // Create a single user
 const createOne = async (req, res) => {
@@ -108,6 +108,30 @@ const getUserByEmail = async (req, res) => {
   }
 };
 
+// Get a user by id
+const getUserById = async (req, res) => {
+  try {
+    const userById = await Models.User.findUnique({
+      where: {
+        id: parseInt(req.params.id),
+      },
+      // you can include relation and elements like that.
+      include: {
+        UserType: true,
+      },
+    });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    res.status(200).json(userById);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+
 // Update a user
 const updateUserByEmail = async (req, res) => {
   try {
@@ -124,6 +148,26 @@ const updateUserByEmail = async (req, res) => {
   }
 };
 
+// Update a user by id
+const updateUserById = async (req, res) => {
+  try {
+    const onlyThoseFields = ['firstName', 'lastName', 'age', 'user_type_id', 'email','cellphone', 'homephone', 'role', 'workphone' ,'isActive'];
+    const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+
+    const updateUser = await Models.User.update({
+      where: {
+        id: parseInt(req.params.id),
+      },
+      data: fieldsFiltered,
+    });
+    console.log(updateUser);
+    res.status(200).json(updateUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+  }
+};
+
 //Delete a user
 const deleteUser = async (req, res) => {
   try {
@@ -133,6 +177,24 @@ const deleteUser = async (req, res) => {
       },
     });
 
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    res.status(200).json(deleteUser);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+//Delete a user by id
+const deleteUserById = async (req, res) => {
+  try {
+    const deleteUser = await Models.User.delete({
+      where: {
+        id: parseInt(req.params.id),
+      },
+    });
     // The prisma client can run only 10 instances simultaneously,
     // so it is better to stop the current instance before sending the response
     await Models.$disconnect();
@@ -198,7 +260,10 @@ module.exports = {
   createMany,
   getAllUsers,
   getUserByEmail,
+  getUserById,
   updateUserByEmail,
+  updateUserById,
   deleteUser,
+  deleteUserById,
   findMany
 };

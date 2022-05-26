@@ -137,7 +137,6 @@ const updateTreatment = async (req, res) => {
 
 // Delete function
 const deleteTreatment = async (req, res) => {
-    // console.log(req.params, "deleteTreatment params")
     const id = transformIntValue(req.params.id);
     
     try {
@@ -149,7 +148,6 @@ const deleteTreatment = async (req, res) => {
         await Models.$disconnect();
         res.status(200).json(`Treatment with id ${id} was deleted`);
     } catch (error) {
-        // console.log(error, "error")
         res.status(400).json(error)
     }
 }

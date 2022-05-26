@@ -114,13 +114,16 @@ router.post('/news', createManyDrug)
 
 /**
  * @apiGroup Drug
- * @api {GET} /api/drugs/many Get Many Drug
+ * @api {GET} /api/drugs/many?filterMany={"id":[1]} Get Many Drug
  * @apiName GetManyDrug
+ * @apiDescription Get Drug list filtered by ressources Ids
  *
  * @apiUse DrugNotFoundError
+ * 
+ * @apiParam {Object} filterMany Required: Filter on a list of ids 
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugs/many
+ *      curl -i http://localhost:4000/api/drugs/many?filterMany={"id":[1]}
  *
  * @apiVersion 0.1.0
  */
@@ -128,13 +131,18 @@ router.post('/news', createManyDrug)
 
 /**
  * @apiGroup Drug
- * @api {GET} /api/drugs/all Get all Drug
+ * @api {GET} /api/drugs/all?filter={}&range=[0,10]&sort=["id","ASC"] Get all Drug filtered by ids
  * @apiName GetAllDrug
+ * @apiDescription Get all drugs filtered by query params
+ * 
+ * @apiParam {Object} [filter] Filter on a criteria
+ * @apiParam {Object} [range] To retrieve only some entries
+ * @apiParam {Object} [sort] To sort the entries
  *
  * @apiUse DrugNotFoundError
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugs/all
+ *      curl -i http://localhost:4000/api/drugs/all?filter={}&range=[0,10]&sort=["id","ASC"]
  *
  * @apiVersion 0.1.0
  */
@@ -142,14 +150,14 @@ router.get('/all', findAll);
 
 /**
  * @apiGroup Drug
- * @api {GET} /api/drugs/:nameSlug Get drug by slug
+ * @api {GET} /api/drugs/slug/:nameSlug Get drug by slug
  * @apiName GetDrugBySlug
  *
  * @apiUse DrugNotFoundError
  * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugs/test
+ *      curl -i http://localhost:4000/api/drugs/slug/test
  *
  * @apiVersion 0.1.0
  */
@@ -160,13 +168,13 @@ router.get('/slug/:nameSlug', findBySlug);
  * @apiGroup Drug
  * @api {GET} /api/drugs/:id Get drug by id
  * @apiName GetDrugById
- * 
+ *
  * @apiUse DrugNotFoundError
  * @apiParam {Number} id Drug id
- * 
+ *
  * @apiExample {curl} Exemple uasage:
  *     curl -i http://localhost:4000/api/drugs/1
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.get('/:id', findById);
@@ -174,7 +182,7 @@ router.get('/:id', findById);
 
 /**
  * @apiGroup Drug
- * @api {PUT} /api/drugs/:nameSlug/edit Update drug
+ * @api {PUT} /api/drugs/slug/:nameSlug Update drug
  * @apiName UpdatedrugBySlug
  *
  * @apiBody {String[2..50]} [name] drug name.
@@ -212,7 +220,7 @@ router.put('/slug/:nameSlug', updateBySlug);
  * @apiGroup Drug
  * @api {PUT} /api/drugs/:id Update drug
  * @apiName UpdateDrugById
- * 
+ *
  * @apiBody {String[2..50]} [name] drug name.
  * @apiBody {String[2..50]} [description] drug.
  * @apiBody {Boolean} [isPrescription=false] Optional prescription.
@@ -220,14 +228,14 @@ router.put('/slug/:nameSlug', updateBySlug);
  * @apiBody {Number} [drug_level_id]  Drug level  id
  * @apiBody {Number} [drug_type_id]  Drug type  id
  * @apiBody {Number} [medical_administration_id]  Medical administration  id
- * 
+ *
  * @apiParam {Number} id Drug id
- * 
+ *
  * @apiHeaderExample {json} Header-Example:
  *  {
  *   'Content-Type': 'application/json'
  *  }
- * 
+ *
  * @apiParamExample {json} Request-Example
  * {
  *   name: "lisopaine",
@@ -238,21 +246,21 @@ router.put('/slug/:nameSlug', updateBySlug);
  *   drug_type_id: 1,
  *   medical_administration_id: 1
  * }
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.put('/:id', updateById);
 
 /**
  * @apiGroup Drug
- * @api {DELETE} /api/drugs/:nameSlug/delete Delete drug
+ * @api {DELETE} /api/drugs/slug/:nameSlug Delete drug
  * @apiName DeleteDrugById
  *
  * @apiUse DrugNotFoundError
  * @apiParam {String[2..50]} nameSlug NameSlug
  *
  * @apiExample {curl} Exemple uasage:
- *      curl -i http://localhost:4000/api/drugs/doliprane/delete
+ *      curl -i http://localhost:4000/api/drugs/slug/doliprane
  *
  * @apiVersion 0.1.0
  */
@@ -263,13 +271,13 @@ router.delete('/slug/:nameSlug', deleteBySlug);
  * @apiGroup Drug
  * @api {DELETE} /api/drugs/:id/ Delete drug by id
  * @apiName DeleteDrug
- * 
+ *
  * @apiUse DrugNotFoundError
  * @apiParam {Number} id Drug id
- * 
+ *
  * @apiExample {curl} Exemple uasage:
  *     curl -i http://localhost:4000/api/drugs/1
- * 
+ *
  * @apiVersion 0.1.0
  */
 router.delete('/:id', deleteById);

@@ -6,6 +6,7 @@ const {
   transformIntValue,
   extractFieldsToChange,
 } = require('./../utils/requestHandler');
+const {extractQueryParameters} = require("../utils/requestHandler");
 
 // create a user type
 const createOne = async (req, res) => {
@@ -74,24 +75,32 @@ const getOneById = async (req, res) => {
   }
 };
 
+const findMany = async (req, res) => {
+  try {
+    const configClient = extractQueryParameters(req.query, ['filterMany'])
+    const Address = await Models.Address.findMany(configClient)
+    await Models.$disconnect();
+
+    res.status(200).json(Address);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+}
+
 // get all user type
 const getAll = async (req, res) => {
   try {
-    const AddressType = await Models.Address.findMany({
-      include: {
-        User: true,
-        AddressRoadType: true,
-      },
-    });
-
-    // The prisma client can run only 10 instances simultaneously,
-    // so it is better to stop the current instance before sending the response
+    const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
+    const Address = await Models.Address.findMany(configClient)
+    const totalCount = await Models.Address.count();
     await Models.$disconnect();
 
-    // Success Response
-    res.status(200).json(AddressType);
+    // Add to ResponseHeaders the totalcount
+    res.header('Access-Control-Expose-Headers', 'Content-Range');
+    res.set('Content-Range', totalCount);
+    res.status(200).json(Address);
   } catch (error) {
-    return res.status(400).json(error);
+    res.status(400).json(error);
   }
 };
 
@@ -161,4 +170,5 @@ module.exports = {
   getOneById,
   updateOne,
   deleteOne,
+  findMany,
 };

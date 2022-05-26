@@ -5,6 +5,7 @@ const {
   selectNotificationType,
   transformIntValue,
 } = require('./../utils/requestHandler');
+const {extractQueryParameters} = require("../utils/requestHandler");
 
 // create a user notification type
 const createOne = async (req, res) => {
@@ -61,18 +62,31 @@ const getOneById = async (req, res) => {
 // get all user notification type
 const getAll = async (req, res) => {
   try {
-    const UserNotification = await Models.NotificationHistory.findMany();
-
-    // The prisma client can run only 10 instances simultaneously,
-    // so it is better to stop the current instance before sending the response
+    const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
+    const notificationHistory = await Models.NotificationHistory.findMany(configClient)
+    const totalCount = await Models.NotificationHistory.count();
     await Models.$disconnect();
 
-    // Success Response
-    res.status(200).json(UserNotification);
+    // Add to ResponseHeaders the totalcount
+    res.header('Access-Control-Expose-Headers', 'Content-Range');
+    res.set('Content-Range', totalCount);
+    res.status(200).json(notificationHistory);
   } catch (error) {
-    return res.status(400).json(error);
+    res.status(400).json(error);
   }
 };
+
+const findMany = async (req, res) => {
+  try {
+    const configClient = extractQueryParameters(req.query, ['filterMany'])
+    const UserNotification = await Models.NotificationHistory.findMany(configClient)
+    await Models.$disconnect();
+
+    res.status(200).json(UserNotification);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+}
 
 const updateOne = async (req, res) => {
   try {
@@ -134,4 +148,5 @@ module.exports = {
   getOneById,
   updateOne,
   deleteOne,
+  findMany,
 };

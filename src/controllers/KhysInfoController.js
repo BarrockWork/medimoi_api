@@ -5,6 +5,7 @@ const {
   extractFieldsToChange,
   createSlug,
   extractQueryParameters,
+  transformIntToString,
 } = require('./../utils/requestHandler');
 
 // Create data for KhysInfo
@@ -34,7 +35,7 @@ const createOne = async (req, res) => {
         numberRoad: req.body.numberRoad,
         streetName: req.body.streetName,
         additionnalAddress: req.body.additionnalAddress,
-        zipcode: req.body.zipcode,
+        zipcode: transformIntToString(req.body.zipcode),
         city: req.body.city,
         region: req.body.region,
         country: req.body.country,
@@ -97,7 +98,6 @@ const getAll = async (req, res) => {
     res.set('Content-Range', totalCount);
     res.status(200).json(KhysInfo);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 };

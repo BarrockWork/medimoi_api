@@ -344,8 +344,10 @@ const selectTreatmentMediasInfos = () => {
   return {
     select: {
       id: true,
-      name: true,
+      filePath: true,
+      originalName: true,
       mimeType: true,
+      createdAt: true,
       isActive: true,
     },
   };
@@ -369,7 +371,7 @@ const selectTreatmentGlobalInfos = () => {
     startedAt: true,
     finishedAt: true,
     TreatmentPeriodicity: selecttreatmentPeriodicityInfos(),
-    TreatmentMedias: selectTreatmentMediasInfos(),
+   TreatmentMedias: selectTreatmentMediasInfos(),
     TreatmentDrugs: selectTreatmentDrugsInfos(),
     User: selectUserGlobalInfos(),
     isActive: true,

@@ -67,7 +67,7 @@ const createMany = async (req, res) => {
 
 const getTreatmentById = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const treatmemt = await Models.treatment.findUnique({
             where: {
                 id: transformIntValue(id)

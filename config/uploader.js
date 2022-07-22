@@ -1,6 +1,10 @@
 const path = require('path');
 const multer = require('multer');
 const {v4: uuidv4} = require('uuid');
+const uploadDir = process.env.UPLOAD_DIRECTORY;
+const fileLimitSize = process.env.FILE_LIMIT_SIZE;
+const uploadMaxFiles = process.env.UPLOAD_MAX_FILES;
+
 const mimetypes = [
     "image/png",
     "image/jpg",
@@ -19,7 +23,8 @@ const mimetypes = [
 /**
  * Configure where the file should be stored.
  */
-const configureDiskStorage = (uploadPath) => {
+const configureDiskStorage = () => {
+    const uploadPath = path.join(__dirname, '../' + uploadDir); // Upload absolute path
     return multer.diskStorage({
         destination: (req, file, cb) => {
             cb(null, uploadPath);
@@ -45,19 +50,18 @@ const configureUpload = (storage) => {
                 cb(null, false);
                 return cb(new Error('The file format is not allowed! (.png, .jpeg/jpg, .pdf, .docs/docx, .xls/xlsx, .ppt/pptx, .odt, .ods)'));
             }
-        }
+        },
+       limits: {
+           fieldSize: fileLimitSize+'MB',
+           fields: uploadMaxFiles
+       }
     });
 }
 
 /**
  * Uploader to use for the project
- * @param subFolderName
- * @constructor
  */
-const Uploader = (subFolderName) => {
-    const uploadsDir = path.join(__dirname, '../public/uploads/'+subFolderName); // Upload absolute path
-    const diskStorage = configureDiskStorage(uploadsDir);
-    return configureUpload(diskStorage);
-};
+const Uploader = configureUpload(configureDiskStorage());
 
-export default Uploader;
+module.exports = Uploader;// export default
+

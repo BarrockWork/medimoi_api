@@ -40,7 +40,7 @@ model TreatmentMedia {
   Treatment    Treatment @relation(name: "TreatmentToTreatmentMedia", fields: [treatment_id], references: [id])
   originalName String    @db.VarChar(255)
   fileName     String    @db.VarChar(255) @unique
-  fileSize     Int       @db.Integer
+  fileSize     Int
   filePath     String    @db.Text
   mimeType     String    @db.VarChar(255)
   createdAt    DateTime  @default(now())

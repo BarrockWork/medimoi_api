@@ -2,31 +2,30 @@
 // Import of the Prisma client
 const Models = require('../models');
 const {checkRequiredFields, extractFieldsToChange, transformIntValue} = require('../utils/requestHandler');
-const uploader = require('./../../config/uploader');
+const Uploader = require('./../../config/uploader');
+const path = require("path");
+const uploadDir = process.env.UPLOAD_DIRECTORY;
 
 const createTreatmentMedia = async (req, res) => {
-    console.log(req);
-    const reqFiles = [];
-    const url = req.protocol + '://' + req.get('host')
-    for (let i = 0; i < req.files.length; i++) {
-        reqFiles.push(url + '/public/' + req.files[i].filename)
-    }    // Check the required fields
-    // checkRequiredFields(req, res, [
-    //     "name",
-    //     "mimeType",
-    //     "treatment_id"
-    // ]);
+   try {
+        // Check the required fields
+        checkRequiredFields(req, res, ['treatmentId']);
+        const mediaFiles = [];
+        for (let i = 0; i < req.files.length; i++) {
+            mediaFiles.push(
+                {
+                    treatment_id: transformIntValue(req.body.treatmentId),
+                    originalName: req.files[i].originalname,
+                    fileName: req.files[i].filename,
+                    fileSize: req.files[i].size,
+                    filePath:'/' +uploadDir + req.files[i].filename,
+                    mimeType: req.files[i].mimetype
 
-    // get values to add 
-    const{name, mimeType, treatment_id} = req.body;
-
-    try {
-        const treatmentMedia = await Models.treatmentMedia.create({
-            data: {
-                name,
-                mimeType,
-                treatment_id
-            }
+                }
+            )
+        }
+        const treatmentMedias = await Models.treatmentMedia.createMany({
+            data: mediaFiles
         });
 
         // The prisma client can run only 10 instances simultaneously, 
@@ -34,7 +33,7 @@ const createTreatmentMedia = async (req, res) => {
         await Models.$disconnect();
 
         // Success response
-        res.status(200).json(treatmentMedia);
+        res.status(200).json(treatmentMedias);
     } catch (error) {
         res.status(400).json(error);
     }

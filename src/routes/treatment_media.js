@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Uploader = require('./../../config/uploader');
 
 // import route functions from controller
 const { createTreatmentMedia, getTreatmentMediaById, findAll, findManyByTreatmentId, updateTreatmentMedia, deleteTreatmentMedia } = require('../controllers/TreatmentMediaController');
@@ -30,9 +31,9 @@ const { createTreatmentMedia, getTreatmentMediaById, findAll, findManyByTreatmen
 /* ROUTES --------------------------------------------*/
 
 /**
- * @apiDescription Insert single treatment media
- * @api {POST} /api/treatment_medias/new Create new treatment media.
- * @apiName CreateTreatmentMedia
+ * @apiDescription Insert many treatment media
+ * @api {POST} /api/treatment_medias/news Create many treatment media.
+ * @apiName CreateManyTreatmentMedia
  * @apiGroup TreatmentMedia
  * 
  * @apiUse TreatmentMediaPOSTParam
@@ -44,15 +45,14 @@ const { createTreatmentMedia, getTreatmentMediaById, findAll, findManyByTreatmen
  * 
  * @apiParamExample {json} Request-Example
  *  {
- *     "name":         "some media name",
- *     "mimeType":     "some mime type",
- *     "treatment_id": 1
+ *     "files": "Multiple files",
+ *     "treatementId": "Treatment id"
  *  }
  * 
- * @apiSampleRequest http://localhost:4000/api/treatment_medias/new
+ * @apiSampleRequest http://localhost:4000/api/treatment_medias/news
  * @apiVersion 0.1.0
  */
-router.post("/new", createTreatmentMedia);
+router.post("/news", Uploader.array('files'), createTreatmentMedia);
 
 
 /**

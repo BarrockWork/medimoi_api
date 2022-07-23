@@ -1,16 +1,40 @@
 const treatment_periodicity = [
     {
-        name: 'Daily',
-        nameSlug: 'daily',
+        name: 'journalier',
+        nameSlug: 'journalier',
     },
     {
-        name: 'Weekly',
-        nameSlug: 'weekly',
+        name: 'hebdomadaire',
+        nameSlug: 'hebdomadaire',
     },
     {
-        name: 'Monthly',
-        nameSlug: 'monthly',
-    }
+        name: 'mensuel',
+        nameSlug: 'mensuel',
+    },
+    {
+        name: 'bimestrielle',
+        nameSlug: 'bimestrielle',
+    },
+    {
+        name: 'trimestrielle',
+        nameSlug: 'trimestrielle',
+    },
+    {
+        name: 'semestrielle',
+        nameSlug: 'semestrielle',
+    },
+    {
+        name: 'annuelle',
+        nameSlug: 'annuelle',
+    },
+    {
+        name: 'indéterminée',
+        nameSlug: 'indeterminée',
+    },
+    {
+        name: 'personnalisé',
+        nameSlug: 'personnalisé',
+    },
 ]
 
 module.exports = treatment_periodicity;

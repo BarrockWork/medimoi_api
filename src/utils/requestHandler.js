@@ -72,11 +72,11 @@ const createSlug = (textForSlug) => {
  * @returns {string}
  */
 const verifySlugInDb = async (
-    Models,
-    SchemaTarget,
-    currentSlugOrId,
-    nameParam,
-    fieldsFiltered
+  Models,
+  SchemaTarget,
+  currentSlugOrId,
+  nameParam,
+  fieldsFiltered
 ) => {
   try {
     // Init the currentSlug
@@ -94,7 +94,7 @@ const verifySlugInDb = async (
     }
 
     // Check if nameParam is undefined or not
-    if(!nameParam) {
+    if (!nameParam) {
       return {
         where: {
           nameSlug: currentSlug,
@@ -163,8 +163,8 @@ const verifySlugInDb = async (
 const extractQueryParameters = (queryParams, targetParams) => {
   const configClient = {};
 
-  if(Object.entries(queryParams).length > 0) {
-    targetParams.forEach(qP => {
+  if (Object.entries(queryParams).length > 0) {
+    targetParams.forEach((qP) => {
       const parsingParam = JSON.parse(queryParams[qP]);
       switch (qP) {
         case 'sort':
@@ -177,34 +177,34 @@ const extractQueryParameters = (queryParams, targetParams) => {
           break;
         case 'filter':
           const listFilter = Object.entries(parsingParam);
-          if(listFilter.length > 0) {
+          if (listFilter.length > 0) {
             configClient.where = {};
-            for(const field of listFilter) {
-              configClient.where[field[0]] = {equals: field[1]};
+            for (const field of listFilter) {
+              configClient.where[field[0]] = { equals: field[1] };
             }
           }
           break;
         case 'filterMany':
           const listFilterMany = Object.entries(parsingParam);
-          if(listFilterMany.length > 0) {
+          if (listFilterMany.length > 0) {
             configClient.where = {};
-            for(const field of listFilterMany) {
-              configClient.where[field[0]] = { in: field[1]};
+            for (const field of listFilterMany) {
+              configClient.where[field[0]] = { in: field[1] };
             }
           }
           break;
       }
-    })
+    });
   } else {
     //Limit by default to 10 entries
     configClient.orderBy = {
-      id: "desc"
-    }
+      id: 'desc',
+    };
     configClient.take = 10;
   }
 
   return configClient;
-}
+};
 
 /**
  * Check and parse a STRING value to INT value
@@ -219,11 +219,24 @@ const transformIntValue = (value) => {
   return result;
 };
 
+/**
+ * Check and parse a Int value to String value
+ * @param value Number
+ */
+const transformIntToString = (value) => {
+  const result = value.toString();
+
+  if (!R.is(String, result)) {
+    throw `The value ${value} is NaN.`;
+  }
+  return result;
+};
+
 // transform a string to a boolean
 const transformBooleanValue = (value) => {
   const result = value === 'true' ? true : false;
   return result;
-}
+};
 
 /**
  * Get user infos
@@ -401,4 +414,5 @@ module.exports = {
   selecttreatmentPeriodicityInfos,
   selectTreatmentGlobalInfos,
   transformBooleanValue,
+  transformIntToString,
 };

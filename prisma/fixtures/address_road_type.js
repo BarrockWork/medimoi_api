@@ -16,20 +16,16 @@ const address_road_type = [
         nameSlug: 'chemin',
     },
     {
-        name: 'cours',
-        nameSlug: 'cours',
-    },
-    {
         name: 'impasse',
         nameSlug: 'impasse',
     },
     {
-        name: 'place',
-        nameSlug: 'place',
+        name: 'Allee',
+        nameSlug: 'Allee',
     },
     {
-        name: 'route',
-        nameSlug: 'route',
+        name: 'Place',
+        nameSlug: 'Place',
     }
 ]
 

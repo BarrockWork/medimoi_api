@@ -37,6 +37,7 @@ app.use('/api/disease_types', routes.diseaseTypeRouter);
 app.use('/api/drugs', routes.drugRouter);
 app.use('/api/drug_levels', routes.drugLevelRouter);
 app.use('/api/drug_types', routes.drugTypeRouter);
+app.use('/api/khys_info', routes.KhysInfoRouter);
 app.use('/api/medical_administrations', routes.medicalAdministrationRouter);
 app.use('/api/notification_type', routes.NotificationTypeRouter);
 app.use('/api/notification_history', routes.NotificationHistory);

@@ -3,9 +3,9 @@ const user = [
         firstName: "John",
         lastName: "Doe",
         age: 30,
-        email: "User@mail.com",
+        email: "superuser@mail.com",
         password: "Azerty",
-        role: "user",
+        role: "SUPER_ADMIN",
         cellphone: "0123456789",
         homephone: "0123456789",
         workphone: "0123456789"
@@ -14,9 +14,9 @@ const user = [
         firstName: "Jane",
         lastName: "Doe",
         age: 30,
-        email: "Admin",
+        email: "admin@mail.com",
         password: "Azerty",
-        role: "user",
+        role: "ADMIN",
         cellphone: "0123456789",
         homephone: "0123456789",
         workphone: "0123456789"

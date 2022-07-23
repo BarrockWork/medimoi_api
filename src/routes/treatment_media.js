@@ -137,7 +137,7 @@ router.put("/:id", updateTreatmentMedia);
 
 
 /**
- * @apiDescription Delete treatment media
+ * @apiDescription Delete treatment media and its file
  * @apiGroup TreatmentMedia
  * @api {DELETE} /api/treatment_medias/:id Delete treatment media
  * @apiName DeleteTreatmentMedia

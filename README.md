@@ -42,7 +42,8 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 3. Initialiser la base de données:
     - yarn create-migration ou npm run create-migration
     - yarn execute-migration ou npm run execute-migration
-4. Exécuter l'application: yarn start ou npm run start
+4. Créer le dossier d'upload pour gérer l'envoi de fichiers; Il faut se référeré au chemin configuré dans le fichier .env
+5. Exécuter l'application: yarn start ou npm run start
 ```
 
 ## Pour les tests

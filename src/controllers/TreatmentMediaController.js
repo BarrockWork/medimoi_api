@@ -1,10 +1,12 @@
-
 // Import of the Prisma client
 const Models = require('../models');
-const {checkRequiredFields, extractFieldsToChange, transformIntValue} = require('../utils/requestHandler');
-const Uploader = require('./../../config/uploader');
-const path = require("path");
+const {checkRequiredFields, extractFieldsToChange, transformIntValue, selectTreatmentGlobalInfos,
+    selectTreatmentMediasInfos
+} = require('../utils/requestHandler');
 const uploadDir = process.env.UPLOAD_DIRECTORY;
+const fs = require('fs');
+const path = require('path');
+
 
 const createTreatmentMedia = async (req, res) => {
    try {
@@ -141,11 +143,28 @@ const updateTreatmentMedia = async (req, res) => {
 
 // Delete function
 const deleteTreatmentMedia = async (req, res) => {
-    const {id} = req.params;
     try {
+        const {id} = req.params;
+        console.log("OK", id)
+
+        // Retrieve the entry for delete the file in the upload folder
+        const treatmentMedia = await Models.treatmentMedia.findUnique({
+            where: {
+                id: transformIntValue(id)
+            },
+        })
+        const filePath = path.join(uploadDir + treatmentMedia.fileName);
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error(err)
+                return
+            }
+        })
+
+        // Delete the entry from the DB
         await Models.treatmentMedia.delete({
             where:{
-                id: transformIntValue(req.params.id)
+                id: transformIntValue(id)
             }
         })
         await Models.$disconnect();

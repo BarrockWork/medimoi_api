@@ -24,6 +24,8 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 * [Slugify](https://www.npmjs.com/package/slugify)
 * [Jest](https://jestjs.io/fr/docs/getting-started)
 * [Supertest](https://github.com/visionmedia/supertest)
+* [Multer](https://github.com/expressjs/multer)
+* [Uuid](https://github.com/uuidjs/uuid)
 ## Pour initialiser le projet
 
 ### 1/ Configurer les variables d'environnements
@@ -40,7 +42,8 @@ Pour lancer le projet vous aurez besoin de la configuration suivante :
 3. Initialiser la base de données:
     - yarn create-migration ou npm run create-migration
     - yarn execute-migration ou npm run execute-migration
-4. Exécuter l'application: yarn start ou npm run start
+4. Créer le dossier d'upload pour gérer l'envoi de fichiers; Il faut se référeré au chemin configuré dans le fichier .env
+5. Exécuter l'application: yarn start ou npm run start
 ```
 
 ## Pour les tests

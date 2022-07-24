@@ -1,6 +1,7 @@
 // Import of the Prisma client
 const { isEmpty } = require('ramda');
 const Models = require('../models');
+const uploadDir = process.env.UPLOAD_DIRECTORY;
 const { transformIntValue, checkRequiredFields, selectDrugInfos, selectTreatmentDrugsInfos, selectTreatmentMediasInfos, selecttreatmentPeriodicityInfos, selectTreatmentGlobalInfos,
     extractQueryParameters,
     extractFieldsToChange
@@ -8,9 +9,12 @@ const { transformIntValue, checkRequiredFields, selectDrugInfos, selectTreatment
 
 const createOne = async (req, res) => {
     try {
+        console.log(req.body);
+        console.log(req.files);
         // Check the required fields
         checkRequiredFields(req, res,['name', "user_id", "treatment_periodicity_id", "startedAt"]);
 
+        // Treatments
         const treatmemt = await Models.treatment.create({
             data:{
                 name: req.body.name,
@@ -19,6 +23,27 @@ const createOne = async (req, res) => {
                 startedAt: new Date(req.body.startedAt)
             }
         });
+
+        //Treaments medias
+        const mediaFiles = [];
+        for (let i = 0; i < req.files.length; i++) {
+            mediaFiles.push(
+                {
+                    treatment_id: transformIntValue(treatmemt.id),
+                    originalName: req.files[i].originalname,
+                    fileName: req.files[i].filename,
+                    fileSize: req.files[i].size,
+                    filePath:'/' +uploadDir + req.files[i].filename,
+                    mimeType: req.files[i].mimetype
+
+                }
+            )
+        }
+        if(mediaFiles.length > 0) {
+            const treatmentMedias = await Models.treatmentMedia.createMany({
+                data: mediaFiles
+            });
+        }
 
         // The prisma client can run only 10 instances simultaneously, 
         // so it is better to stop the current instance before sending the response
@@ -67,7 +92,7 @@ const createMany = async (req, res) => {
 
 const getTreatmentById = async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const treatmemt = await Models.treatment.findUnique({
             where: {
                 id: transformIntValue(id)
@@ -99,8 +124,6 @@ const findMany = async (req, res) => {
     }
 }
 
-
-
 const getAllTreatments = async (req, res) => {
     try {
         const configClient = extractQueryParameters(req.query, ['sort', 'range', 'filter'])
@@ -121,13 +144,34 @@ const updateTreatment = async (req, res) => {
     try {
         const onlyThoseFields = ['name', 'startedAt', 'finishedAt', 'user_id', 'treatment_periodicity_id', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
+        const mediaFiles = [];
+        for (let i = 0; i < req.files.length; i++) {
+            mediaFiles.push(
+                {
+                    treatment_id: transformIntValue(req.params.id),
+                    originalName: req.files[i].originalname,
+                    fileName: req.files[i].filename,
+                    fileSize: req.files[i].size,
+                    filePath:'/' +uploadDir + req.files[i].filename,
+                    mimeType: req.files[i].mimetype
 
+                }
+            )
+        }
+        //Treatment
         const treatment = await Models.treatment.update({
             where:{
                 id: transformIntValue(req.params.id)
             },
             data:fieldsFiltered
         });
+
+        //Treaments medias
+        if(mediaFiles.length > 0) {
+            const treatmentMedias = await Models.treatmentMedia.createMany({
+                data: mediaFiles
+            });
+        }
         await Models.$disconnect();
         res.status(200).json(treatment);
     } catch (error) {

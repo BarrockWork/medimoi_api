@@ -1,27 +1,33 @@
-
 // Import of the Prisma client
 const Models = require('../models');
-const {checkRequiredFields, extractFieldsToChange, transformIntValue} = require('../utils/requestHandler');
+const {checkRequiredFields, extractFieldsToChange, transformIntValue, selectTreatmentGlobalInfos,
+    selectTreatmentMediasInfos
+} = require('../utils/requestHandler');
+const uploadDir = process.env.UPLOAD_DIRECTORY;
+const fs = require('fs');
+const path = require('path');
+
 
 const createTreatmentMedia = async (req, res) => {
+   try {
+        // Check the required fields
+        checkRequiredFields(req, res, ['treatmentId']);
+        const mediaFiles = [];
+        for (let i = 0; i < req.files.length; i++) {
+            mediaFiles.push(
+                {
+                    treatment_id: transformIntValue(req.body.treatmentId),
+                    originalName: req.files[i].originalname,
+                    fileName: req.files[i].filename,
+                    fileSize: req.files[i].size,
+                    filePath:'/' +uploadDir + req.files[i].filename,
+                    mimeType: req.files[i].mimetype
 
-    // Check the required fields
-    checkRequiredFields(req, res, [
-        "name",
-        "mimeType",
-        "treatment_id"
-    ]);
-
-    // get values to add 
-    const{name, mimeType, treatment_id} = req.body;
-
-    try {
-        const treatmentMedia = await Models.treatmentMedia.create({
-            data: {
-                name,
-                mimeType,
-                treatment_id
-            }
+                }
+            )
+        }
+        const treatmentMedias = await Models.treatmentMedia.createMany({
+            data: mediaFiles
         });
 
         // The prisma client can run only 10 instances simultaneously, 
@@ -29,7 +35,7 @@ const createTreatmentMedia = async (req, res) => {
         await Models.$disconnect();
 
         // Success response
-        res.status(200).json(treatmentMedia);
+        res.status(200).json(treatmentMedias);
     } catch (error) {
         res.status(400).json(error);
     }
@@ -137,11 +143,28 @@ const updateTreatmentMedia = async (req, res) => {
 
 // Delete function
 const deleteTreatmentMedia = async (req, res) => {
-    const {id} = req.params;
     try {
+        const {id} = req.params;
+        console.log("OK", id)
+
+        // Retrieve the entry for delete the file in the upload folder
+        const treatmentMedia = await Models.treatmentMedia.findUnique({
+            where: {
+                id: transformIntValue(id)
+            },
+        })
+        const filePath = path.join(uploadDir + treatmentMedia.fileName);
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error(err)
+                return
+            }
+        })
+
+        // Delete the entry from the DB
         await Models.treatmentMedia.delete({
             where:{
-                id: transformIntValue(req.params.id)
+                id: transformIntValue(id)
             }
         })
         await Models.$disconnect();

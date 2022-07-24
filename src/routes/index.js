@@ -20,6 +20,7 @@ const ContactTypeRouter = require('./contact_type');
 const CompanyRouter = require('./company');
 const ContactRouter = require('./contact');
 const UserCompanyRouter = require('./user_company');
+const KhysInfoRouter = require('./khys_info');
 
 module.exports = {
   indexRouter,
@@ -43,5 +44,6 @@ module.exports = {
   ContactTypeRouter,
   CompanyRouter,
   ContactRouter,
-  UserCompanyRouter
-}
+  UserCompanyRouter,
+  KhysInfoRouter,
+};

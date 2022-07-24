@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Uploader = require('./../../config/uploader');
 
 // import route functions from controller
 const {
@@ -61,7 +62,7 @@ const {
  * @apiSampleRequest http://localhost:4000/api/treatments/new
  * @apiVersion 0.1.0
  */
-router.post("/new", createOne);
+router.post("/new", Uploader.array('files'), createOne);
 
 /**
  * @apiDescription Insert Many Treatments
@@ -178,7 +179,7 @@ router.get("/:id", getTreatmentById);
  * @apiSampleRequest http://localhost:4000/api/treatments/:id
  * @apiVersion 0.1.0
  */
-router.put("/:id", updateTreatment);
+router.put("/:id",  Uploader.array('files'), updateTreatment);
 
 
 /**

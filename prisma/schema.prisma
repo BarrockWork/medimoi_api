@@ -38,8 +38,11 @@ model TreatmentMedia {
   id           Int       @id @default(autoincrement())
   treatment_id Int
   Treatment    Treatment @relation(name: "TreatmentToTreatmentMedia", fields: [treatment_id], references: [id])
-  name         String    @db.VarChar(255)
-  mimeType     String    @db.VarChar(50)
+  originalName String    @db.VarChar(255)
+  fileName     String    @db.VarChar(255) @unique
+  fileSize     Int
+  filePath     String    @db.Text
+  mimeType     String    @db.VarChar(255)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @updatedAt
   isActive     Boolean   @default(true)
@@ -269,7 +272,7 @@ model Disease {
 model KhysInfo {
   id                    Int               @id @default(autoincrement())
   name                  String            @db.VarChar(50)
-  nameSlug              String            @db.VarChar(50)
+  nameSlug              String            @db.VarChar(50) @unique
   phoneNumber           String            @db.VarChar(50)
   email                 String            @db.VarChar(50) @unique
   address_road_type_id  Int

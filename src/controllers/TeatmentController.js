@@ -9,8 +9,6 @@ const { transformIntValue, checkRequiredFields, selectDrugInfos, selectTreatment
 
 const createOne = async (req, res) => {
     try {
-        console.log(req.body);
-        console.log(req.files);
         // Check the required fields
         checkRequiredFields(req, res,['name', "user_id", "treatment_periodicity_id", "startedAt"]);
 
@@ -26,19 +24,22 @@ const createOne = async (req, res) => {
 
         //Treaments medias
         const mediaFiles = [];
-        for (let i = 0; i < req.files.length; i++) {
-            mediaFiles.push(
-                {
-                    treatment_id: transformIntValue(treatmemt.id),
-                    originalName: req.files[i].originalname,
-                    fileName: req.files[i].filename,
-                    fileSize: req.files[i].size,
-                    filePath:'/' +uploadDir + req.files[i].filename,
-                    mimeType: req.files[i].mimetype
+        if(req.files !== undefined) {
+            for (let i = 0; i < req.files.length; i++) {
+                mediaFiles.push(
+                    {
+                        treatment_id: transformIntValue(treatmemt.id),
+                        originalName: req.files[i].originalname,
+                        fileName: req.files[i].filename,
+                        fileSize: req.files[i].size,
+                        filePath:'/' +uploadDir + req.files[i].filename,
+                        mimeType: req.files[i].mimetype
 
-                }
-            )
+                    }
+                )
+            }
         }
+
         if(mediaFiles.length > 0) {
             const treatmentMedias = await Models.treatmentMedia.createMany({
                 data: mediaFiles
@@ -145,19 +146,22 @@ const updateTreatment = async (req, res) => {
         const onlyThoseFields = ['name', 'startedAt', 'finishedAt', 'user_id', 'treatment_periodicity_id', 'isActive'];
         const fieldsFiltered = extractFieldsToChange(req, res, onlyThoseFields);
         const mediaFiles = [];
-        for (let i = 0; i < req.files.length; i++) {
-            mediaFiles.push(
-                {
-                    treatment_id: transformIntValue(req.params.id),
-                    originalName: req.files[i].originalname,
-                    fileName: req.files[i].filename,
-                    fileSize: req.files[i].size,
-                    filePath:'/' +uploadDir + req.files[i].filename,
-                    mimeType: req.files[i].mimetype
+        if(req.files !== undefined) {
+            for (let i = 0; i < req.files.length; i++) {
+                mediaFiles.push(
+                    {
+                        treatment_id: transformIntValue(req.params.id),
+                        originalName: req.files[i].originalname,
+                        fileName: req.files[i].filename,
+                        fileSize: req.files[i].size,
+                        filePath:'/' +uploadDir + req.files[i].filename,
+                        mimeType: req.files[i].mimetype
 
-                }
-            )
+                    }
+                )
+            }
         }
+
         //Treatment
         const treatment = await Models.treatment.update({
             where:{

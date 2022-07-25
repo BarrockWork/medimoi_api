@@ -9,7 +9,7 @@ const login = async (req, res) => {
     try {
         // Pas d'information à traiter
         if (!req.body.email || !req.body.password) {
-            return res.status(400).json({message: 'Erreur. Veuillez entrer l\'email et le mot de passe corrects'})
+            return res.status(400).json({message: 'Erreur, veuillez entrer l\'email et le mot de passe corrects'})
         }
 
         // Checking
@@ -59,7 +59,7 @@ const signUp = async (req, res) => {
 
     // Aucune information à traiter
     if (!req.body.email || !req.body.password) {
-        return res.status(400).json({message: 'Erreur. Veuillez entrer l\'email et le mot de passe'})
+        return res.status(400).json({message: 'Veuillez renseignez l\'email et le mot de passe'})
     }
 
     // Checking

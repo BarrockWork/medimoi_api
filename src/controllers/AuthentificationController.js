@@ -34,11 +34,19 @@ const login = async (req, res) => {
                     expiresIn: "3 hours",
                 }
             );
-
+            const infoUser = {
+                email: user.email,
+                lastName: user.lastName,
+                firstName: user.firstName,
+                user_type_id: user.UserType,
+                role: user.role,
+                isActive: user.isActive
+            }
             // user
-            res.status(200).json({user, token});
+            res.status(200).json({infoUser, token});
+        } else {
+            res.status(401).send("Invalid Credentials");
         }
-        res.status(401).send("Invalid Credentials");
     } catch (err) {
         console.log(err);
     }

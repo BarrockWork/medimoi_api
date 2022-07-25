@@ -21,7 +21,7 @@ const login = async (req, res) => {
 
         // Pas bon
         if (!user) {
-            return res.status(400).json({message: 'Aucun identifiant ou mot de passe correspond. Veuillez réessayer !!!'})
+            return res.status(401).json({message: 'Aucun identifiant ou mot de passe correspond. Veuillez réessayer !!!'})
         }
         let token;
         if (user && (await bcrypt.compare(req.body.password, user.password))) {

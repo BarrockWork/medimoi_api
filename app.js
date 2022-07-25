@@ -13,6 +13,7 @@ const routes = require('./src/routes');
 // Initialize express server
 const app = express();
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'src/views'));
 app.set('view engine', 'jade');
@@ -49,7 +50,7 @@ app.use('/api/user_company', authenticateToken, routes.UserCompanyRouter);
 app.use('/api/user_notification_type', authenticateToken, routes.userNotificationRouter);
 app.use('/api/users', authenticateToken, routes.usersRouter);
 app.use('/api/user_type', authenticateToken, routes.userTypeRouter);
-
+app.use('/api/auth', routes.AuthServer);
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']

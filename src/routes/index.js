@@ -21,9 +21,11 @@ const CompanyRouter = require('./company');
 const ContactRouter = require('./contact');
 const UserCompanyRouter = require('./user_company');
 const KhysInfoRouter = require('./khys_info');
+const AuthServer = require('./authServer');
 
 module.exports = {
   indexRouter,
+  AuthServer,
   usersRouter,
   userTypeRouter,
   userNotificationRouter,

@@ -22,7 +22,6 @@ model Treatment {
   id                       Int                  @id @default(autoincrement())
   treatment_periodicity_id Int
   TreatmentPeriodicity     TreatmentPeriodicity @relation(name: "TreatmentToTreatmentPeriodicity", fields: [treatment_periodicity_id], references: [id])
-  TreatmentMedias          TreatmentMedia[]     @relation(name: "TreatmentToTreatmentMedia")
   user_id                  Int
   User                     User                 @relation(name: "TreatmentToUser", fields: [user_id], references: [id])
   name                     String               @db.VarChar(255)
@@ -31,21 +30,8 @@ model Treatment {
   startedAt                DateTime?
   finishedAt               DateTime?
   isActive                 Boolean              @default(true)
+  TreatmentMedias          TreatmentMedia[]     @relation(name: "TreatmentToTreatmentMedia")
   TreatmentDrugs           TreatmentDrug[]      @relation(name: "TreatmentToTreatmentDrug")
-}
-
-model TreatmentMedia {
-  id           Int       @id @default(autoincrement())
-  treatment_id Int
-  Treatment    Treatment @relation(name: "TreatmentToTreatmentMedia", fields: [treatment_id], references: [id])
-  originalName String    @db.VarChar(255)
-  fileName     String    @db.VarChar(255) @unique
-  fileSize     Int
-  filePath     String    @db.Text
-  mimeType     String    @db.VarChar(255)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime? @updatedAt
-  isActive     Boolean   @default(true)
 }
 
 model Company {
@@ -73,8 +59,8 @@ model UserCompany {
 
 model UserType {
   id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(50)
-  nameSlug  String    @db.VarChar(50) @unique
+  name      String
+  nameSlug  String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   Users     User[]    @relation(name: "UserToUserType")
@@ -92,7 +78,7 @@ model User {
   cellphone             String                 @db.VarChar(50)
   homephone             String                 @db.VarChar(50)
   workphone             String?                @db.VarChar(50)
-  role                  String                 @db.LongText
+  role                  String
   lastConnection        DateTime               @default(now())
   createdAt             DateTime               @default(now())
   updatedAt             DateTime?              @updatedAt
@@ -108,10 +94,10 @@ model Address {
   id                   Int             @id @default(autoincrement())
   user_id              Int
   User                 User            @relation(name: "AddressToUser", fields: [user_id], references: [id])
-  address_road_type_id Int
-  AddressRoadType      AddressRoadType @relation(name: "AddressToAddressRoadType", fields: [address_road_type_id], references: [id])
   numberRoad           Int
   streetName           String          @db.VarChar(50)
+  address_road_type_id Int
+  AddressRoadType      AddressRoadType @relation(name: "AddressToAddressRoadType", fields: [address_road_type_id], references: [id])
   additionnalAddress   String?         @db.VarChar(255)
   zipcode              String          @db.VarChar(10)
   city                 String          @db.VarChar(50)
@@ -158,6 +144,12 @@ model ContactType {
   Contacts  Contact[] @relation(name: "ContactToContactType")
 }
 
+model TreatmentMedia {
+  id           Int       @id
+  treatment_id Int
+  Treatment    Treatment @relation(name: "TreatmentToTreatmentMedia", fields: [treatment_id], references: [id])
+}
+
 model TreatmentDrug {
   id           Int       @id @default(autoincrement())
   treatment_id Int
@@ -171,7 +163,7 @@ model TreatmentDrug {
 model DrugLevel {
   id          Int       @id @default(autoincrement())
   level       Int
-  description String    @db.Text
+  description String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   isActive    Boolean   @default(true)
@@ -188,7 +180,7 @@ model Drug {
   MedicalAdministration     MedicalAdministration @relation(name: "DrugToMedicalAdministration", fields: [medical_administration_id], references: [id])
   name                      String                @db.VarChar(255)
   nameSlug                  String                @unique @db.VarChar(255)
-  description               String                @db.Text
+  description               String
   isPrescription            Boolean               @default(false)
   createdAt                 DateTime              @default(now())
   updatedAt                 DateTime?             @updatedAt
@@ -200,7 +192,7 @@ model DrugType {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(50)
   nameSlug    String    @unique @db.VarChar(50)
-  description String    @db.Text
+  description String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   isActive    Boolean   @default(true)
@@ -209,8 +201,8 @@ model DrugType {
 
 model MedicalAdministration {
   id        Int       @id @default(autoincrement())
-  name      String    @db.VarChar(255)
-  nameSlug  String    @db.VarChar(255) @unique
+  name      String
+  nameSlug  String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   isActive  Boolean   @default(true)
@@ -235,20 +227,15 @@ model NotificationHistory {
 }
 
 model AddressRoadType {
-  id        Int         @id @default(autoincrement())
-  name      String      @db.VarChar(50)
-  nameSlug  String      @unique @db.VarChar(50)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime?   @updatedAt
-  Addresses Address[]   @relation(name: "AddressToAddressRoadType")
-  KhysInfo  KhysInfo[]  @relation(name: "KhysInfoToAddressRoadType")
+  id        Int       @id
+  Addresses Address[] @relation(name: "AddressToAddressRoadType")
 }
 
 model DiseaseType {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(100)
   nameSlug    String    @unique @db.VarChar(100)
-  description String    @db.Text
+  description String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   isActive    Boolean   @default(true)
@@ -261,30 +248,10 @@ model Disease {
   DiseaseType      DiseaseType @relation(name: "DiseaseToDiseaseType", fields: [disease_type_id], references: [id])
   name             String      @db.VarChar(255)
   nameSlug         String      @unique @db.VarChar(255)
-  description      String      @db.Text
-  incubationPeriod String      @db.Text
+  description      String
+  incubationPeriod String
   transmitting     String      @db.VarChar(255)
   createdAt        DateTime    @default(now())
   updatedAt        DateTime?   @updatedAt
   isActive         Boolean     @default(true)
-}
-
-model KhysInfo {
-  id                    Int               @id @default(autoincrement())
-  name                  String            @db.VarChar(50)
-  nameSlug              String            @db.VarChar(50) @unique
-  phoneNumber           String            @db.VarChar(50)
-  email                 String            @db.VarChar(50) @unique
-  address_road_type_id  Int
-  AddressRoadType       AddressRoadType   @relation(name: "KhysInfoToAddressRoadType", fields: [address_road_type_id], references: [id])
-  numberRoad            Int
-  streetName            String            @db.VarChar(50)
-  zipcode               String            @db.VarChar(10)
-  city                  String            @db.VarChar(50)
-  region                String            @db.VarChar(50)
-  country               String            @db.VarChar(50)
-  siret                 String            @db.VarChar(50)
-  tva                   String            @db.VarChar(50)
-  createdAt             DateTime          @default(now())
-  updatedAt             DateTime?         @updatedAt
 }

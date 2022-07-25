@@ -5,67 +5,92 @@ require('dotenv').config()
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Models = require('./../models');
-
-const app = express();
+const bcrypt = require("bcrypt");
+const router = express.Router();
 
 let refreshTokens = []
 
-const users = await Models.User.findAll();
 
 /* Formulaire de connexion */
-app.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     // Pas d'information à traiter
     if (!req.body.email || !req.body.password) {
-        return res.status(400).json({ message: 'Erreur. Veuillez entrer l\'email et le mot de passe corrects' })
+        return res.status(400).json({message: 'Erreur. Veuillez entrer l\'email et le mot de passe corrects'})
     }
 
     // Checking
-    const user = users.find(u => u.email === req.body.email && u.password === req.body.password)
+    const user = await Models.User.findUnique({
+        where: {
+            email: req.body.email
+        }
+    });
 
     // Pas bon
     if (!user) {
-        return res.status(400).json({ message: 'Erreur. Identifiant ou mot de passe erroné' })
+        return res.status(400).json({message: 'Erreur. Identifiant ou mot de passe erroné'})
     }
 
-    const token = jwt.sign({
-        id: user.id,
-        username: user.username
-    }, SECRET, { expiresIn: '3 hours' })
+    let token;
+    try {
+        //Creating jwt token
+        token = jwt.sign(
+            { userId: user.id, email: user.email },
+            "secretkeyappearshere",
+            { expiresIn: "3 hours" }
+        );
+    } catch (err) {
+        console.log(err);
+        const error = new Error("Error! Something went wrong.");
+        return next(error);
+    }
+})
 
-    return res.json({ access_token: token })
+//inscription
+router.post('/signup', async (req, res) => {
+    const users = await Models.User.findMany();
+
+    // Aucune information à traiter
+    if (!req.body.email || !req.body.password) {
+        return res.status(400).json({message: 'Erreur. Veuillez entrer l\'email et le mot de passe'})
+    }
+
+    // Checking
+    const userExisting = await Models.User.findUnique({
+        where: {
+            email: req.body.email,
+        },
+    })
+
+    // Pas bon
+    if (userExisting) {
+        return res.status(400).json({message: `Error. Un utlisateur existe déjà avec cet adresse email`})
+    }
+
+    // Données du nouvel utilisateur
+    const cryptoPassword = bcrypt.hashSync(req.body.password, 12)
+    const newUser = await Models.User.create({
+        data: {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            age: parseInt(req.body.age),
+            cellphone: req.body.cellphone,
+            homephone: req.body.homephone,
+            email: req.body.email,
+            password: cryptoPassword,
+            user_type_id: req.body.user_type_id,
+            role: "USER",
+        },
+    })
+
+    return res.status(201).json({newUser, message: `User  created`})
 })
 
 //deconnexion
-app.delete('/logout', (req, res) => {
+router.delete('/logout', (req, res) => {
     refreshTokens = refreshTokens.filter(token => token !== req.body.token)
     res.sendStatus(204)
 })
 
-//inscription
-app.post('/register', (req, res) => {
-    // Aucune information à traiter
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).json({ message: 'Erreur. Veuillez entrer l\'email et le mot de passe' })
-    }
 
-    // Checking
-    const userExisting = users.find(u => u.email === req.body.email)
+module.exports = router;
 
-    // Pas bon
-    if (userExisting) {
-        return res.status(400).json({ message: `Error. L\'utlisateur ${req.body.username} existe déjà` })
-    }
-
-    // Données du nouvel utilisateur
-    const id = users[users.length - 1].id + 1
-    const newUser = {
-        id: id,
-        email: req.body.email,
-        password: req.body.password
-    }
-
-    // Insertion dans le tableau des utilisateurs
-    users.push(newUser)
-
-    return res.status(201).json({ message: `User ${id} created` })
-})

@@ -35,6 +35,7 @@ const login = async (req, res) => {
                 }
             );
             const infoUser = {
+                id: user.id,
                 email: user.email,
                 lastName: user.lastName,
                 firstName: user.firstName,
@@ -96,29 +97,52 @@ const signUp = async (req, res) => {
 
 }
 
-const logout = async (req, res) => {
-    refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-    res.sendStatus(204)
-}
+// Verify route
+const verify = async (req, res) => {
+
+    // Get token value to the json body
+    const token = req.body.token;
+
+    // If the token is present
+    if (token) {
+
+        // Verify the token using jwt.verify method
+        const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        //  Return response with decode data
+        res.json({
+            login: true,
+            data: decode
+        });
+    } else {
+
+        // Return response weith error
+        res.json({
+            login: false,
+            data: 'error'
+        });
+    }
+};
+
 
 function authenticateToken(req, res, next) {
-    /*    let accesstokensecret = process.env.ACCESS_TOKEN_SECRET;
-        let refreshtokensecret = process.env.REFRESH_TOKEN_SECRET;
+    let accesstokensecret = process.env.ACCESS_TOKEN_SECRET;
+    let refreshtokensecret = process.env.REFRESH_TOKEN_SECRET;
 
-        try {
-            const token = req.header(refreshtokensecret);
+    try {
+        const token = req.header(refreshtokensecret);
 
-            const verified = jwt.verify(token, accesstokensecret);
-            if(verified){
-                return res.send("Successfully Verified");
-            }else{
-                // Access Denied
-                return res.status(401).send(error);
-            }
-        } catch (error) {
+        const verified = jwt.verify(token, accesstokensecret);
+        if (verified) {
+            return res.send("Successfully Verified");
+        } else {
             // Access Denied
             return res.status(401).send(error);
-        }*/
+        }
+    } catch (error) {
+        // Access Denied
+        return res.status(401).send(error);
+    }
     /*    const authHeader = req.headers['authorization']
 
         // Récupération du token
@@ -139,6 +163,6 @@ function authenticateToken(req, res, next) {
 module.exports = {
     login,
     signUp,
-    logout,
-    authenticateToken
+    authenticateToken,
+    verify
 };

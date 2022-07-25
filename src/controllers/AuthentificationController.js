@@ -6,37 +6,44 @@ const bcrypt = require("bcrypt");
 
 
 const login = async (req, res) => {
-    // Pas d'information à traiter
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).json({message: 'Erreur. Veuillez entrer l\'email et le mot de passe corrects'})
-    }
-
-    // Checking
-    const user = await Models.User.findUnique({
-        where: {
-            email: req.body.email
-        }
-    });
-
-    // Pas bon
-    if (!user) {
-        return res.status(400).json({message: 'Erreur. Identifiant ou mot de passe erroné'})
-    }
-
-    let token;
     try {
-        //Creating jwt token
-        token = jwt.sign(
-            {userId: user.id, email: user.email},
-            "secretkeyappearshere",
-            {expiresIn: "3 hours"}
-        );
+        // Pas d'information à traiter
+        if (!req.body.email || !req.body.password) {
+            return res.status(400).json({message: 'Erreur. Veuillez entrer l\'email et le mot de passe corrects'})
+        }
+
+        // Checking
+        const user = await Models.User.findUnique({
+            where: {
+                email: req.body.email
+            }
+        });
+
+        // Pas bon
+        if (!user) {
+            return res.status(400).json({message: 'Aucun identifiant ou mot de passe correspond. Veuillez réessayer !!!'})
+        }
+        let token;
+        if (user && (await bcrypt.compare(req.body.password, user.password))) {
+            // Create token
+            // save user token
+            token = jwt.sign(
+                {user_id: user.id, email: user.email},
+                process.env.ACCESS_TOKEN_SECRET,
+                {
+                    expiresIn: "3 hours",
+                }
+            );
+
+            // user
+            res.status(200).json({user, token});
+        }
+        res.status(401).send("Invalid Credentials");
     } catch (err) {
         console.log(err);
-        const error = new Error("Error! Something went wrong.");
-        return next(error);
     }
 }
+
 
 const signUp = async (req, res) => {
     const users = await Models.User.findMany();
@@ -60,21 +67,25 @@ const signUp = async (req, res) => {
 
     // Données du nouvel utilisateur
     const cryptoPassword = bcrypt.hashSync(req.body.password, 12)
-    const newUser = await Models.User.create({
-        data: {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            age: parseInt(req.body.age),
-            cellphone: req.body.cellphone,
-            homephone: req.body.homephone,
-            email: req.body.email,
-            password: cryptoPassword,
-            user_type_id: req.body.user_type_id,
-            role: "USER",
-        },
-    })
+    try {
+        const newUser = await Models.User.create({
+            data: {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                age: parseInt(req.body.age),
+                cellphone: req.body.cellphone,
+                homephone: req.body.homephone,
+                email: req.body.email,
+                password: cryptoPassword,
+                user_type_id: parseInt(req.body.user_type_id),
+                role: "USER",
+            },
+        })
+        return res.status(201).json({newUser, message: `Vous venez de vous inscrire sur MediMoi !!!`})
+    } catch (error) {
+        res.send(error)
+    }
 
-    return res.status(201).json({newUser, message: `User  created`})
 }
 
 const logout = async (req, res) => {
@@ -82,8 +93,44 @@ const logout = async (req, res) => {
     res.sendStatus(204)
 }
 
+function authenticateToken(req, res, next) {
+    /*    let accesstokensecret = process.env.ACCESS_TOKEN_SECRET;
+        let refreshtokensecret = process.env.REFRESH_TOKEN_SECRET;
+
+        try {
+            const token = req.header(refreshtokensecret);
+
+            const verified = jwt.verify(token, accesstokensecret);
+            if(verified){
+                return res.send("Successfully Verified");
+            }else{
+                // Access Denied
+                return res.status(401).send(error);
+            }
+        } catch (error) {
+            // Access Denied
+            return res.status(401).send(error);
+        }*/
+    /*    const authHeader = req.headers['authorization']
+
+        // Récupération du token
+        const token = authHeader && authHeader.split(' ')[1]
+
+        if (token == null) return res.sendStatus(401)
+
+        // Véracité du token
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            console.log(err)
+            if (err) return res.sendStatus(403)
+            req.user = user
+            next()
+        })*/
+}
+
+
 module.exports = {
     login,
     signUp,
     logout,
+    authenticateToken
 };

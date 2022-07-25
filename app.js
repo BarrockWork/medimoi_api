@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken')
 
 // Import of routes
 const routes = require('./src/routes');
+const {authenticateToken} = require("./src/controllers/AuthentificationController");
 
 // Initialize express server
 const app = express();
@@ -52,22 +53,6 @@ app.use('/api/users', authenticateToken, routes.usersRouter);
 app.use('/api/user_type', authenticateToken, routes.userTypeRouter);
 app.use('/api/auth', routes.AuthServer);
 
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-
-    // Récupération du token
-    const token = authHeader && authHeader.split(' ')[1]
-
-    if (token == null) return res.sendStatus(401)
-
-    // Véracité du token
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        console.log(err)
-        if (err) return res.sendStatus(403)
-        req.user = user
-        next()
-    })
-}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -145,7 +145,6 @@ const updateTreatmentMedia = async (req, res) => {
 const deleteTreatmentMedia = async (req, res) => {
     try {
         const {id} = req.params;
-        console.log("OK", id)
 
         // Retrieve the entry for delete the file in the upload folder
         const treatmentMedia = await Models.treatmentMedia.findUnique({

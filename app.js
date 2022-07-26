@@ -40,6 +40,7 @@ app.use('/api/disease_types', authenticateToken, routes.diseaseTypeRouter);
 app.use('/api/drugs', authenticateToken, routes.drugRouter);
 app.use('/api/drug_levels', authenticateToken, routes.drugLevelRouter);
 app.use('/api/drug_types', authenticateToken, routes.drugTypeRouter);
+app.use('/api/khys_info', authenticateToken, routes.KhysInfoRouter);
 app.use('/api/medical_administrations', authenticateToken, routes.medicalAdministrationRouter);
 app.use('/api/notification_type', authenticateToken, routes.NotificationTypeRouter);
 app.use('/api/notification_history', authenticateToken, routes.NotificationHistory);

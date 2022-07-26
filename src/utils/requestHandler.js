@@ -384,7 +384,7 @@ const selectTreatmentGlobalInfos = () => {
     startedAt: true,
     finishedAt: true,
     TreatmentPeriodicity: selecttreatmentPeriodicityInfos(),
-   TreatmentMedias: selectTreatmentMediasInfos(),
+    TreatmentMedias: selectTreatmentMediasInfos(),
     TreatmentDrugs: selectTreatmentDrugsInfos(),
     User: selectUserGlobalInfos(),
     isActive: true,

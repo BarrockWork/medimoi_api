@@ -148,6 +148,14 @@ model TreatmentMedia {
   id           Int       @id
   treatment_id Int
   Treatment    Treatment @relation(name: "TreatmentToTreatmentMedia", fields: [treatment_id], references: [id])
+  originalName String    @db.VarChar(255)
+  fileName     String    @db.VarChar(255) @unique
+  fileSize     Int
+  filePath     String    @db.Text
+  mimeType     String    @db.VarChar(255)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+  isActive     Boolean   @default(true)
 }
 
 model TreatmentDrug {
@@ -254,4 +262,25 @@ model Disease {
   createdAt        DateTime    @default(now())
   updatedAt        DateTime?   @updatedAt
   isActive         Boolean     @default(true)
+}
+
+model KhysInfo {
+  id                    Int               @id @default(autoincrement())
+  name                  String            @db.VarChar(50)
+  nameSlug              String            @db.VarChar(50)
+  nameSlug              String            @db.VarChar(50) @unique
+  phoneNumber           String            @db.VarChar(50)
+  email                 String            @db.VarChar(50) @unique
+  address_road_type_id  Int
+  AddressRoadType       AddressRoadType   @relation(name: "KhysInfoToAddressRoadType", fields: [address_road_type_id], references: [id])
+  numberRoad            Int
+  streetName            String            @db.VarChar(50)
+  zipcode               String            @db.VarChar(10)
+  city                  String            @db.VarChar(50)
+  region                String            @db.VarChar(50)
+  country               String            @db.VarChar(50)
+  siret                 String            @db.VarChar(50)
+  tva                   String            @db.VarChar(50)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime?         @updatedAt
 }

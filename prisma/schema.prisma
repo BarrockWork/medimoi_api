@@ -88,7 +88,7 @@ model User {
   UserCompany           UserCompany?           @relation(name: "UserToUserCompany")
   Contacts              Contact[]              @relation(name: "ContactToUser")
   UserNotificationTypes UserNotificationType[] @relation(name: "UserToUserNotificationType")
-  UserPlan              UserPlan[]             @relation(name: "UserToUserPlan")
+  UserPlans              UserPlan[]            @relation(name: "UserToUserPlan")
 }
 
 model Address {
@@ -291,14 +291,14 @@ model KhysInfo {
 }
 
 model Plan {
-    id                      Int                 @id @default(autoincrement)
+    id                      Int                 @id @default(autoincrement())
     name                    String              @db.VarChar(50)
     nameSlug                String              @db.VarChar(50) @unique
     price                   Float               @db.Double
-    stripe_price            String              @db.String(50)
+    stripe_price            String              @db.VarChar(50)
     // ----- PlanPeriodicity relation ------
     plan_periodicity_id     Int
-    PlanPeriodicity         PlanPeriodicity     @relation(fields: [plan_periodicity_id], references: [id])    
+    PlanPeriodicity         PlanPeriodicity     @relation(name: "PlanPeriodicityToPlan", fields: [plan_periodicity_id], references: [id])    
     // ---------------------------------
     createdAt               DateTime            @default(now())
     updatedAt               DateTime?           @updatedAt    
@@ -319,16 +319,16 @@ model PlanPeriodicity {
 }
 
 model UserPlan {
-    id                          Int         @id @default(autoincrement)
+    id                          Int         @id @default(autoincrement())
     billing_date                DateTime    @default(now())
-    terminated_date             DateTime    @default(null)
+    terminated_date             DateTime?
     isActive                    Boolean     @default(true)
     createdAt                   DateTime    @default(now())
     updatedAt                   DateTime?   @updatedAt
     // User relation --------------------------
     user_id                     Int
-    User                        User         @relation(fields: [user_id], references: [id])
+    User                        User         @relation(name: "UserToUserPlan", fields: [user_id], references: [id])
     // Plan relation --------------------------
     plan_id                     Int
-    Plan                        Plan         @relation(fields: [plan_id], references: [id])
+    Plan                        Plan         @relation(name: "PlanToUserPlan", fields: [plan_id], references: [id])
 }

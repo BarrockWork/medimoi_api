@@ -5,11 +5,11 @@ datasource db {
 }
 
 model Plan {
-    id                      Int                 @id @default(autoincrement)
+    id                      Int                 @id @default(autoincrement())
     name                    String              @db.VarChar(50)
     nameSlug                String              @db.VarChar(50) @unique
     price                   Float               @db.Double
-    stripe_price            String              @db.String(50)
+    stripe_price            String              @db.VarChar(50)
     // ----- PlanPeriodicity relation ------
     plan_periodicity_id     Int
     PlanPeriodicity         PlanPeriodicity     @relation(fields: [plan_periodicity_id], references: [id])    
@@ -29,6 +29,6 @@ model UserPlan {
 }
 
 model PlanPeriodicity {
-    id                  Int
+    id                  Int  @id
     Plans               Plan[]
 }

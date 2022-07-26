@@ -5,9 +5,9 @@ datasource db {
 }
 
 model UserPlan {
-    id                          Int         @id @default(autoincrement)
+    id                          Int         @id @default(autoincrement())
     billing_date                DateTime    @default(now())
-    terminated_date             DateTime    @default(null)
+    terminated_date             DateTime?
     isActive                    Boolean     @default(true)
     createdAt                   DateTime    @default(now())
     updatedAt                   DateTime?   @updatedAt

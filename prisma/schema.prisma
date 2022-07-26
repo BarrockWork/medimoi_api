@@ -188,7 +188,7 @@ model Drug {
   MedicalAdministration     MedicalAdministration @relation(name: "DrugToMedicalAdministration", fields: [medical_administration_id], references: [id])
   name                      String                @db.VarChar(255)
   nameSlug                  String                @unique @db.VarChar(255)
-  description               String
+  description               String                @db.Text
   isPrescription            Boolean               @default(false)
   createdAt                 DateTime              @default(now())
   updatedAt                 DateTime?             @updatedAt

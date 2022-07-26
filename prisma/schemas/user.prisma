@@ -28,6 +28,7 @@ model User {
     UserCompany                 UserCompany?
     Contacts                    Contact[]
     UserNotificationTypes       UserNotificationType[]
+    UserPlans                   UserPlan[]
 }
 
 //**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
@@ -56,6 +57,11 @@ model Treatment {
     User                User    @relation(fields: [user_id], references: [id])
 }
 model UserNotificationType {
+    id                  Int     @id
+    user_id             Int
+    User                User    @relation(fields: [user_id], references: [id])
+}
+model UserPlan {
     id                  Int     @id
     user_id             Int
     User                User    @relation(fields: [user_id], references: [id])

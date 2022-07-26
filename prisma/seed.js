@@ -13,7 +13,7 @@ const contactTypes = require('./fixtures/contact_type');
 const drugLevels = require('./fixtures/drug_levels');
 const drugTypes = require('./fixtures/drug_types');
 const drugs = require('./fixtures/drugs');
-
+const planPeriodicities = require('./fixtures/plan_periodicity');
 
 
 async function main() {
@@ -31,6 +31,15 @@ async function main() {
     try {
         await Models.NotificationType.createMany({
             data: notificationsTypes
+        })
+    } catch (error) {
+        console.error(error)
+    }
+
+    // création des différentes périodes d'abonnements
+    try {
+        await Models.PlanPeriodicity.createMany({
+            data: planPeriodicities
         })
     } catch (error) {
         console.error(error)
@@ -168,6 +177,8 @@ async function main() {
     } catch (error) {
         console.log(error)
     }
+
+
 }
 
 main()

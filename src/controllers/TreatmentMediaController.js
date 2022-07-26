@@ -6,7 +6,7 @@ const {checkRequiredFields, extractFieldsToChange, transformIntValue, selectTrea
 const uploadDir = process.env.UPLOAD_DIRECTORY;
 const fs = require('fs');
 const path = require('path');
-
+const {toLower} = require("ramda");
 
 const createTreatmentMedia = async (req, res) => {
    try {

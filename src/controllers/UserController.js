@@ -1,7 +1,7 @@
 const Models = require('./../models');
 const { checkRequiredFields } = require('./../utils/requestHandler');
 const { toLower } = require('ramda');
-const {extractQueryParameters, extractFieldsToChange} = require("../utils/requestHandler");
+const {extractQueryParameters, extractFieldsToChange, transformBooleanValue} = require("../utils/requestHandler");
 
 // Create a single user
 const createOne = async (req, res) => {
@@ -68,6 +68,25 @@ const getAllUsers = async (req, res) => {
     res.header('Access-Control-Expose-Headers', 'Content-Range');
     res.set('Content-Range', totalCount);
     res.status(200).json(allUsers);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+const getNbUsers = async (req, res) => {
+  try {
+    const totalCount = await Models.User.count({
+      where: {
+        isActive: transformBooleanValue(req.params.isActive)
+      }
+    });
+
+    // The prisma client can run only 10 instances simultaneously,
+    // so it is better to stop the current instance before sending the response
+    await Models.$disconnect();
+
+    // Add to ResponseHeaders the totalcount
+    res.status(200).json(totalCount);
   } catch (error) {
     return res.status(400).json(error);
   }
@@ -265,5 +284,6 @@ module.exports = {
   updateUserById,
   deleteUser,
   deleteUserById,
-  findMany
+  findMany,
+  getNbUsers
 };

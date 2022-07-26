@@ -10,7 +10,8 @@ const {
   updateUserById,
   deleteUser,
   deleteUserById,
-  findMany
+  findMany,
+  getNbUsers
 } = require('./../controllers/UserController');
 
 /**
@@ -124,6 +125,18 @@ router.post('/new', createOne);
  * @apiVersion 0.1.0
  */
 router.post('/news', createMany);
+
+/**
+ * @apiDescription Get users count
+ * @apiGroup User
+ * @api {GET} /api/users/count/:isActive Get user by Id
+ * @apiName getUserById
+ *
+ * @apiUse UserNotFoundError
+ *
+ * @apiVersion 0.1.0
+ */
+router.get('/count/:isActive', getNbUsers);
 
 /**
  * @apiDescription Get many User

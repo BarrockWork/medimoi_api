@@ -145,7 +145,7 @@ model ContactType {
 }
 
 model TreatmentMedia {
-  id           Int       @id
+  id           Int       @id @default(autoincrement())
   treatment_id Int
   Treatment    Treatment @relation(name: "TreatmentToTreatmentMedia", fields: [treatment_id], references: [id])
   originalName String    @db.VarChar(255)

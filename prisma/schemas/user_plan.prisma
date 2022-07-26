@@ -15,8 +15,8 @@ model UserPlan {
     user_id                     Int
     User                        User         @relation(fields: [user_id], references: [id])
     // Plan relation --------------------------
-    user_id                     Int
-    User                        User         @relation(fields: [user_id], references: [id])
+    plan_id                     Int
+    Plan                        Plan         @relation(fields: [plan_id], references: [id])
 }
 
 //**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/

@@ -88,6 +88,7 @@ model User {
   UserCompany           UserCompany?           @relation(name: "UserToUserCompany")
   Contacts              Contact[]              @relation(name: "ContactToUser")
   UserNotificationTypes UserNotificationType[] @relation(name: "UserToUserNotificationType")
+  UserPlan              UserPlan[]             @relation(name: "UserToUserPlan")
 }
 
 model Address {
@@ -287,4 +288,47 @@ model KhysInfo {
   tva                   String            @db.VarChar(50)
   createdAt             DateTime          @default(now())
   updatedAt             DateTime?         @updatedAt
+}
+
+model Plan {
+    id                      Int                 @id @default(autoincrement)
+    name                    String              @db.VarChar(50)
+    nameSlug                String              @db.VarChar(50) @unique
+    price                   Float               @db.Double
+    stripe_price            String              @db.String(50)
+    // ----- PlanPeriodicity relation ------
+    plan_periodicity_id     Int
+    PlanPeriodicity         PlanPeriodicity     @relation(fields: [plan_periodicity_id], references: [id])    
+    // ---------------------------------
+    createdAt               DateTime            @default(now())
+    updatedAt               DateTime?           @updatedAt    
+    isActive                Boolean             @default(true)
+
+    // ---- UserPlan relation ----
+    UserPlans               UserPlan[]          @relation(name: "PlanToUserPlan")
+}
+
+model PlanPeriodicity {
+    id              Int             @default(autoincrement()) @id
+    name            String          @db.VarChar(255)
+    nameSlug        String          @db.VarChar(255) @unique
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime?       @updatedAt
+    isActive        Boolean         @default(true)
+    Plans           Plan[]          @relation(name: "PlanPeriodicityToPlan")
+}
+
+model UserPlan {
+    id                          Int         @id @default(autoincrement)
+    billing_date                DateTime    @default(now())
+    terminated_date             DateTime    @default(null)
+    isActive                    Boolean     @default(true)
+    createdAt                   DateTime    @default(now())
+    updatedAt                   DateTime?   @updatedAt
+    // User relation --------------------------
+    user_id                     Int
+    User                        User         @relation(fields: [user_id], references: [id])
+    // Plan relation --------------------------
+    plan_id                     Int
+    Plan                        Plan         @relation(fields: [plan_id], references: [id])
 }

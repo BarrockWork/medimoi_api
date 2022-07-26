@@ -171,7 +171,7 @@ model TreatmentDrug {
 model DrugLevel {
   id          Int       @id @default(autoincrement())
   level       Int
-  description String
+  description String    @db.Text
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   isActive    Boolean   @default(true)
@@ -200,7 +200,7 @@ model DrugType {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(50)
   nameSlug    String    @unique @db.VarChar(50)
-  description String
+  description String    @db.Text
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   isActive    Boolean   @default(true)
@@ -209,8 +209,8 @@ model DrugType {
 
 model MedicalAdministration {
   id        Int       @id @default(autoincrement())
-  name      String
-  nameSlug  String    @unique
+  name      String    @db.VarChar(255)
+  nameSlug  String    @db.VarChar(255) @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   isActive  Boolean   @default(true)
@@ -248,7 +248,7 @@ model DiseaseType {
   id          Int       @id @default(autoincrement())
   name        String    @db.VarChar(100)
   nameSlug    String    @unique @db.VarChar(100)
-  description String
+  description String    @db.Text
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   isActive    Boolean   @default(true)
@@ -261,8 +261,8 @@ model Disease {
   DiseaseType      DiseaseType @relation(name: "DiseaseToDiseaseType", fields: [disease_type_id], references: [id])
   name             String      @db.VarChar(255)
   nameSlug         String      @unique @db.VarChar(255)
-  description      String
-  incubationPeriod String
+  description      String      @db.Text
+  incubationPeriod String      @db.Text
   transmitting     String      @db.VarChar(255)
   createdAt        DateTime    @default(now())
   updatedAt        DateTime?   @updatedAt

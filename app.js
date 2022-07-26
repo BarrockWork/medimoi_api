@@ -53,6 +53,8 @@ app.use('/api/user_notification_type', authenticateToken, routes.userNotificatio
 app.use('/api/users', authenticateToken, routes.usersRouter);
 app.use('/api/user_type', authenticateToken, routes.userTypeRouter);
 app.use('/api/auth', routes.AuthServer);
+app.use("/api/plans", routes.PlanRouter);
+app.use('/api/plan_periodicities', routes.PlanPeriodicityRouter);
 
 
 

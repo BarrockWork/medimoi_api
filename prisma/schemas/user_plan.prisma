@@ -1,0 +1,31 @@
+//**** Is necessary to add the datasource here in order to use @db***/
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model UserPlan {
+    id                          Int         @id @default(autoincrement())
+    billing_date                DateTime    @default(now())
+    terminated_date             DateTime?
+    isActive                    Boolean     @default(true)
+    createdAt                   DateTime    @default(now())
+    updatedAt                   DateTime?   @updatedAt
+    // User relation --------------------------
+    user_id                     Int
+    User                        User         @relation(fields: [user_id], references: [id])
+    // Plan relation --------------------------
+    plan_id                     Int
+    Plan                        Plan         @relation(fields: [plan_id], references: [id])
+}
+
+//**** Is necessary to initialize the models relations here in order to be merging with PrismaSDK ****/
+model User {
+    id                          Int         @id
+    UserPlan                    UserPlan[]
+}
+
+model Plan {
+    id                          Int         @id
+    UserPlan                    UserPlan[]
+}

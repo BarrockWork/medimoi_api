@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {signUp, login, verify} = require('./../controllers/AuthentificationController');
+const {signUp, login} = require('./../controllers/AuthentificationController');
 
 
 /* Formulaire de connexion */
@@ -58,8 +58,6 @@ router.post('/login', login)
  * @apiVersion 0.1.0
  */
 router.post('/signup', signUp)
-
-router.get('/', verify)
 
 module.exports = router;
 

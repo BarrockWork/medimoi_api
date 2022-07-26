@@ -97,66 +97,22 @@ const signUp = async (req, res) => {
 
 }
 
-// Verify route
-const verify = async (req, res) => {
-
-    // Get token value to the json body
-    const token = req.body.token;
-
-    // If the token is present
-    if (token) {
-
-        // Verify the token using jwt.verify method
-        const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-        //  Return response with decode data
-        res.json({
-            login: true,
-            data: decode
-        });
-    } else {
-
-        // Return response weith error
-        res.json({
-            login: false,
-            data: 'error'
-        });
-    }
-};
-
-
+//middleware
 function authenticateToken(req, res, next) {
-    let accesstokensecret = process.env.ACCESS_TOKEN_SECRET;
-    let refreshtokensecret = process.env.REFRESH_TOKEN_SECRET;
+    const authHeader = req.headers['authorization'];
 
-    try {
-        const token = req.header(refreshtokensecret);
+    // Récupération du token
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401);
 
-        const verified = jwt.verify(token, accesstokensecret);
-        if (verified) {
-            return res.send("Successfully Verified");
-        } else {
-            // Access Denied
-            return res.status(401).send(error);
+    // Véracité du token
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) {
+            return res.sendStatus(401);
         }
-    } catch (error) {
-        // Access Denied
-        return res.status(401).send(error);
-    }
-    /*    const authHeader = req.headers['authorization']
-
-        // Récupération du token
-        const token = authHeader && authHeader.split(' ')[1]
-
-        if (token == null) return res.sendStatus(401)
-
-        // Véracité du token
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            console.log(err)
-            if (err) return res.sendStatus(403)
-            req.user = user
-            next()
-        })*/
+        req.user = user;
+        next();
+    })
 }
 
 
@@ -164,5 +120,4 @@ module.exports = {
     login,
     signUp,
     authenticateToken,
-    verify
 };

@@ -1,11 +1,11 @@
 const plan_periodicity = [
     {
-        name: "Mensuelle",
-        nameSlug: "Mensuelle",
+        name: "mensuelle",
+        nameSlug: "mensuelle",
     },
     {
-        name: "Annuelle",
-        nameSlug: "Annuelle",
+        name: "annuelle",
+        nameSlug: "annuelle",
     }
 ];
 

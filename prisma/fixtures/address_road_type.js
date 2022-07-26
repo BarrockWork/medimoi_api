@@ -1,31 +1,31 @@
 const address_road_type = [
     {
-        name: 'rue',
+        name: 'Rue',
         nameSlug: 'rue',
     },
     {
-        name: 'avenue',
+        name: 'Avenue',
         nameSlug: 'avenue',
     },
     {
-        name: 'boulevard',
+        name: 'Boulevard',
         nameSlug: 'boulevard',
     },
     {
-        name: 'chemin',
+        name: 'Chemin',
         nameSlug: 'chemin',
     },
     {
-        name: 'impasse',
+        name: 'Impasse',
         nameSlug: 'impasse',
     },
     {
         name: 'Allee',
-        nameSlug: 'Allee',
+        nameSlug: 'allee',
     },
     {
         name: 'Place',
-        nameSlug: 'Place',
+        nameSlug: 'place',
     }
 ]
 

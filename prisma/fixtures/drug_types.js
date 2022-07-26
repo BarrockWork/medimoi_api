@@ -6,17 +6,17 @@ const drugTypes = [
     },
     {
         name: "Generique",
-        nameSlug: "Generique",
+        nameSlug: "generique",
         description: "Un médicament générique est fabriqué à partir de la même molécule qu’un médicament déjà autorisé, dit médicament de référence et dont le brevet est tombé dans le domaine public."
     },
     {
         name: "Biologique",
-        nameSlug: "Biologique",
+        nameSlug: "biologique",
         description: "Les biomédicaments regroupent diverses classes de médicaments dont le point commun est de faire appel à une source biologique comme matière première du principe actif qu’ils renferment. "
     },
     {
         name: "Homeopathie",
-        nameSlug: "Homeopathie",
+        nameSlug: "homeopathie",
         description: "L'homéopathie est une médecine douce pratiquée un peu partout dans le monde, que ce soit par des médecins, des naturopathes et autres professionnels de santé."
     }
 ]

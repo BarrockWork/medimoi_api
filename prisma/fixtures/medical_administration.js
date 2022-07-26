@@ -1,15 +1,15 @@
 const medical_administration = [
     {
         name: "Orale",
-        nameSlug: "Orale"
+        nameSlug: "orale"
     },
     {
         name: "Locale",
-        nameSlug: "Locale"
+        nameSlug: "locale"
     },
     {
         name: "Nasale",
-        nameSlug: "Nasale"
+        nameSlug: "nasale"
     },
     {
         name: "oculaire",
@@ -21,19 +21,19 @@ const medical_administration = [
     },
     {
         name: "Rectale",
-        nameSlug: "Rectale"
+        nameSlug: "rectale"
     },
     {
         name: "Vaginale",
-        nameSlug: "Vaginale"
+        nameSlug: "vaginale"
     },
     {
         name: "Injectable",
-        nameSlug: "Injectable"
+        nameSlug: "injectable"
     },
     {
         name: "Inhalée",
-        nameSlug: "Inhalée"
+        nameSlug: "inhalée"
     }
 ]
 

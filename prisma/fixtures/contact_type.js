@@ -1,23 +1,23 @@
 const contact_type = [
     {
         name: 'Parent',
-        nameSlug: 'Parent',
+        nameSlug: 'parent',
     },
     {
         name: 'Conjoint',
-        nameSlug: 'Conjoint',
+        nameSlug: 'conjoint',
     },
     {
         name: 'Enfant',
-        nameSlug: 'Enfant',
+        nameSlug: 'enfant',
     },
     {
         name: 'Famille',
-        nameSlug: 'Famille',
+        nameSlug: 'famille',
     },
     {
         name: 'Amis',
-        nameSlug: 'Amis',
+        nameSlug: 'amis',
     }
 ]
 

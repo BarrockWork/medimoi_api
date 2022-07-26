@@ -14,6 +14,7 @@ const drugLevels = require('./fixtures/drug_levels');
 const drugTypes = require('./fixtures/drug_types');
 const drugs = require('./fixtures/drugs');
 const planPeriodicities = require('./fixtures/plan_periodicity');
+const plan = require('./fixtures/plan');
 
 
 async function main() {
@@ -36,11 +37,32 @@ async function main() {
         console.error(error)
     }
 
-    // création des différentes périodes d'abonnements
+    // création des différentes périodes d'abonnements et création d'un abonnement
     try {
         await Models.PlanPeriodicity.createMany({
             data: planPeriodicities
         })
+        const getMonthlyPlan = await Models.PlanPeriodicity.findUnique({
+            where: {
+                id: 1,
+            }
+        });
+        try {
+            plan.map(async (data) => {
+                await Models.plan.create({
+                    data: {
+                        name: data.name,
+                        nameSlug: data.nameSlug,
+                        price: data.price,
+                        stripe_price: data.stripe_price,
+                        plan_periodicity_id: getMonthlyPlan.id,
+                    }
+                });
+                await Models.$disconnect();
+            })
+        } catch (error) {
+            console.log(error)
+        }
     } catch (error) {
         console.error(error)
     }

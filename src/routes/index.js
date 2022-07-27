@@ -24,6 +24,7 @@ const KhysInfoRouter = require('./khys_info');
 const AuthServer = require('./authServer');
 const PlanRouter = require('./plan');
 const PlanPeriodicityRouter = require("./plan_periodicity");
+const UserPlanRouter = require('./user_plan');
 
 module.exports = {
   indexRouter,
@@ -51,5 +52,6 @@ module.exports = {
   UserCompanyRouter,
   KhysInfoRouter,
   PlanRouter,
-  PlanPeriodicityRouter
+  PlanPeriodicityRouter,
+  UserPlanRouter
 };

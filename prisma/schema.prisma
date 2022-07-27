@@ -320,6 +320,7 @@ model PlanPeriodicity {
 
 model UserPlan {
     id                          Int         @id @default(autoincrement())
+    stripe_payment_intent       String      @db.VarChar(50) @unique
     billing_date                DateTime    @default(now())
     terminated_date             DateTime?
     isActive                    Boolean     @default(true)

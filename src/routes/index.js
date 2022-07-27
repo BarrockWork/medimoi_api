@@ -22,6 +22,9 @@ const ContactRouter = require('./contact');
 const UserCompanyRouter = require('./user_company');
 const KhysInfoRouter = require('./khys_info');
 const AuthServer = require('./authServer');
+const PlanRouter = require('./plan');
+const PlanPeriodicityRouter = require("./plan_periodicity");
+const UserPlanRouter = require('./user_plan');
 
 module.exports = {
   indexRouter,
@@ -48,4 +51,7 @@ module.exports = {
   ContactRouter,
   UserCompanyRouter,
   KhysInfoRouter,
+  PlanRouter,
+  PlanPeriodicityRouter,
+  UserPlanRouter
 };

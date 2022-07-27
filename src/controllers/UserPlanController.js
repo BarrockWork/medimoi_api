@@ -4,10 +4,10 @@ const Models = require('./../models');
 const createUserPlan = async (req, res) => {
 
     const {
-        user, plan
+        user, plan, sub
     } = req.body;
 
-    const acceptedFields = ['user', 'plan'];
+    const acceptedFields = ['user', 'plan', "sub"];
     const missingValues = acceptedFields.filter(fileld => !req.body[fileld])
 
 
@@ -22,14 +22,15 @@ const createUserPlan = async (req, res) => {
         const userPlan = await Models.userPlan.create({
             data:{
                 user_id: user.id,
-                plan_id: parseInt(plan)
+                plan_id: parseInt(plan),
+                stripe_payment_intent: sub
             }
         })
 
         await Models.$disconnect()
         res.status(200).json(userPlan)
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return res.status(400).json(error);
     }
 }

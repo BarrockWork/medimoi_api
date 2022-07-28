@@ -101,7 +101,7 @@ const getCa = async (req, res) => {
         userPlans.forEach((plan) => {
             ca += plan.Plan.price
         });
-        res.status(200).json(ca)
+        res.status(200).json(ca.toFixed(2))
     } catch (error) {
         return res.status(400).json(error);
     }

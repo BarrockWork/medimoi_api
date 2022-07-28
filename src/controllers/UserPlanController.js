@@ -108,6 +108,7 @@ const getCa = async (req, res) => {
 }
 
 const getLast = async (req, res) => {
+    console.log("hh")
     const nb = 10;
     try {
         const userPlans = await Models.userPlan.findMany({
@@ -135,8 +136,72 @@ const getLast = async (req, res) => {
         res.status(200).json(userPlans.slice(0, nb))
 
     } catch (error) {
-        console.log(error)
         return res.status(400).json(error);
+    }
+}
+
+const getLastDays = async (req, res) => {
+    const nb = parseInt(req.params.nbDay);
+    let lastDay = Date.now() - (24 * 60 * 60 * 1000);
+    lastDay = new Date(lastDay).toISOString();
+    // console.log(lastDay, "1")
+    // retirer 30 jours de la date courante
+    let lastDay30 = new Date(lastDay).setDate(new Date(lastDay).getDate() - nb);
+    lastDay30 = new Date(lastDay30).toISOString();
+    // console.log(lastDay30, '2')
+    try{
+        const userPlans = await Models.userPlan.findMany({
+            include: {
+                Plan:{
+                    select:{
+                        name:true,
+                        price:true
+                    }
+                },
+                User:{
+                    select:{
+                        firstName:true,
+                    }
+                }
+            },
+            where:{
+                billing_date:{
+                    gte: lastDay30
+                }
+            }
+        })
+
+        // ranger les commande par groupe de date (billing_date)
+        const groupedUserPlans = userPlans.reduce((acc, curr) => {
+            const date = new Date(curr.billing_date).toISOString().split("T")[0];
+            if(!acc[date]){
+                acc[date] = [];
+            }
+            curr.date = date;
+            acc[date].push(curr);
+            return acc;
+        }
+        , {})
+
+        // retourner les dates des commandes (billing_date)
+        const dates = Object.keys(groupedUserPlans);
+        console.log(groupedUserPlans, "dates")
+
+        // faire un tableau de commande par date avec le nmbre de commande
+        const userPlansByDate = dates.map(date => {
+            const userPlans = groupedUserPlans[date];
+            const nb = userPlans.length;
+            return {
+                name: date,
+                nombre: nb,
+            }
+        })
+
+        console.log(userPlansByDate, "userPlansByDate")
+        res.status(200).json(userPlansByDate);
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json(error)
     }
 }
 
@@ -146,5 +211,6 @@ module.exports = {
     createUserPlan,
     getNbUserPlans,
     getCa,
-    getLast
+    getLast,
+    getLastDays
 }

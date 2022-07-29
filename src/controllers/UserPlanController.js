@@ -108,7 +108,7 @@ const getCa = async (req, res) => {
 }
 
 const getLast = async (req, res) => {
-    console.log("hh")
+    // console.log("hh")
     const nb = 10;
     try {
         const userPlans = await Models.userPlan.findMany({
@@ -185,7 +185,7 @@ const getLastDays = async (req, res) => {
 
         // retourner les dates des commandes (billing_date)
         const dates = Object.keys(groupedUserPlans);
-        console.log(groupedUserPlans, "dates")
+        // console.log(groupedUserPlans, "dates")
 
         // faire un tableau de commande par date avec le nmbre de commande
         const userPlansByDate = dates.map(date => {
@@ -197,7 +197,7 @@ const getLastDays = async (req, res) => {
             }
         })
 
-        console.log(userPlansByDate, "userPlansByDate")
+        // console.log(userPlansByDate, "userPlansByDate")
         res.status(200).json(userPlansByDate);
     } catch (error) {
         console.log(error)

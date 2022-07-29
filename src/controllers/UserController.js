@@ -179,7 +179,7 @@ const updateUserById = async (req, res) => {
       },
       data: fieldsFiltered,
     });
-    console.log(updateUser);
+    // console.log(updateUser);
     res.status(200).json(updateUser);
   } catch (error) {
     console.log(error);

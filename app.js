@@ -47,7 +47,7 @@ app.use('/api/notification_history', authenticateToken, routes.NotificationHisto
 app.use('/api/treatments', authenticateToken, routes.treatmentRouter);
 app.use('/api/treatment_medias', authenticateToken, routes.treatmentMediaRouter);
 app.use('/api/treatment_drugs', authenticateToken, routes.treatmentDrugRouter);
-app.use('/api/treatment_periodicities', authenticateToken, routes.treatmentPeriodicityRouter);
+app.use('/api/treatment_periodicities', routes.treatmentPeriodicityRouter);
 app.use('/api/user_company', authenticateToken, routes.UserCompanyRouter);
 app.use('/api/user_notification_type', authenticateToken, routes.userNotificationRouter);
 app.use('/api/users', authenticateToken, routes.usersRouter);
